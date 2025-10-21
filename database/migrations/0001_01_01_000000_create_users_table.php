@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['finance', 'admin', 'superadmin'])->default('finance'); // 👈 Tambah kolom role
+            $table->enum('role', ['finance', 'admin', 'superadmin', 'traveler', 'customer'])->default('finance');
+            $table->enum('account_status', ['active', 'inactive'])->default('active');
             $table->rememberToken();
             $table->timestamps();
         });

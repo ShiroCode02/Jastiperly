@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'account_status', // Tambahkan kolom baru
     ];
 
     /**
@@ -43,6 +44,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => 'string', // Tambahkan cast untuk role
+            'account_status' => 'string', // Tambahkan cast untuk account_status
         ];
     }
 }
