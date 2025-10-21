@@ -110,6 +110,7 @@ php artisan storage:link
 ## 4) Migration & Seeder
 
 ```bash
+php artisan migrate
 php artisan migrate --seed
 ```
 
