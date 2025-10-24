@@ -55,7 +55,7 @@ php artisan key:generate
 Contoh `.env` (silakan sesuaikan):
 
 ```env
-APP_NAME="Starter v1.2"
+APP_NAME="Jastiperly"
 APP_ENV=local
 APP_KEY=base64:***TERISI_OTOMATIS_SETELAH_KEY:GENERATE***
 APP_DEBUG=true
@@ -68,7 +68,7 @@ LOG_LEVEL=debug
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=starter_v12
+DB_DATABASE=jastiperly
 DB_USERNAME=root
 DB_PASSWORD=
 
