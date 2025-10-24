@@ -1,13 +1,13 @@
 <x-app-layout>
-    <div class="flex">
+    <div class="flex" style="background-color: #DBEDFF;">
         <!-- Sidebar -->
         @include('layouts.sidebar-superadmin')
 
         <!-- Area kanan (konten utama) -->
-        <div class="flex-1 ml-64 flex flex-col bg-blue-50">
+        <div class="flex-1 ml-[312px] flex flex-col" style="background-color: #DBEDFF;">
             
             <!-- Navbar + Header -->
-            <div class="fixed top-0 left-64 right-0 z-20 bg-blue-50 border-b border-blue-200 shadow-sm px-6 pt-4 pb-4">
+            <div class="fixed top-0 left-[312px] right-0 z-20" style="background-color: #DBEDFF; padding: 1rem 1.5rem 1rem 1.5rem;">
                 @include('layouts.navigation', ['title' => 'Dashboard'])
 
                 <div class="mt-2 flex justify-between items-center">
@@ -21,12 +21,12 @@
             <!-- Konten utama -->
             <div class="flex-1 px-6 pb-6 pt-48 space-y-6">
                 <!-- Statistik -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-white p-4 rounded-xl shadow text-center">
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)] text-center">
                         <h3 class="text-gray-500 text-sm">Total Pengguna</h3>
                         <p class="text-3xl font-bold">{{ number_format($totalUsers) }}</p>
                     </div>
-                    <div class="bg-white p-4 rounded-xl shadow text-center">
+                    <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)] text-center">
                         <h3 class="text-gray-500 text-sm">Total Transaksi</h3>
                         <p class="text-3xl font-bold">{{ number_format($totalTransactions) }}</p>
                     </div>
@@ -34,12 +34,12 @@
 
                 <!-- Grafik & Aktivitas -->
                 <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-white p-4 rounded-xl shadow">
+                    <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
                         <h3 class="font-semibold mb-3">Grafik Total Pengguna</h3>
                         <canvas id="userChart"></canvas>
                     </div>
 
-                    <div class="bg-white p-4 rounded-xl shadow">
+                    <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
                         <h3 class="font-semibold mb-3">Total Aktivitas</h3>
                         <ul class="space-y-3">
                             <li class="flex justify-between"><span>Transaksi Selesai</span> <span class="text-green-600 font-bold">{{ $transaksiSelesai }}</span></li>
@@ -51,7 +51,7 @@
                 </div>
 
                 <!-- Tabel Transaksi Terbaru -->
-                <div class="bg-white p-4 rounded-xl shadow">
+                <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
                     <h3 class="font-semibold mb-3">Transaksi Terbaru</h3>
                     <table class="w-full text-sm border-collapse">
                         <thead>
