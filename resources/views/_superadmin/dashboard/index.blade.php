@@ -4,10 +4,10 @@
         @include('layouts.sidebar-superadmin')
 
         <!-- Area kanan (konten utama) -->
-        <div class="flex-1 ml-[312px] flex flex-col" style="background-color: #DBEDFF;">
+        <div id="main-content" class="flex-1 ml-97 transition-all duration-300 flex flex-col initial-hidden" style="background-color: #DBEDFF;">
             
             <!-- Navbar + Header -->
-            <div class="fixed top-0 left-[312px] right-0 z-20" style="background-color: #DBEDFF; padding: 1rem 1.5rem 1rem 1.5rem;">
+            <div id="navbar-header" class="fixed top-0 left-97 right-0 z-20 transition-all duration-300 initial-hidden" style="background-color: #DBEDFF; padding: 1rem 1.5rem 1rem 1.5rem;">
                 @include('layouts.navigation', ['title' => 'Dashboard'])
 
                 <div class="mt-2 flex justify-between items-center">
@@ -105,6 +105,12 @@
                 },
                 options: { responsive: true, scales: { y: { beginAtZero: true } } }
             });
+            </script>
+
+            <!-- Inline script untuk hapus initial-hidden -->
+            <script>
+                document.getElementById('main-content').classList.remove('initial-hidden');
+                document.getElementById('navbar-header').classList.remove('initial-hidden');
             </script>
         </div>
     </div>

@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\_admin\AdminDashboardController;
 use App\Http\Controllers\_finance\FinanceDashboardController;
 use App\Http\Controllers\_superadmin\SuperadminDashboardController;
+use App\Http\Controllers\_superadmin\SuperadminUserController;
 
 // ------------------- AUTHENTICATION -------------------
 Route::get('/login', [AuthenticationController::class, 'signIn'])->name('login');
@@ -56,5 +57,6 @@ Route::middleware(['auth'])->prefix('finance')->group(function () {
 // --------------------------------------------------- SUPERADMIN -------------------------------------------------------
 Route::middleware(['auth'])->prefix('superadmin')->group(function () {
     Route::get('/dashboard', [SuperadminDashboardController::class, 'index'])->name('superadmin.dashboard');
+    Route::get('/users', [SuperadminUserController::class, 'index'])->name('superadmin.users');
     Route::get('/index2', [SuperadminDashboardController::class, 'index2'])->name('superadmin.index2');
 });
