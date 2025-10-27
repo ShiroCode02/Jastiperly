@@ -48,4 +48,9 @@ class User extends Authenticatable
             'account_status' => 'string', // Tambahkan cast untuk account_status
         ];
     }
+    
+    public function detail()
+    {
+        return $this->hasOne(UserDetail::class);
+    }
 }

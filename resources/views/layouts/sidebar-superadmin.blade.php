@@ -1,4 +1,15 @@
-<!-- Jastiperly\resources\views\layouts\sidebar-superadmin.blade.php -->
+@php
+    // Menu Superadmin
+    $menus = [
+        ['name' => 'Dashboard', 'icon' => 'dashboard.svg', 'route' => 'superadmin.dashboard'],
+        ['name' => 'Manajemen Pengguna', 'icon' => 'users.svg', 'route' => 'superadmin.users'],
+        ['name' => 'Manajemen Produk', 'icon' => 'product.svg'],
+        ['name' => 'Transaksi', 'icon' => 'transaction.svg'],
+        ['name' => 'Refund', 'icon' => 'refund.svg'],
+        ['name' => 'Pengaturan', 'icon' => 'settings.svg'],
+    ];
+@endphp
+
 <aside class="fixed top-0 left-0 h-screen w-[312px] text-white z-30">
     <!-- Lapisan Depan: Biru tua (statis) -->
     <div class="absolute inset-0 w-[97px] bg-[#0A0E5C] z-20"></div>

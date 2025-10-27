@@ -8,7 +8,8 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\_admin\AdminDashboardController;
 use App\Http\Controllers\_finance\FinanceDashboardController;
 use App\Http\Controllers\_superadmin\SuperadminDashboardController;
-use App\Http\Controllers\_superadmin\SuperadminUserController;
+
+use App\Http\Controllers\UserController;
 
 // ------------------- AUTHENTICATION -------------------
 Route::get('/login', [AuthenticationController::class, 'signIn'])->name('login');
@@ -46,17 +47,18 @@ require __DIR__.'/auth.php';
 
 // --------------------------------------------------- ADMIN -------------------------------------------------------
 Route::middleware(['auth'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.index');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users');
 });
 
 // --------------------------------------------------- FINANCE -------------------------------------------------------
 Route::middleware(['auth'])->prefix('finance')->group(function () {
-    Route::get('/dashboard', [FinanceDashboardController::class, 'index'])->name('finance.index');
+    Route::get('/dashboard', [FinanceDashboardController::class, 'index'])->name('finance.dashboard');
 });
 
 // --------------------------------------------------- SUPERADMIN -------------------------------------------------------
 Route::middleware(['auth'])->prefix('superadmin')->group(function () {
     Route::get('/dashboard', [SuperadminDashboardController::class, 'index'])->name('superadmin.dashboard');
-    Route::get('/users', [SuperadminUserController::class, 'index'])->name('superadmin.users');
+    Route::get('/users', [UserController::class, 'index'])->name('superadmin.users');
     Route::get('/index2', [SuperadminDashboardController::class, 'index2'])->name('superadmin.index2');
 });

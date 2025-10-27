@@ -1,69 +1,49 @@
-<aside class="w-64 bg-blue-900 text-white min-h-screen flex flex-col fixed top-0 left-0">
-    <!-- Logo -->
-    <div class="flex items-center gap-3 px-5 py-4 border-b border-blue-800">
-        <img src="{{ asset('images/logo.png') }}" class="w-10 h-10" alt="Logo">
-        <span class="text-2xl font-semibold">Jastiperly</span>
+<aside class="fixed top-0 left-0 h-screen w-[312px] bg-[#2643A7] text-white flex flex-col justify-between shadow-lg">
+    <!-- Header / Logo -->
+    <div class="flex flex-col items-center py-6 border-b border-blue-800">
+        <img src="{{ asset('images/LogoSidebar.png') }}" alt="Logo" class="w-12 h-12 mb-2">
+        <h1 class="text-xl font-bold leading-tight">Finance</h1>
+        <span class="text-sm text-blue-100 -mt-1">Jastiperly</span>
     </div>
 
-    <!-- Menu Navigasi -->
-    <nav class="flex-1 px-3 py-6 space-y-1">
-        <a href="{{ route('superadmin.dashboard') }}"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 transition {{ request()->routeIs('superadmin.dashboard') ? 'bg-blue-700' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h7v7H3V3zm0 11h7v7H3v-7zm11-11h7v7h-7V3zm0 11h7v7h-7v-7z" />
-            </svg>
-            <span>Dashboard</span>
-        </a>
+    <div>
+        <!-- Menu Navigasi -->
+        <nav class="mt-5 space-y-2 px-5">
+            @php
+                $menus = [
+                    ['name' => 'Dashboard', 'icon' => 'dashboard.svg', 'route' => 'finance.dashboard'],
+                    ['name' => 'Transaksi', 'icon' => 'transaction.svg'],
+                    ['name' => 'Traveler', 'icon' => 'traveler.svg'],
+                    ['name' => 'Penitip', 'icon' => 'penitip.svg'],
+                    ['name' => 'Refund', 'icon' => 'refund.svg'],
+                    ['name' => 'Pengaturan', 'icon' => 'settings.svg'],
+                ];
+            @endphp
 
-        <a href="{{ route('superadmin.dashboard') }}"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 transition {{ request()->routeIs('superadmin.dashboard') ? 'bg-blue-700' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h7v7H3V3zm0 11h7v7H3v-7zm11-11h7v7h-7V3zm0 11h7v7h-7v-7z" />
-            </svg>
-            <span>Transaksi</span>
-        </a>
-        
-        <a href="{{ route('superadmin.dashboard') }}"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 transition {{ request()->routeIs('superadmin.dashboard') ? 'bg-blue-700' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h7v7H3V3zm0 11h7v7H3v-7zm11-11h7v7h-7V3zm0 11h7v7h-7v-7z" />
-            </svg>
-            <span>Traveler</span>
-        </a>
+            <ul class="space-y-2">
+                @foreach ($menus as $menu)
+                    <li>
+                        <a href="{{ isset($menu['route']) ? route($menu['route']) : '#' }}"
+                           class="group flex items-center gap-3 px-4 py-2.5 rounded-md font-medium transition-all duration-200 
+                           {{ request()->routeIs($menu['route'] ?? '') 
+                                ? 'bg-[#0A0E5C] text-white' 
+                                : 'bg-white text-[#1E3A8A] hover:bg-blue-100' }}">
+                            <img src="{{ asset('icons/' . $menu['icon']) }}"
+                                 alt="{{ $menu['name'] }}"
+                                 class="w-[20px] h-[20px] filter {{ request()->routeIs($menu['route'] ?? '') ? 'invert brightness-0' : '' }}">
+                            <span class="text-[15px] font-semibold">{{ $menu['name'] }}</span>
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </nav>
+    </div>
 
-        <a href="{{ route('superadmin.dashboard') }}"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 transition {{ request()->routeIs('superadmin.dashboard') ? 'bg-blue-700' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h7v7H3V3zm0 11h7v7H3v-7zm11-11h7v7h-7V3zm0 11h7v7h-7v-7z" />
-            </svg>
-            <span>Penitip</span>
+    <!-- Tombol Logout -->
+    <div class="px-5 pb-6">
+        <a href="#" class="flex items-center gap-2 text-white hover:text-blue-200 transition-all">
+            <img src="{{ asset('icons/logout.svg') }}" class="w-[20px] h-[20px]" alt="Logout">
+            <span class="font-semibold">Logout</span>
         </a>
-
-        <a href="{{ route('superadmin.dashboard') }}"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 transition {{ request()->routeIs('superadmin.dashboard') ? 'bg-blue-700' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h7v7H3V3zm0 11h7v7H3v-7zm11-11h7v7h-7V3zm0 11h7v7h-7v-7z" />
-            </svg>
-            <span>Refund</span>
-        </a>
-
-        <a href="{{ route('superadmin.dashboard') }}"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 transition {{ request()->routeIs('superadmin.dashboard') ? 'bg-blue-700' : '' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M3 3h7v7H3V3zm0 11h7v7H3v-7zm11-11h7v7h-7V3zm0 11h7v7h-7v-7z" />
-            </svg>
-            <span>Pengaturan</span>
-        </a>
-    </nav>
-
-    <!-- Footer -->
-    <div class="px-4 py-3 text-sm border-t border-blue-800 text-gray-300">
-        © 2025 Jastiperly
     </div>
 </aside>

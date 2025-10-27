@@ -1,10 +1,10 @@
 <x-app-layout>
-    <div class="flex" style="background-color: #DBEDFF;">
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
         @include('layouts.sidebar-superadmin')
 
         <!-- Area kanan (konten utama) -->
-        <div id="main-content" class="flex-1 ml-97 transition-all duration-300 flex flex-col initial-hidden" style="background-color: #DBEDFF;">
+        <div id="main-content" class="flex-1 ml-97 transition-all duration-300 flex flex-col min-h-screen initial-hidden">
             
             <!-- Navbar + Header -->
             <div id="navbar-header" class="fixed top-0 left-97 right-0 z-20 transition-all duration-300 initial-hidden" style="background-color: #DBEDFF; padding: 1rem 1.5rem 1rem 1.5rem;">
@@ -12,7 +12,9 @@
 
                 <div class="mt-2 flex justify-between items-center">
                     <div>
-                        <h2 class="text-2xl font-bold text-blue-900">Hi, King</h2>
+                        <h2 class="text-2xl font-bold text-blue-900">
+                            Hi, {{ Auth::user()->name }}
+                        </h2>
                         <p class="text-gray-600">Welcome back to SuperAdmin Dashboard</p>
                     </div>
                 </div>
@@ -22,13 +24,21 @@
             <div class="flex-1 px-6 pb-6 pt-48 space-y-6">
                 <!-- Statistik -->
                 <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)] text-center">
-                        <h3 class="text-gray-500 text-sm">Total Pengguna</h3>
-                        <p class="text-3xl font-bold">{{ number_format($totalUsers) }}</p>
+                    <div class="flex items-center gap-4 bg-[rgba(255,255,255,0.4)] px-6 py-4 rounded-2xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
+                        <!-- Ikon SVG (gunakan asset SVG kamu di folder public/icons/) -->
+                        <img src="{{ asset('icons/card-bag.svg') }}" alt="Total Pengguna" class="w-8 h-8">
+                        <div class="flex flex-col leading-tight">
+                            <p class="text-[22px] font-extrabold text-gray-900">{{ number_format($totalUsers) }}</p>
+                            <span class="text-gray-500 text-sm font-medium">Total Pengguna</span>
+                        </div>
                     </div>
-                    <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)] text-center">
-                        <h3 class="text-gray-500 text-sm">Total Transaksi</h3>
-                        <p class="text-3xl font-bold">{{ number_format($totalTransactions) }}</p>
+
+                    <div class="flex items-center gap-4 bg-[rgba(255,255,255,0.4)] px-6 py-4 rounded-2xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
+                        <img src="{{ asset('icons/card-bag.svg') }}" alt="Total Transaksi" class="w-8 h-8">
+                        <div class="flex flex-col leading-tight">
+                            <p class="text-[22px] font-extrabold text-gray-900">{{ number_format($totalTransactions) }}</p>
+                            <span class="text-gray-500 text-sm font-medium">Total Transaksi</span>
+                        </div>
                     </div>
                 </div>
 
@@ -61,7 +71,10 @@
                                 <th class="p-2 border">Nama Traveler</th>
                                 <th class="p-2 border">Nama Penitip</th>
                                 <th class="p-2 border">Total Transaksi</th>
+                                <th class="p-2 border">Layanan</th>
+                                <th class="p-2 border">Metode Pembayaran</th>
                                 <th class="p-2 border">Status</th>
+                                <th class="p-2 border">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -83,7 +96,7 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr><td colspan="6" class="text-center text-gray-500 py-4">Tidak ada transaksi</td></tr>
+                            <tr><td colspan="8" class="text-center text-gray-500 py-4">Tidak ada transaksi</td></tr>
                             @endforelse
                         </tbody>
                     </table>

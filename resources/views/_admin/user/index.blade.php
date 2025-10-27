@@ -1,20 +1,19 @@
 <x-app-layout>
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        @include('layouts.sidebar-superadmin')
+        <!-- Sidebar admin (lebar 312px) -->
+        @include('layouts.sidebar-admin')
 
-        <!-- Area kanan (konten utama) -->
-        <div id="main-content" class="flex-1 ml-97 transition-all duration-300 flex flex-col min-h-screen initial-hidden">
-            
-            <!-- Navbar + Header -->
-            <div id="navbar-header" class="fixed top-0 left-97 right-0 z-20 transition-all duration-300 initial-hidden" style="background-color: #DBEDFF; padding: 1rem 1.5rem;">
+        <!-- Konten utama – offset 312px -->
+        <div id="main-content" class="flex-1 ml-[312px] transition-all duration-300 flex flex-col min-h-screen initial-hidden">
+            <!-- Navbar (tetap di atas konten) -->
+            <div id="navbar-header" class="fixed top-0 left-[312px] right-0 z-20 transition-all duration-300 initial-hidden" style="background-color: #DBEDFF; padding: 1rem 1.5rem;">
                 @include('layouts.navigation', ['title' => $title])
 
                 <div class="mt-2 flex justify-between items-center">
-                    <!-- Tab Navigasi -->
+                    <!-- Tab filter (hanya Traveler & Penitip untuk admin) -->
                     <div class="flex gap-3">
-                        @foreach (['Traveler', 'Penitip', 'Admin', 'Finance'] as $tab)
-                            <a href="{{ route(Auth::user()->role === 'superadmin' ? 'superadmin.users' : 'admin.users', ['tab' => $tab]) }}"
+                        @foreach (['Traveler', 'Penitip'] as $tab)
+                            <a href="{{ route('admin.users', ['tab' => $tab]) }}"
                                class="px-5 py-2 border border-blue-400 rounded-md text-blue-800 font-medium bg-transparent hover:bg-blue-200 transition {{ request('tab') === $tab ? 'bg-blue-200' : '' }}">
                                 {{ $tab }}
                             </a>
@@ -31,9 +30,8 @@
                 </div>
             </div>
 
-            <!-- Konten utama -->
+            <!-- Isi tabel -->
             <div class="flex-1 px-6 pb-6 pt-48 space-y-6">
-                <!-- Daftar Pengguna -->
                 <div class="bg-white/70 backdrop-blur p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
                     <table class="w-full text-sm border-collapse">
                         <thead>
@@ -51,8 +49,7 @@
                                 <tr class="border-b hover:bg-blue-50 transition">
                                     <td class="p-3">{{ $user->id }}</td>
                                     <td class="p-3">
-                                        <img src="{{ $user->photo_url ?? asset('images/default-avatar.png') }}" 
-                                             class="w-10 h-10 rounded-full object-cover">
+                                        <img src="{{ $user->photo_url ?? asset('images/default-avatar.png') }}" class="w-10 h-10 rounded-full object-cover">
                                     </td>
                                     <td class="p-3 font-semibold">{{ $user->name }}</td>
                                     <td class="p-3 text-gray-700">{{ $user->email }}</td>
@@ -64,9 +61,7 @@
                                                 'Aktif' => 'text-blue-600'
                                             ];
                                         @endphp
-                                        <span class="{{ $statusColors[$user->status] ?? 'text-gray-500' }}">
-                                            {{ $user->status }}
-                                        </span>
+                                        <span class="{{ $statusColors[$user->status] ?? 'text-gray-500' }}">{{ $user->status }}</span>
                                     </td>
                                     <td class="p-3 flex gap-2">
                                         <button class="p-2 bg-yellow-400 rounded-md hover:bg-yellow-500 transition">
@@ -94,7 +89,7 @@
                 </div>
             </div>
 
-            <!-- Inline script untuk hapus initial-hidden -->
+            <!-- Hapus initial-hidden setelah render -->
             <script>
                 document.getElementById('main-content').classList.remove('initial-hidden');
                 document.getElementById('navbar-header').classList.remove('initial-hidden');

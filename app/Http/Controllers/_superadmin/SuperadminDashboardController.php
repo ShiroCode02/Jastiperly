@@ -6,25 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\BuyTransaction;
 use App\Models\SendTransaction;
-use Illuminate\Support\Facades\View;
 
 class SuperadminDashboardController extends Controller
 {
-    public function __construct()
-    {
-        // Menu Superadmin
-        $menus = [
-            ['name' => 'Dashboard', 'icon' => 'dashboard.svg', 'route' => 'superadmin.dashboard'],
-            ['name' => 'Manajemen Pengguna', 'icon' => 'users.svg', 'route' => 'superadmin.users'],
-            ['name' => 'Manajemen Produk', 'icon' => 'product.svg'],
-            ['name' => 'Transaksi', 'icon' => 'transaction.svg'],
-            ['name' => 'Refund', 'icon' => 'refund.svg'],
-            ['name' => 'Pengaturan', 'icon' => 'settings.svg'],
-        ];
-
-        View::share('menus', $menus);
-    }
-
     public function index()
     {
         // Statistik dasar
