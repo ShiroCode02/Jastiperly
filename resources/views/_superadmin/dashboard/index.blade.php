@@ -94,12 +94,26 @@
                                         <span class="text-gray-500">Dibatalkan</span>
                                     @endif
                                 </td>
+                                <td class="p-2 border">
+                                    @php
+                                        $detailRoute = $trx->type === 'buy' 
+                                            ? route('superadmin.transaction.buy.show', $trx->id)
+                                            : route('superadmin.transaction.send.show', $trx->id);
+                                    @endphp
+                                    <a href="{{ $detailRoute }}" 
+                                    class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-lg">
+                                    Detail
+                                    </a>
+                                </td>
                             </tr>
                             @empty
                             <tr><td colspan="8" class="text-center text-gray-500 py-4">Tidak ada transaksi</td></tr>
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="mt-4">
+                        {{ $latestTransactions->links() }}
+                    </div>
                 </div>
             </div>
 
@@ -107,16 +121,51 @@
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
             const ctx = document.getElementById('userChart').getContext('2d');
+
+            const labels = @json($chartData['months']);
+            const customerData = @json($chartData['customer']);
+            const travelerData = @json($chartData['traveler']);
+            const allValues = [...customerData, ...travelerData];
+
+            // hitung min & max dari dataset
+            const minValue = allValues.length ? Math.min(...allValues) : 0;
+            const maxValue = allValues.length ? Math.max(...allValues) : 0;
+
+            // default option: biarkan Chart.js menentukan range (seperti sebelum diubah)
+            let yOptions = {
+                beginAtZero: true
+            };
+
+            // Jika data (maks <= 50), gunakan step 10 dan sesuaikan max ke kelipatan 10
+            if (maxValue <= 50) {
+                const computedMax = Math.max(50, Math.ceil(maxValue / 10) * 10); // minimal 10
+                yOptions = {
+                    beginAtZero: true,
+                    min: 0,
+                    max: computedMax,
+                    ticks: {
+                        stepSize: 10,
+                        precision: 0
+                    }
+                };
+            }
+
+            // Untuk dataset yang lebih besar (>50), tetap biarkan Chart.js otomatis (tanpa stepSize)
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: @json($chartData['months']),
+                    labels: labels,
                     datasets: [
-                        { label: 'Penitip', data: @json($chartData['customer']), backgroundColor: '#FFF500' },
-                        { label: 'Traveler', data: @json($chartData['traveler']), backgroundColor: '#8FD14F' }
+                        { label: 'Penitip', data: customerData, backgroundColor: '#FFF500' },
+                        { label: 'Traveler', data: travelerData, backgroundColor: '#8FD14F' }
                     ]
                 },
-                options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: yOptions
+                    }
+                }
             });
             </script>
 

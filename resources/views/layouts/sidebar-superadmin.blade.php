@@ -4,7 +4,7 @@
         ['name' => 'Dashboard', 'icon' => 'dashboard.svg', 'route' => 'superadmin.dashboard'],
         ['name' => 'Manajemen Pengguna', 'icon' => 'users.svg', 'route' => 'superadmin.users'],
         ['name' => 'Manajemen Produk', 'icon' => 'product.svg'],
-        ['name' => 'Transaksi', 'icon' => 'transaction.svg'],
+        ['name' => 'Transaksi', 'icon' => 'transaction.svg', 'route' => 'superadmin.transactions'],
         ['name' => 'Refund', 'icon' => 'refund.svg'],
         ['name' => 'Pengaturan', 'icon' => 'settings.svg'],
     ];

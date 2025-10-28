@@ -1,29 +1,27 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\_admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UserController extends Controller
+class AdminUserController extends Controller
 {
     public function index(Request $request)
     {
-        // Tentukan judul halaman berdasarkan role
-        $title = Auth::user()->role === 'superadmin' ? 'Manajemen Pengguna' : 'Manajemen Pelanggan';
+        $title = 'Manajemen Pelanggan';
 
-        // Ambil role yang diizinkan berdasarkan user yang login
-        $allowedRoles = Auth::user()->role === 'superadmin' 
-            ? ['traveler', 'customer', 'admin', 'finance'] 
-            : ['traveler', 'customer'];
+        // Role yang dapat dilihat oleh Admin
+        $allowedRoles = ['traveler', 'customer'];
 
-        // Query user berdasarkan role yang diizinkan
+        // Query user
         $query = User::with('detail')
             ->whereIn('role', $allowedRoles)
             ->orderBy('id', 'desc');
 
-        // Filter pencarian (opsional)
+        // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -32,14 +30,12 @@ class UserController extends Controller
             });
         }
 
-        // Filter berdasarkan tab (Traveler, Penitip, Admin, Finance)
+        // Filter tab (Traveler, Penitip)
         if ($request->filled('tab')) {
             $tab = $request->input('tab');
             $roleMap = [
                 'Traveler' => 'traveler',
                 'Penitip' => 'customer',
-                'Admin' => 'admin',
-                'Finance' => 'finance'
             ];
             if (isset($roleMap[$tab])) {
                 $query->where('role', $roleMap[$tab]);
@@ -48,6 +44,6 @@ class UserController extends Controller
 
         $users = $query->paginate(10);
 
-        return view(Auth::user()->role === 'superadmin' ? '_superadmin.user.index' : '_admin.user.index', compact('users', 'title'));
+        return view('_admin.user.index', compact('users', 'title'));
     }
 }

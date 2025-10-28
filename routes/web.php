@@ -6,10 +6,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthenticationController;
 
 use App\Http\Controllers\_admin\AdminDashboardController;
-use App\Http\Controllers\_finance\FinanceDashboardController;
-use App\Http\Controllers\_superadmin\SuperadminDashboardController;
+use App\Http\Controllers\_admin\AdminUserController;
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\_finance\FinanceDashboardController;
+
+use App\Http\Controllers\_superadmin\SuperadminDashboardController;
+use App\Http\Controllers\_superadmin\SuperadminUserController;
+use App\Http\Controllers\_superadmin\SuperadminTransactionController;
 
 // ------------------- AUTHENTICATION -------------------
 Route::get('/login', [AuthenticationController::class, 'signIn'])->name('login');
@@ -48,7 +51,7 @@ require __DIR__.'/auth.php';
 // --------------------------------------------------- ADMIN -------------------------------------------------------
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('/users', [UserController::class, 'index'])->name('admin.users');
+    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
 });
 
 // --------------------------------------------------- FINANCE -------------------------------------------------------
@@ -59,6 +62,15 @@ Route::middleware(['auth'])->prefix('finance')->group(function () {
 // --------------------------------------------------- SUPERADMIN -------------------------------------------------------
 Route::middleware(['auth'])->prefix('superadmin')->group(function () {
     Route::get('/dashboard', [SuperadminDashboardController::class, 'index'])->name('superadmin.dashboard');
-    Route::get('/users', [UserController::class, 'index'])->name('superadmin.users');
-    Route::get('/index2', [SuperadminDashboardController::class, 'index2'])->name('superadmin.index2');
+
+    // Users List
+    Route::get('/users', [SuperadminUserController::class, 'index'])->name('superadmin.users');
+
+    // Transactions List
+    Route::get('/transactions', [SuperadminTransactionController::class, 'index'])->name('superadmin.transactions');
+
+    // Transaction Details
+    Route::get('/transaction/buy/{id}', [SuperadminTransactionController::class, 'showBuy'])->name('superadmin.transaction.buy.show');
+    Route::get('/transaction/send/{id}', [SuperadminTransactionController::class, 'showSend'])->name('superadmin.transaction.send.show');
+    Route::get('/transaction/{type}/{id}/edit', [SuperadminTransactionController::class, 'edit'])->name('superadmin.transaction.edit');
 });
