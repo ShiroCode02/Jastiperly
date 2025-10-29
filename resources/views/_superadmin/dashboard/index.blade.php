@@ -8,9 +8,9 @@
             
             <!-- Navbar + Header -->
             <div id="navbar-header" class="fixed top-0 left-97 right-0 z-20 transition-all duration-300 initial-hidden" style="background-color: #DBEDFF; padding: 1rem 1.5rem 1rem 1.5rem;">
-                @include('layouts.navigation', ['title' => 'Dashboard'])
+                @include('layouts.navigation', ['title' => $title])
 
-                <div class="mt-2 flex justify-between items-center">
+                <div class="mt-2 px-4 flex justify-between items-center">
                     <div>
                         <h2 class="text-2xl font-bold text-blue-900">
                             Hi, {{ Auth::user()->name }}
@@ -21,12 +21,12 @@
             </div>
 
             <!-- Konten utama -->
-            <div class="flex-1 px-6 pb-6 pt-48 space-y-6">
+            <div class="flex-1 px-10 pb-6 pt-48 space-y-6">
                 <!-- Statistik -->
                 <div class="grid md:grid-cols-2 gap-6 mb-6">
                     <div class="flex items-center gap-4 bg-[rgba(255,255,255,0.4)] px-6 py-4 rounded-2xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
                         <!-- Ikon SVG (gunakan asset SVG kamu di folder public/icons/) -->
-                        <img src="{{ asset('icons/card-bag.svg') }}" alt="Total Pengguna" class="w-8 h-8">
+                        <img src="{{ asset('icons/superadmin/card-bag.svg') }}" alt="Total Pengguna" class="w-8 h-8">
                         <div class="flex flex-col leading-tight">
                             <p class="text-[22px] font-extrabold text-gray-900">{{ number_format($totalUsers) }}</p>
                             <span class="text-gray-500 text-sm font-medium">Total Pengguna</span>
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="flex items-center gap-4 bg-[rgba(255,255,255,0.4)] px-6 py-4 rounded-2xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
-                        <img src="{{ asset('icons/card-bag.svg') }}" alt="Total Transaksi" class="w-8 h-8">
+                        <img src="{{ asset('icons/superadmin/card-bag.svg') }}" alt="Total Transaksi" class="w-8 h-8">
                         <div class="flex flex-col leading-tight">
                             <p class="text-[22px] font-extrabold text-gray-900">{{ number_format($totalTransactions) }}</p>
                             <span class="text-gray-500 text-sm font-medium">Total Transaksi</span>

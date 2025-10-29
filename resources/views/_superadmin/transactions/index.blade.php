@@ -9,7 +9,7 @@
             <div id="navbar-header" class="fixed top-0 left-97 right-0 z-20 transition-all duration-300 initial-hidden"
                  style="background-color: #DBEDFF; padding: 1rem 1.5rem;">
                 
-                @include('layouts.navigation', ['title' => 'Daftar Transaksi'])
+                @include('layouts.navigation', ['title' => $title])
                 
                 <div class="mt-2 flex justify-between items-center">
                     <!-- Filter Tipe & Status -->
@@ -48,21 +48,21 @@
                         <table class="w-full text-sm border-collapse">
                             <thead>
                                 <tr class="bg-[#BFD9FF] text-blue-900">
-                                    <th class="p-3 font-semibold text-center w-12">No</th>
-                                    <th class="p-3 font-semibold text-left">Nama Penitip</th>
+                                    <th class="p-3 font-semibold text-center">No</th>
+                                    <th class="p-3 font-semibold text-center">Nama Penitip</th>
                                     <th class="p-3 font-semibold text-center">ID Transaksi</th>
                                     <th class="p-3 font-semibold text-center">Tanggal</th>
                                     <th class="p-3 font-semibold text-center">Status</th>
-                                    <th class="p-3 font-semibold text-right">Total Transaksi</th>
-                                    <th class="p-3 font-semibold text-left">Pembayaran</th>
-                                    <th class="p-3 font-semibold text-center w-24">Aksi</th>
+                                    <th class="p-3 font-semibold text-center">Total Transaksi</th>
+                                    <th class="p-3 font-semibold text-center">Pembayaran</th>
+                                    <th class="p-3 font-semibold text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($transactions as $index => $trx)
                                     <tr class="border-b hover:bg-blue-50 transition text-gray-700">
                                         <td class="p-3 text-center font-medium align-middle">{{ $transactions->firstItem() + $index }}</td>
-                                        <td class="p-3 font-semibold text-left align-middle">{{ $trx->buyer->name ?? '-' }}</td>
+                                        <td class="p-3 font-semibold text-center align-middle">{{ $trx->buyer->name ?? '-' }}</td>
                                         <td class="p-3 text-center text-blue-700 font-semibold align-middle">#JSTP{{ $trx->id }}</td>
                                         <td class="p-3 text-center align-middle">{{ \Carbon\Carbon::parse($trx->created_at)->format('d M Y') }}</td>
                                         <td class="p-3 text-center align-middle">
@@ -77,10 +77,10 @@
                                                 {{ ucfirst($trx->payment_status) }}
                                             </span>
                                         </td>
-                                        <td class="p-3 text-right font-semibold text-blue-800 align-middle">
+                                        <td class="p-3 text-center font-semibold text-blue-800 align-middle">
                                             Rp{{ number_format($trx->total_price, 0, ',', '.') }}
                                         </td>
-                                        <td class="p-3 text-left align-middle">{{ $trx->paymentMethod->name ?? '-' }}</td>
+                                        <td class="p-3 text-center align-middle">{{ $trx->paymentMethod->name ?? '-' }}</td>
                                         <td class="p-3 text-center align-middle">
                                             @php
                                                 $detailRoute = $trx->type === 'buy'

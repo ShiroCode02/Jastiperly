@@ -17,6 +17,8 @@ class SuperadminTransactionController extends Controller
      */
     public function index(Request $request)
     {
+        $title = 'Transaksi';
+
         $filterType = $request->input('type', 'all');
         $filterStatus = $request->input('status', 'all');
 
@@ -63,6 +65,7 @@ class SuperadminTransactionController extends Controller
         );
 
         return view('_superadmin.transactions.index', [
+            'title' => $title,
             'transactions' => $paginated,
             'filterType' => $filterType,
             'filterStatus' => $filterStatus,

@@ -1,12 +1,12 @@
 @php
     // Menu Superadmin
     $menus = [
-        ['name' => 'Dashboard', 'icon' => 'dashboard.svg', 'route' => 'superadmin.dashboard'],
-        ['name' => 'Manajemen Pengguna', 'icon' => 'users.svg', 'route' => 'superadmin.users'],
-        ['name' => 'Manajemen Produk', 'icon' => 'product.svg'],
-        ['name' => 'Transaksi', 'icon' => 'transaction.svg', 'route' => 'superadmin.transactions'],
-        ['name' => 'Refund', 'icon' => 'refund.svg'],
-        ['name' => 'Pengaturan', 'icon' => 'settings.svg'],
+        ['name' => 'Dashboard', 'icon' => 'superadmin/dashboard.svg', 'route' => 'superadmin.dashboard'],
+        ['name' => 'Manajemen Pengguna', 'icon' => 'superadmin/users.svg', 'route' => 'superadmin.users'],
+        ['name' => 'Manajemen Produk', 'icon' => 'superadmin/product.svg', 'route' => 'superadmin.products'],
+        ['name' => 'Transaksi', 'icon' => 'superadmin/transaction.svg', 'route' => 'superadmin.transactions'],
+        ['name' => 'Refund', 'icon' => 'superadmin/refund.svg' , 'route' => 'superadmin.refunds'],
+        ['name' => 'Pengaturan', 'icon' => 'superadmin/settings.svg', 'route' => 'superadmin.settings'],
     ];
 @endphp
 
@@ -45,7 +45,7 @@
     <div class="relative flex flex-col h-full">
         <div class="flex items-center px-6 py-5 z-30">
             <div id="toggle-sidebar" class="w-[70px] cursor-pointer">
-                <img src="{{ asset('images/logo.svg') }}" alt="Logo Jastiperly" class="w-[60px] h-[60px]">
+                <img src="{{ asset('images/superadmin/logo.svg') }}" alt="Logo Jastiperly" class="w-[60px] h-[60px]">
             </div>
             <div class="flex-1"></div>
         </div>

@@ -38,25 +38,25 @@
                     <table class="w-full text-sm border-collapse">
                         <thead>
                             <tr class="bg-[#BFD9FF] text-blue-900">
-                                <th class="p-3 text-left font-semibold">ID</th>
-                                <th class="p-3 text-left font-semibold">Foto</th>
-                                <th class="p-3 text-left font-semibold">Nama</th>
-                                <th class="p-3 text-left font-semibold">Email</th>
-                                <th class="p-3 text-left font-semibold">Status</th>
-                                <th class="p-3 text-left font-semibold">Aksi</th>
+                                <th class="p-3 text-center font-semibold">ID</th>
+                                <th class="p-3 text-center font-semibold">Foto</th>
+                                <th class="p-3 text-center font-semibold">Nama</th>
+                                <th class="p-3 text-center font-semibold">Email</th>
+                                <th class="p-3 text-center font-semibold">Status</th>
+                                <th class="p-3 text-center font-semibold">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($users as $index => $user)
                                 <tr class="border-b hover:bg-blue-50 transition">
-                                    <td class="p-3">{{ $user->id }}</td>
-                                    <td class="p-3">
+                                    <td class="p-3 text-center">{{ $user->id }}</td>
+                                    <td class="p-3 justify-center flex">
                                         <img src="{{ $user->photo_url ?? asset('images/default-avatar.png') }}" 
                                              class="w-10 h-10 rounded-full object-cover">
                                     </td>
-                                    <td class="p-3 font-semibold">{{ $user->name }}</td>
-                                    <td class="p-3 text-gray-700">{{ $user->email }}</td>
-                                    <td class="p-3">
+                                    <td class="p-3 text-center font-semibold">{{ $user->name }}</td>
+                                    <td class="p-3 text-center text-gray-700">{{ $user->email }}</td>
+                                    <td class="p-3 text-center">
                                         @php
                                             $statusColors = [
                                                 'Online' => 'text-green-600',
@@ -68,7 +68,7 @@
                                             {{ $user->status }}
                                         </span>
                                     </td>
-                                    <td class="p-3 flex gap-2">
+                                    <td class="p-3 justify-center flex gap-2">
                                         <button class="p-2 bg-yellow-400 rounded-md hover:bg-yellow-500 transition">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-white">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l2-2m0 0l2-2m-2 2H3m9-2a9 9 0 110 18 9 9 0 010-18z" />

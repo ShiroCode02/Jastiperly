@@ -13,6 +13,8 @@ class SuperadminDashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $title = 'Dashboard';
+        
         // ==== 1️⃣ TOTAL PENGGUNA & TRANSAKSI ====
         $totalUsers = User::count();
         $totalTransactions = BuyTransaction::count() + SendTransaction::count();
@@ -78,6 +80,7 @@ class SuperadminDashboardController extends Controller
 
         // ==== 5️⃣ RETURN VIEW ====
         return view('_superadmin.dashboard.index', compact(
+            'title',
             'totalUsers',
             'totalTransactions',
             'transaksiSelesai',

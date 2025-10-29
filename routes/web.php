@@ -12,7 +12,10 @@ use App\Http\Controllers\_finance\FinanceDashboardController;
 
 use App\Http\Controllers\_superadmin\SuperadminDashboardController;
 use App\Http\Controllers\_superadmin\SuperadminUserController;
+use App\Http\Controllers\_superadmin\SuperadminProductController;
 use App\Http\Controllers\_superadmin\SuperadminTransactionController;
+use App\Http\Controllers\_superadmin\SuperadminRefundController;
+use App\Http\Controllers\_superadmin\SuperadminSettingController;
 
 // ------------------- AUTHENTICATION -------------------
 Route::get('/login', [AuthenticationController::class, 'signIn'])->name('login');
@@ -66,6 +69,9 @@ Route::middleware(['auth'])->prefix('superadmin')->group(function () {
     // Users List
     Route::get('/users', [SuperadminUserController::class, 'index'])->name('superadmin.users');
 
+    // Products List
+    Route::get('/products', [SuperadminProductController::class, 'index'])->name('superadmin.products');
+
     // Transactions List
     Route::get('/transactions', [SuperadminTransactionController::class, 'index'])->name('superadmin.transactions');
 
@@ -73,4 +79,10 @@ Route::middleware(['auth'])->prefix('superadmin')->group(function () {
     Route::get('/transaction/buy/{id}', [SuperadminTransactionController::class, 'showBuy'])->name('superadmin.transaction.buy.show');
     Route::get('/transaction/send/{id}', [SuperadminTransactionController::class, 'showSend'])->name('superadmin.transaction.send.show');
     Route::get('/transaction/{type}/{id}/edit', [SuperadminTransactionController::class, 'edit'])->name('superadmin.transaction.edit');
+
+    // Refunds List
+    Route::get('/refunds', [SuperadminRefundController::class, 'index'])->name('superadmin.refunds');
+
+    // Settings
+    Route::get('/settings', [SuperadminSettingController::class, 'index'])->name('superadmin.settings');
 });
