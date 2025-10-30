@@ -12,17 +12,18 @@
 
                 <div class="mt-2 flex justify-between items-center">
                     <!-- Tab Navigasi -->
-                    <div class="flex gap-3">
+                    <div class="flex gap-3 mt-3">
                         @foreach (['Traveler', 'Penitip', 'Admin', 'Finance'] as $tab)
                             <a href="{{ route(Auth::user()->role === 'superadmin' ? 'superadmin.users' : 'admin.users', ['tab' => $tab]) }}"
-                               class="px-5 py-2 border border-blue-400 rounded-md text-blue-800 font-medium bg-transparent hover:bg-blue-200 transition {{ request('tab') === $tab ? 'bg-blue-200' : '' }}">
+                                class="px-6 py-0.5 border border-blue-400 rounded-md text-blue-800 font-medium 
+                                        hover:bg-blue-200 transition {{ request('tab') === $tab ? 'bg-[#577BC1] text-white' : 'bg-transparent' }}">
                                 {{ $tab }}
                             </a>
                         @endforeach
                     </div>
 
                     <!-- Tombol Unduh -->
-                    <button class="flex items-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-2 rounded-md shadow transition">
+                    <button class="flex items-center gap-2 mt-6 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold px-4 py-1 rounded-md shadow transition">
                         <span>Unduh Data</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
@@ -34,10 +35,11 @@
             <!-- Konten utama -->
             <div class="flex-1 px-6 pb-6 pt-48 space-y-6">
                 <!-- Daftar Pengguna -->
-                <div class="bg-white/70 backdrop-blur p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
+                <div class="rounded-t-lg overflow-hidden shadow-md bg-white/50">
+                    <!-- Tabel -->
                     <table class="w-full text-sm border-collapse">
-                        <thead>
-                            <tr class="bg-[#BFD9FF] text-blue-900">
+                        <thead class="bg-[#577BC166] text-blue-900">
+                            <tr>
                                 <th class="p-3 text-center font-semibold">ID</th>
                                 <th class="p-3 text-center font-semibold">Foto</th>
                                 <th class="p-3 text-center font-semibold">Nama</th>
@@ -48,7 +50,7 @@
                         </thead>
                         <tbody>
                             @forelse ($users as $index => $user)
-                                <tr class="border-b hover:bg-blue-50 transition">
+                                <tr class="border-b hover:bg-blue-100 transition">
                                     <td class="p-3 text-center">{{ $user->id }}</td>
                                     <td class="p-3 justify-center flex">
                                         <img src="{{ $user->photo_url ?? asset('images/default-avatar.png') }}" 
@@ -68,21 +70,20 @@
                                             {{ $user->status }}
                                         </span>
                                     </td>
-                                    <td class="p-3 justify-center flex gap-2">
-                                        <button class="p-2 bg-yellow-400 rounded-md hover:bg-yellow-500 transition">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-white">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l2-2m0 0l2-2m-2 2H3m9-2a9 9 0 110 18 9 9 0 010-18z" />
-                                            </svg>
+                                    <td class="p-3 flex justify-center gap-2">
+                                        <!-- Edit -->
+                                        <button class="p-2 rounded-md transition hover:scale-110" style="background-color: #FAB00580;">
+                                            <x-icons.icon name="pencil" class="w-4 h-4" />
                                         </button>
-                                        <button class="p-2 bg-blue-400 rounded-md hover:bg-blue-500 transition">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-white">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553 4.553a1 1 0 010 1.414L15 20.414m-6-10l-4.553 4.553a1 1 0 000 1.414L9 20.414M9 10l6 6" />
-                                            </svg>
+
+                                        <!-- View -->
+                                        <button class="p-2 rounded-md transition hover:scale-110" style="background-color: #0095DA80;">
+                                            <x-icons.icon name="eye" class="w-4 h-4" />
                                         </button>
-                                        <button class="p-2 bg-red-400 rounded-md hover:bg-red-500 transition">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4 text-white">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
+
+                                        <!-- Delete -->
+                                        <button class="p-2 rounded-md transition hover:scale-110" style="background-color: #FA525280;">
+                                            <x-icons.icon name="trash" class="w-4 h-4" />
                                         </button>
                                     </td>
                                 </tr>
@@ -91,6 +92,16 @@
                             @endforelse
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Footer tabel -->
+                <div class="flex justify-between items-center bg-white/50 p-3 shadow-md hover:bg-blue-100 transition">
+                    <span class="text-gray-700 text-sm">Total {{ count($users) }}</span>
+                    <div class="flex gap-2 items-center">
+                        <button class="px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">&lt;</button>
+                        <span class="text-blue-800 font-semibold">1</span>
+                        <button class="px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">&gt;</button>
+                    </div>
                 </div>
             </div>
 

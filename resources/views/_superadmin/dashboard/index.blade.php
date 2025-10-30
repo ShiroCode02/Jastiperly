@@ -24,8 +24,8 @@
             <div class="flex-1 px-10 pb-6 pt-48 space-y-6">
                 <!-- Statistik -->
                 <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div class="flex items-center gap-4 bg-[rgba(255,255,255,0.4)] px-6 py-4 rounded-2xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
-                        <!-- Ikon SVG (gunakan asset SVG kamu di folder public/icons/) -->
+                    <div class="flex items-center gap-4 bg-white/40 px-6 py-4 rounded-2xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
+                        <!-- Ikon SVG -->
                         <img src="{{ asset('icons/superadmin/card-bag.svg') }}" alt="Total Pengguna" class="w-8 h-8">
                         <div class="flex flex-col leading-tight">
                             <p class="text-[22px] font-extrabold text-gray-900">{{ number_format($totalUsers) }}</p>
@@ -33,7 +33,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-4 bg-[rgba(255,255,255,0.4)] px-6 py-4 rounded-2xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
+                    <div class="flex items-center gap-4 bg-white/40 px-6 py-4 rounded-2xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
                         <img src="{{ asset('icons/superadmin/card-bag.svg') }}" alt="Total Transaksi" class="w-8 h-8">
                         <div class="flex flex-col leading-tight">
                             <p class="text-[22px] font-extrabold text-gray-900">{{ number_format($totalTransactions) }}</p>
@@ -44,12 +44,12 @@
 
                 <!-- Grafik & Aktivitas -->
                 <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
+                    <div class="bg-white/40 p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
                         <h3 class="font-semibold mb-3">Grafik Total Pengguna</h3>
                         <canvas id="userChart"></canvas>
                     </div>
 
-                    <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
+                    <div class="bg-white/40 p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
                         <h3 class="font-semibold mb-3">Total Aktivitas</h3>
                         <ul class="space-y-3">
                             <li class="flex justify-between"><span>Transaksi Selesai</span> <span class="text-green-600 font-bold">{{ $transaksiSelesai }}</span></li>
@@ -61,7 +61,7 @@
                 </div>
 
                 <!-- Tabel Transaksi Terbaru -->
-                <div class="bg-[rgba(255,255,255,0.4)] p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
+                <div class="bg-white/40 p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
                     <h3 class="font-semibold mb-3">Transaksi Terbaru</h3>
                     <table class="w-full text-sm border-collapse">
                         <thead>

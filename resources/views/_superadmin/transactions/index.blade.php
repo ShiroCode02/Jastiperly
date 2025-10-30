@@ -43,7 +43,7 @@
             <!-- Konten utama -->
             <div class="flex-1 px-6 pb-6 pt-48 space-y-6">
                 <!-- Daftar Transaksi -->
-                <div class="bg-white/70 backdrop-blur p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
+                <div class="bg-white/50 backdrop-blur p-4 rounded-xl shadow-md">
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm border-collapse">
                             <thead>

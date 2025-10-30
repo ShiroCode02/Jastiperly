@@ -9,7 +9,7 @@
             </div>
 
             <div class="flex-1 px-6 pb-6 pt-48 space-y-6">
-                <div class="bg-white/70 backdrop-blur p-6 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)] text-center text-gray-700">
+                <div class="bg-white/50 backdrop-blur p-6 rounded-xl shadow-md text-center text-gray-700">
                     <h2 class="text-xl font-semibold mb-2">Halaman {{ $title }}</h2>
                     <p>Konten refund akan ditampilkan di sini nanti.</p>
                 </div>

@@ -46,6 +46,6 @@ class SuperadminUserController extends Controller
 
         $users = $query->paginate(10);
 
-        return view('_superadmin.user.index', compact('users', 'title'));
+        return view('_superadmin.users.index', compact('users', 'title'));
     }
 }
