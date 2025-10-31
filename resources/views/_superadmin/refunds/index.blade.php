@@ -5,7 +5,7 @@
         <div id="main-content" class="flex-1 ml-97 transition-all duration-300 flex flex-col min-h-screen initial-hidden">
             <div id="navbar-header" class="fixed top-0 left-97 right-0 z-20 transition-all duration-300 initial-hidden"
                  style="background-color: #DBEDFF; padding: 1rem 1.5rem;">
-                @include('layouts.navigation', ['title' => $title])
+                @include('layouts.navigation-superadmin', ['title' => $title])
             </div>
 
             <div class="flex-1 px-6 pb-6 pt-48 space-y-6">

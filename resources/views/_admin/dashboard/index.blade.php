@@ -7,7 +7,7 @@
         <div id="main-content" class="flex-1 ml-[312px] transition-all duration-300 flex flex-col min-h-screen initial-hidden">
             <!-- Navbar (tetap di atas konten) -->
             <div id="navbar-header" class="fixed top-0 left-[312px] right-0 z-20 transition-all duration-300 initial-hidden" style="background-color: #DBEDFF; padding: 1rem 1.5rem;">
-                @include('layouts.navigation', ['title' => 'Dashboard'])
+                @include('layouts.navigation-admin', ['title' => 'Dashboard'])
 
                 <div class="mt-2 flex justify-between items-center">
                     <div>
