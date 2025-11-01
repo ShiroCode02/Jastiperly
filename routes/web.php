@@ -71,6 +71,7 @@ Route::middleware(['auth'])->prefix('superadmin')->group(function () {
 
     // Products List
     Route::get('/products', [SuperadminProductController::class, 'index'])->name('superadmin.products');
+    Route::get('/products/{id}', [SuperadminProductController::class, 'show'])->name('superadmin.products.show');
     Route::post('/products/{id}/approve', [SuperadminProductController::class, 'approve'])->name('superadmin.products.approve');
     Route::post('/products/{id}/reject', [SuperadminProductController::class, 'reject'])->name('superadmin.products.reject');
     Route::post('/products/export', [SuperadminProductController::class, 'export'])->name('superadmin.products.export');

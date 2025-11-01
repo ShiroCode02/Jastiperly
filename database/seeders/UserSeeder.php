@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Superadmin
+        // Superadmin (ID 1)
         User::create([
             'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'account_status' => 'active',
         ]);
 
-        // Admin
+        // Admin (ID 2)
         User::create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
@@ -31,12 +31,48 @@ class UserSeeder extends Seeder
             'account_status' => 'active',
         ]);
 
-        // Finance
+        // Finance (ID 3)
         User::create([
             'name' => 'Finance',
             'email' => 'finance@example.com',
             'password' => Hash::make('password'),
             'role' => 'finance',
+            'account_status' => 'active',
+        ]);
+
+        // Traveler 1 (ID 4)
+        User::create([
+            'name' => 'Traveler 1',
+            'email' => 'traveler1@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'traveler',
+            'account_status' => 'active',
+        ]);
+
+        // Traveler 2 (ID 5)
+        User::create([
+            'name' => 'Traveler 2',
+            'email' => 'traveler2@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'traveler',
+            'account_status' => 'active',
+        ]);
+
+        // Customer 1 (ID 6)
+        User::create([
+            'name' => 'Customer 1',
+            'email' => 'customer1@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'customer',
+            'account_status' => 'active',
+        ]);
+
+        // Customer 2 (ID 7)
+        User::create([
+            'name' => 'Customer 2',
+            'email' => 'customer2@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'customer',
             'account_status' => 'active',
         ]);
     }

@@ -48,6 +48,14 @@ class SuperadminProductController extends Controller
         return view('_superadmin.products.index', compact('title', 'products', 'tab'));
     }
 
+    public function show($id)
+    {
+        $product = Product::with(['submiter', 'category'])->findOrFail($id);
+        $title = 'Detail Produk';
+
+        return view('_superadmin.products.detail', compact('product', 'title'));
+    }
+
     public function approve($id)
     {
         $product = Product::findOrFail($id);
