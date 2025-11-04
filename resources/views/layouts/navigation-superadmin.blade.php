@@ -1,5 +1,3 @@
-@props(['title' => 'Dashboard'])
-
 @php
     // Daftar halaman yang BUTUH search bar
     $pagesWithSearch = [
@@ -11,20 +9,27 @@
 
     // Cek apakah halaman saat ini butuh search
     $showSearch = in_array(request()->route()->getName(), $pagesWithSearch);
+
+    // Cek apakah ini halaman detail produk
+    $isProductDetail = request()->route()->getName() === 'superadmin.products' && request('product_id');
 @endphp
 
 <nav class="flex items-center justify-between h-[78px] border border-[rgba(142,142,147,0.5)] shadow-sm px-6 rounded-xl" style="background-color: transparent;">
     <!-- Kiri: Judul Halaman -->
-    <div class="flex items-center space-x-2">
-        <h1 class="text-[35px] font-semibold text-gray-800 tracking-wide">
-            {{ $title }}
-        </h1>
-    </div>
+    @if(!$isProductDetail)
+        <div class="flex items-center space-x-2">
+            <h1 class="text-[35px] font-semibold text-gray-800 tracking-wide">
+                {{ $title }}
+            </h1>
+        </div>
+    @else
+        <div></div> <!-- Kosongkan kiri -->
+    @endif
 
     <!-- Kanan: Profil User -->
     <div class="flex items-center space-x-4">
         <!-- SEARCH BAR – Hanya di halaman tertentu -->
-        @if($showSearch)
+        @if($showSearch && !$isProductDetail)
             <div class="relative mr-6">
                 <form action="{{ route(request()->route()->getName()) }}" method="GET" class="flex items-center">
                     <input type="text" 

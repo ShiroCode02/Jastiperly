@@ -7,6 +7,9 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\ProductRejected; // Buat notifikasi ini nanti
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProductsExport;
+use App\Exports\ProductDetailExport;
 
 class SuperadminProductController extends Controller
 {
@@ -16,6 +19,7 @@ class SuperadminProductController extends Controller
         $tab = $request->input('tab', 'Traveler');
         $filter = $request->input('filter');
         $search = $request->input('search');
+        $product_id = $request->input('product_id');
 
         $query = Product::with(['submiter', 'category']);
 
@@ -45,15 +49,19 @@ class SuperadminProductController extends Controller
         $products = $query->latest()->paginate(10);
         $products->appends($request->query());
 
-        return view('_superadmin.products.index', compact('title', 'products', 'tab'));
+        $selectedProduct = $product_id 
+        ? Product::with(['submiter', 'category'])->find($product_id) 
+        : null;
+
+        return view('_superadmin.products.index', compact('title', 'products', 'tab', 'selectedProduct'));
     }
 
     public function show($id)
     {
-        $product = Product::with(['submiter', 'category'])->findOrFail($id);
-        $title = 'Detail Produk';
-
-        return view('_superadmin.products.detail', compact('product', 'title'));
+        return redirect()->route('superadmin.products', [
+            'tab' => request('tab', 'Traveler'),
+            'product_id' => $id
+        ]);
     }
 
     public function approve($id)
@@ -90,50 +98,15 @@ class SuperadminProductController extends Controller
     {
         $tab = $request->input('tab', 'Traveler');
         $filter = $request->input('filter');
+        $product_id = $request->input('product_id');
 
-        $query = Product::with(['submiter', 'category']);
-
-        if ($tab === 'Traveler') {
-            $query->whereHas('submiter', fn($q) => $q->where('role', 'traveler'));
-        } elseif ($tab === 'Customer') {
-            $query->whereHas('submiter', fn($q) => $q->where('role', 'customer'));
+        if ($product_id) {
+            // Export 1 produk dari detail
+            $product = Product::with(['submiter', 'category'])->findOrFail($product_id);
+            return Excel::download(new ProductDetailExport($product), 'detail_produk_' . $product->name . '_' . now()->format('Ymd_His') . '.xlsx');
+        } else {
+            // Export daftar produk dengan filter
+            return Excel::download(new ProductsExport($tab, $filter), 'daftar_produk_' . $tab . '_' . now()->format('Ymd_His') . '.xlsx');
         }
-
-        if ($filter === 'Validasi') {
-            $query->where('approval', 'pending');
-        } elseif ($filter === 'Disetujui') {
-            $query->where('approval', 'approved');
-        } elseif ($filter === 'Ditolak') {
-            $query->where('approval', 'declined');
-        }
-
-        $products = $query->get();
-
-        $filename = "products_export_" . now()->format('Ymd_His') . ".csv";
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
-        ];
-
-        $callback = function () use ($products) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, ['ID', 'Nama', 'Deskripsi', 'Harga', 'Submiter', 'Kategori', 'Status', 'Approval']);
-
-            foreach ($products as $p) {
-                fputcsv($file, [
-                    $p->id,
-                    $p->name,
-                    strip_tags($p->description ?? '-'),
-                    number_format($p->price, 0, ',', '.'),
-                    $p->submiter->name ?? '-',
-                    $p->category->name ?? '-',
-                    ucfirst($p->status),
-                    ucfirst(str_replace(['pending', 'approved', 'declined'], ['Validasi', 'Disetujui', 'Ditolak'], $p->approval))
-                ]);
-            }
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
     }
 }
