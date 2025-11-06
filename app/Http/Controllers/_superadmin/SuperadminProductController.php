@@ -77,12 +77,13 @@ class SuperadminProductController extends Controller
 
     public function reject(Request $request, $id)
     {
-        $request->validate([
-            'reason' => 'required|string|max:500'
-        ]);
+        $request->validate(['reason' => 'required|string|max:500']);
 
         $product = Product::findOrFail($id);
-        $product->update(['approval' => 'declined']); // HANYA UPDATE approval
+        $product->update([
+            'approval' => 'declined',
+            'reject_reason' => $request->reason
+        ]);
 
         // Kirim notifikasi ke submiter (sesuai BRD: "Kirim alasan penolakan")
         try {

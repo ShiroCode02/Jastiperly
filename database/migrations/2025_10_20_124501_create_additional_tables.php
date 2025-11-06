@@ -45,6 +45,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->enum('approval', ['pending', 'approved', 'declined'])->default('pending');
+            $table->text('reject_reason')->nullable(); // Tambahkan kolom reject_reason untuk alasan penolakan
             $table->timestamps();
         });
 

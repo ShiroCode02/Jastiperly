@@ -96,7 +96,7 @@
                         $product = \App\Models\Product::with(['submiter', 'category'])->findOrFail(request('product_id'));
                     @endphp
 
-                    <div class="bg-white/70 rounded-xl shadow-md p-10 w-full max-w-5xl mx-auto border border-gray-200">
+                    <div class="bg-white/70 rounded-xl shadow-md p-20 mx-auto border border-gray-200">
                         <!-- Gambar Produk di Tengah -->
                         <div class="flex justify-center mb-8">
                             <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/sample-product.jpg') }}"
@@ -105,7 +105,7 @@
                         </div>
 
                         <!-- Informasi Produk (Vertikal) -->
-                        <div class="space-y-3 text-[15px] text-gray-800 leading-relaxed">
+                        <div class="space-y-2 text-[15px] text-gray-800 leading-relaxed">
                             <div class="flex items-start">
                                 <p class="font-semibold w-44 text-gray-700">Nama Barang</p>
                                 <p class="flex-1 text-gray-900 font-medium">: {{ $product->name }}</p>
@@ -140,11 +140,17 @@
                                     @endif
                                 </p>
                             </div>
+                            @if($product->approval === 'declined' && $product->reject_reason)
+                                <div class="flex items-start">
+                                    <p class="font-semibold w-44 text-gray-700">Alasan Penolakan</p>
+                                    <p class="flex-1 text-black leading-relaxed">: {!! nl2br(e($product->reject_reason)) !!}</p>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- Tombol Aksi (Jika pending) -->
                         @if($product->approval === 'pending')
-                            <div class="mt-10 flex justify-center gap-10">
+                            <div class="mt-10 flex justify-end gap-10">
                                 <button type="button"
                                         onclick="openRejectModal({{ $product->id }})"
                                         class="w-40 h-12 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition">
