@@ -78,11 +78,11 @@ Route::middleware(['auth',])->prefix('superadmin')->group(function () {
 
     // Transactions List
     Route::get('/transactions', [SuperadminTransactionController::class, 'index'])->name('superadmin.transactions');
+    Route::get('/transactions/export', [SuperadminTransactionController::class, 'export'])->name('superadmin.transactions.export');
 
     // Transaction Details
-    Route::get('/transaction/buy/{id}', [SuperadminTransactionController::class, 'showBuy'])->name('superadmin.transaction.buy.show');
-    Route::get('/transaction/send/{id}', [SuperadminTransactionController::class, 'showSend'])->name('superadmin.transaction.send.show');
-    Route::get('/transaction/{type}/{id}/edit', [SuperadminTransactionController::class, 'edit'])->name('superadmin.transaction.edit');
+    Route::get('/transactions/{id}', [SuperadminTransactionController::class, 'show'])->name('superadmin.transactions.show');
+    Route::delete('/transactions/{id}', [SuperadminTransactionController::class, 'destroy'])->name('superadmin.transactions.destroy');
 
     // Refunds List
     Route::get('/refunds', [SuperadminRefundController::class, 'index'])->name('superadmin.refunds');

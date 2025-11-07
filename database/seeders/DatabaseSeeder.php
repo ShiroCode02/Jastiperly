@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class); // Seed user dulu
         $this->call(ProductCategorySeeder::class); // Lalu category
         $this->call(ProductSeeder::class); // Terakhir produk
-        // Kalau mau tambah seeder lain seperti PaymentMethodSeeder, tambahin di sini
+        $this->call(PaymentMethodSeeder::class); // Seed metode pembayaran
+        $this->call(BuyTransactionSeeder::class); // Seed transaksi pembelian
+        $this->call(SendTransactionSeeder::class); // Seed transaksi pengiriman
+        // Kalau mau tambah seeder lain, tambahin di sini
     }
 }

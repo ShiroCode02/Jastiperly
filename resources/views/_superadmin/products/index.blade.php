@@ -23,7 +23,7 @@
                                           hover:bg-white transition {{ request('tab') === $tabName ? 'bg-white text-black' : 'bg-transparent' }}">
                                     <span>{{ $tabName }}</span>
                                     @if($pendingCount > 0)
-                                        <span class="text-gray-400 text-sm font-bold rounded-full w-6 h-6 flex items-center justify-center ml-2">
+                                        <span class="text-gray-400 text-sm font-bold flex items-center justify-center ml-2">
                                             {{ $pendingCount }}
                                         </span>
                                     @endif

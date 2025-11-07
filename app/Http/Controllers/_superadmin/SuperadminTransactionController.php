@@ -6,99 +6,84 @@ use App\Http\Controllers\Controller;
 use App\Models\BuyTransaction;
 use App\Models\SendTransaction;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TransactionsExport;
 
 class SuperadminTransactionController extends Controller
 {
-    /**
-     * Menampilkan daftar transaksi gabungan (titip beli & titip kirim)
-     * dengan filter tipe & status.
-     */
     public function index(Request $request)
     {
-        $title = 'Transaksi';
+        $type = $request->get('type', 'buy'); // buy | send
+        $status = $request->get('status');
+        $location = $request->get('location');
+        $search = $request->get('search');
+        $transaction_id = $request->get('transaction_id');
 
-        $filterType = $request->input('type', 'all');
-        $filterStatus = $request->input('status', 'all');
+        if ($transaction_id) {
+            $transaction = $type === 'buy'
+                ? BuyTransaction::with(['buyer', 'traveler', 'product', 'paymentMethod', 'refund'])->findOrFail($transaction_id)
+                : SendTransaction::with(['sender', 'reciever', 'product', 'paymentMethod'])->findOrFail($transaction_id);
 
-        // Ambil data titip beli
-        $buyTransactions = BuyTransaction::with(['buyer', 'traveler', 'paymentMethod'])
-            ->when($filterStatus !== 'all', fn($q) => $q->where('payment_status', $filterStatus))
-            ->get()
-            ->map(function ($trx) {
-                $trx->type = 'buy';
-                return $trx;
-            });
+            return view('_superadmin.transactions.index', compact('transaction', 'type'));
+        }
 
-        // Ambil data titip kirim
-        $sendTransactions = SendTransaction::with(['sender', 'reciever', 'paymentMethod'])
-            ->when($filterStatus !== 'all', fn($q) => $q->where('payment_status', $filterStatus))
-            ->get()
-            ->map(function ($trx) {
-                $trx->type = 'send';
-                // Samakan struktur dengan buy agar view tidak error
-                $trx->buyer = $trx->reciever;
-                $trx->total_price = $trx->total_price ?? 0;
-                return $trx;
-            });
+        $query = $type === 'buy' ? BuyTransaction::query() : SendTransaction::query();
 
-        // Gabungkan & filter berdasarkan tipe
-        $transactions = match ($filterType) {
-            'buy' => $buyTransactions,
-            'send' => $sendTransactions,
-            default => $buyTransactions->concat($sendTransactions),
-        };
+        // Join dengan user & payment method
+        if ($type === 'buy') {
+            $query->with(['buyer', 'traveler', 'paymentMethod', 'product', 'refund']);
+        } else {
+            $query->with(['sender', 'reciever', 'paymentMethod', 'product']);
+        }
 
-        // Urutkan transaksi terbaru
-        $transactions = $transactions->sortByDesc('created_at')->values();
+        // Filter Status
+        if ($status && in_array($status, ['selesai', 'berjalan', 'dibatalkan', 'refund'])) {
+            if ($status === 'refund') {
+                $query->whereHas('refund', fn($q) => $q->whereIn('status', ['pending', 'approved']));
+            } elseif ($status === 'selesai') {
+                $query->where('payment_status', 'approved');
+            } elseif ($status === 'berjalan') {
+                $query->where('payment_status', 'pending');
+            } elseif ($status === 'dibatalkan') {
+                $query->where('payment_status', 'declined');
+            }
+        }
 
-        // Manual pagination (karena digabung dari dua tabel)
-        $page = LengthAwarePaginator::resolveCurrentPage();
-        $perPage = 10;
-        $paginated = new LengthAwarePaginator(
-            $transactions->forPage($page, $perPage),
-            $transactions->count(),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+        // Filter Lokasi (hanya untuk Titip Kirim)
+        if ($type === 'send' && $location) {
+            $delivery_type = $location === 'dalam' ? 'Dalam Negeri' : 'Luar Negeri';
+            $query->where('delivery_type', $delivery_type);
+        }
 
-        return view('_superadmin.transactions.index', [
-            'title' => $title,
-            'transactions' => $paginated,
-            'filterType' => $filterType,
-            'filterStatus' => $filterStatus,
-        ]);
+        // Search
+        if ($search) {
+            $query->whereHas($type === 'buy' ? 'buyer' : 'sender', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            })->orWhere('id', 'like', "%{$search}%");
+        }
+
+        $transactions = $query->latest()->paginate(10)->appends($request->query());
+
+        return view('_superadmin.transactions.index', compact('transactions', 'type'));
     }
 
-    /**
-     * Detail transaksi titip beli
-     */
-    public function showBuy($id)
+    public function export(Request $request)
     {
-        $trx = BuyTransaction::with(['buyer', 'traveler', 'product', 'paymentMethod', 'refund'])
-            ->findOrFail($id);
+        $type = $request->get('type', 'buy');
+        $filename = $type === 'buy' ? 'Transaksi_Titip_Beli' : 'Transaksi_Titip_Kirim';
+        $filename .= '_' . now()->format('Y-m-d') . '.xlsx';
 
-        return view('_superadmin.transactions.show-buy', compact('trx'));
+        return Excel::download(new TransactionsExport($request->all()), $filename);
     }
 
-    /**
-     * Detail transaksi titip kirim
-     */
-    public function showSend($id)
+    public function destroy($id)
     {
-        $trx = SendTransaction::with(['sender', 'reciever', 'product', 'paymentMethod'])
-            ->findOrFail($id);
+        $type = request('type', 'buy');
+        $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
 
-        return view('_superadmin.transactions.show-send', compact('trx'));
-    }
+        $transaction = $model::findOrFail($id);
+        $transaction->delete();
 
-    /**
-     * Edit transaksi (placeholder)
-     */
-    public function edit($type, $id)
-    {
-        return "Halaman edit transaksi tipe {$type} dengan ID: {$id}";
+        return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
     }
 }
