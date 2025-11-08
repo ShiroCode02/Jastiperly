@@ -20,9 +20,13 @@ class SuperadminTransactionController extends Controller
         $transaction_id = $request->get('transaction_id');
 
         if ($transaction_id) {
-            $transaction = $type === 'buy'
-                ? BuyTransaction::with(['buyer', 'traveler', 'product', 'paymentMethod', 'refund'])->findOrFail($transaction_id)
-                : SendTransaction::with(['sender', 'reciever', 'product', 'paymentMethod'])->findOrFail($transaction_id);
+            $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
+
+            $transaction = $model::with(
+                $type === 'buy'
+                    ? ['buyer', 'traveler', 'product.category', 'paymentMethod']
+                    : ['sender', 'reciever', 'product.category', 'paymentMethod']
+            )->findOrFail($transaction_id);
 
             return view('_superadmin.transactions.index', compact('transaction', 'type'));
         }
@@ -31,16 +35,26 @@ class SuperadminTransactionController extends Controller
 
         // Join dengan user & payment method
         if ($type === 'buy') {
-            $query->with(['buyer', 'traveler', 'paymentMethod', 'product', 'refund']);
+            $query->with(['buyer', 'traveler', 'paymentMethod', 'product.category']);
         } else {
-            $query->with(['sender', 'reciever', 'paymentMethod', 'product']);
+            $query->with(['sender', 'reciever', 'paymentMethod', 'product.category']);
+        }
+
+        if ($type === 'send') {
+            $query->addSelect([
+                'calculated_total' => \App\Models\Product::select('price')
+                    ->whereColumn('products.id', 'send_transactions.product_id')
+                    ->limit(1)
+            ]);
+        }
+
+        if ($type === 'buy') {
+            $query->whereDoesntHave('refund');
         }
 
         // Filter Status
-        if ($status && in_array($status, ['selesai', 'berjalan', 'dibatalkan', 'refund'])) {
-            if ($status === 'refund') {
-                $query->whereHas('refund', fn($q) => $q->whereIn('status', ['pending', 'approved']));
-            } elseif ($status === 'selesai') {
+        if ($status && in_array($status, ['selesai', 'berjalan', 'dibatalkan'])) { // HAPUS 'refund'
+            if ($status === 'selesai') {
                 $query->where('payment_status', 'approved');
             } elseif ($status === 'berjalan') {
                 $query->where('payment_status', 'pending');

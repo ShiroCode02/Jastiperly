@@ -7,6 +7,7 @@ use App\Models\SendTransaction;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Illuminate\Support\Collection;
 
 class TransactionsExport implements FromCollection, WithHeadings, WithMapping
 {
@@ -17,55 +18,84 @@ class TransactionsExport implements FromCollection, WithHeadings, WithMapping
         $this->request = $request;
     }
 
-    public function collection()
+    public function collection(): Collection
     {
         $type = $this->request['type'] ?? 'buy';
+        $status = $this->request['status'] ?? null;
+        $location = $this->request['location'] ?? null;
+        $search = $this->request['search'] ?? null;
+
         $query = $type === 'buy' ? BuyTransaction::query() : SendTransaction::query();
 
         if ($type === 'buy') {
-            $query->with(['buyer', 'traveler', 'paymentMethod', 'product']);
+            $query->with(['buyer', 'traveler', 'paymentMethod', 'product.category']);
+            $query->whereDoesntHave('refund'); // HILANGKAN REFUND
         } else {
-            $query->with(['sender', 'reciever', 'paymentMethod', 'product']);
+            $query->with(['sender', 'reciever', 'paymentMethod', 'product.category']);
         }
 
-        // Apply same filters as index
-        if (isset($this->request['status'])) {
-            // ... (sama seperti di index)
+        // FILTER STATUS
+        if ($status && in_array($status, ['selesai', 'berjalan', 'dibatalkan'])) {
+            if ($status === 'selesai') {
+                $query->where('payment_status', 'approved');
+            } elseif ($status === 'berjalan') {
+                $query->where('payment_status', 'pending');
+            } elseif ($status === 'dibatalkan') {
+                $query->where('payment_status', 'declined');
+            }
         }
 
-        return $query->get();
+        // FILTER LOKASI (hanya Titip Kirim)
+        if ($type === 'send' && $location) {
+            $delivery_type = $location === 'dalam' ? 'Dalam Negeri' : 'Luar Negeri';
+            $query->where('delivery_type', $delivery_type);
+        }
+
+        // SEARCH
+        if ($search) {
+            $query->whereHas($type === 'buy' ? 'buyer' : 'sender', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            })->orWhere('id', 'like', "%{$search}%");
+        }
+
+        return $query->latest()->get();
     }
 
     public function headings(): array
     {
-        $base = ['ID', 'Tanggal', 'Penitip/Pengirim', 'Traveler/Penerima', 'Total', 'Metode', 'Status'];
-        return $this->request['type'] === 'send'
-            ? array_merge($base, ['Lokasi', 'Resi'])
-            : array_merge($base, ['Jumlah', 'Produk']);
+        return [
+            'No',
+            'ID Transaksi',
+            'Nama Penitip/Pengirim',
+            'Tanggal',
+            'Status',
+            'Total',
+            'Metode Pembayaran',
+            'Jenis',
+        ];
     }
 
     public function map($trx): array
     {
-        $isBuy = $this->request['type'] === 'buy';
+        static $index = 0;
+        $index++;
 
-        $row = [
+        $statusText = match ($trx->payment_status) {
+            'approved' => 'Selesai',
+            'pending' => 'Belum Bayar',
+            'declined' => 'Dibatalkan',
+            default => '-',
+        };
+
+        return [
+            $index,
             'JST' . $trx->id,
-            $trx->created_at->format('d-m-Y H:i'),
-            $isBuy ? $trx->buyer->name : $trx->sender->name,
-            $isBuy ? $trx->traveler->name : $trx->reciever->name,
+            $trx instanceof BuyTransaction ? $trx->buyer->name : $trx->sender->name,
+            $trx->created_at->format('d-m-Y'),
+            $statusText,
             'Rp' . number_format($trx->total_price ?? 0, 0, ',', '.'),
             $trx->paymentMethod->name ?? '-',
-            ucfirst($trx->payment_status),
+            $trx instanceof BuyTransaction ? 'Titip Beli' : 'Titip Kirim',
         ];
-
-        if ($isBuy) {
-            $row[] = $trx->quantity;
-            $row[] = $trx->product->name;
-        } else {
-            $row[] = $trx->delivery_type;
-            $row[] = $trx->delivery_code ?? '-';
-        }
-
-        return $row;
     }
 }

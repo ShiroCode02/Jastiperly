@@ -37,7 +37,6 @@
                                     <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
                                     <option value="berjalan" {{ request('status') == 'berjalan' ? 'selected' : '' }}>Berjalan</option>
                                     <option value="dibatalkan" {{ request('status') == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
-                                    <option value="refund" {{ request('status') == 'refund' ? 'selected' : '' }}>Refund</option>
                                 </select>
 
                                 <select name="location" onchange="this.form.submit()"
@@ -50,8 +49,6 @@
                                 <input type="hidden" name="type" value="{{ request('type', 'buy') }}">
                                 @if(request('search'))<input type="hidden" name="search" value="{{ request('search') }}"> @endif
                             </form>
-
-                            <livewire:search-input route="superadmin.transactions" />
 
                             <a href="{{ route('superadmin.transactions.export', request()->query()) }}"
                                class="flex items-center gap-2 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold px-4 py-1 rounded-md shadow transition">
@@ -98,76 +95,212 @@
                             : \App\Models\SendTransaction::with(['sender', 'reciever', 'product', 'paymentMethod'])->findOrFail(request('transaction_id'));
                     @endphp
 
-                    <div class="bg-white/70 rounded-xl shadow-md p-8 mx-auto border border-gray-200 max-w-4xl">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <!-- Kiri: Info Utama -->
-                            <div class="space-y-4">
-                                <div class="flex justify-between">
-                                    <span class="font-semibold text-gray-700">ID Transaksi</span>
-                                    <span class="font-medium">#JST{{ $transaction->id }}</span>
+                    <div class="bg-white/70 rounded-xl shadow-md p-6 mx-auto border border-gray-200 max-w-5xl">
+                        <!-- JUDUL -->
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Informasi Transaksi</h2>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <!-- KIRI: Info Utama -->
+                            <div class="space-y-5">
+                                <!-- ID Transaksi -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">ID Transaksi</label>
+                                    <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                        #JSTP{{ $transaction->id }}
+                                    </div>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="font-semibold text-gray-700">Tanggal</span>
-                                    <span>{{ $transaction->created_at->format('d-m-Y H:i') }}</span>
+
+                                <!-- Tanggal -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Transaksi</label>
+                                    <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                        {{ $transaction->created_at->format('d-m-Y') }}
+                                    </div>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="font-semibold text-gray-700">Jenis</span>
-                                    <span class="px-3 py-1 rounded-full text-xs font-medium {{ request('type') === 'buy' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700' }}">
-                                        {{ request('type') === 'buy' ? 'Titip Beli' : 'Titip Kirim' }}
-                                    </span>
+
+                                <!-- Total -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Total Transaksi</label>
+                                    <div class="border border-gray-300 rounded-md px-4 py-2 bg-white font-medium">
+                                        @if($transaction->total_price)
+                                            Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
+                                        @elseif($transaction->product && $transaction->product->price)
+                                            Rp{{ number_format($transaction->product->price, 0, ',', '.') }}
+                                        @else
+                                            <span class="text-gray-500">Belum tersedia</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div class="flex justify-between">
-                                    <span class="font-semibold text-gray-700">Status</span>
-                                    <span class="px-3 py-1 rounded-full text-xs font-medium
-                                        {{ $transaction->payment_status === 'approved' ? 'bg-green-100 text-green-700' :
-                                           ($transaction->payment_status === 'declined' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
-                                        {{ ucfirst($transaction->payment_status) }}
-                                    </span>
+
+                                <!-- Status -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Status</label>
+                                    <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                        @if($transaction->payment_status == 'pending')
+                                            <span class="text-red-500 font-semibold">Belum Bayar</span>
+                                        @elseif($transaction->payment_status == 'approved')
+                                            <span class="text-green-600 font-semibold">Selesai</span>
+                                        @elseif($transaction->payment_status == 'declined')
+                                            <span class="text-red-500 font-semibold">Dibatalkan</span>
+                                        @else
+                                            <span class="text-gray-500 font-semibold">-</span>
+                                        @endif
+                                    </div>
                                 </div>
-                                @if($transaction instanceof \App\Models\BuyTransaction && $transaction->refund)
-                                    <div class="flex justify-between">
-                                        <span class="font-semibold text-gray-700">Refund</span>
-                                        <span class="text-red-600 text-sm">{{ $transaction->refund->status }}</span>
+                            </div>
+
+                            <!-- KANAN: Pengguna & Metode -->
+                            <div class="space-y-5">
+                                @if(request('type') === 'buy')
+                                    <!-- Penitip -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Penitip</label>
+                                        <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                            {{ $transaction->buyer->name }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Traveler -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Traveler</label>
+                                        <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                            {{ $transaction->traveler->name }}
+                                        </div>
+                                    </div>
+                                @else
+                                    <!-- Pengirim -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Pengirim</label>
+                                        <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                            {{ $transaction->sender->name }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Penerima -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Penerima</label>
+                                        <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                            {{ $transaction->reciever->name }}
+                                        </div>
                                     </div>
                                 @endif
-                            </div>
 
-                            <!-- Kanan: Pengguna -->
-                            <div class="space-y-4">
-                                @if(request('type') === 'buy')
-                                    <div><strong>Penitip:</strong> {{ $transaction->buyer->name }}</div>
-                                    <div><strong>Traveler:</strong> {{ $transaction->traveler->name }}</div>
-                                @else
-                                    <div><strong>Pengirim:</strong> {{ $transaction->sender->name }}</div>
-                                    <div><strong>Penerima:</strong> {{ $transaction->reciever->name }}</div>
-                                    <div><strong>Lokasi:</strong> {{ $transaction->delivery_type }}</div>
-                                @endif
-                                <div><strong>Metode:</strong> {{ $transaction->paymentMethod->name ?? '-' }}</div>
+                                <!-- Metode Pembayaran -->
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Metode Pembayaran</label>
+                                    <div class="border border-gray-300 rounded-md px-4 py-2 bg-white flex justify-between items-center">
+                                        <span>{{ $transaction->paymentMethod->name ?? '-' }}</span>
+                                        @if($transaction->payment_proof)
+                                            <button onclick="document.getElementById('proofModal').classList.remove('hidden')"
+                                                    class="text-blue-600 text-xs underline hover:text-blue-800">
+                                                Lihat Bukti Transaksi
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Barang -->
-                        <div class="mt-8 border-t pt-6">
-                            <h3 class="font-semibold text-lg mb-3">Detail Barang</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                <div><strong>Nama:</strong> {{ $transaction->product->name }}</div>
-                                <div><strong>Harga:</strong> Rp{{ number_format($transaction->total_price ?? $transaction->product->price, 0, ',', '.') }}</div>
-                                @if(request('type') === 'buy')
-                                    <div><strong>Jumlah:</strong> {{ $transaction->quantity }}</div>
-                                @else
-                                    <div><strong>Berat:</strong> {{ $transaction->weight ?? '-' }}</div>
-                                    <div><strong>Dimensi:</strong> {{ $transaction->dimension ?? '-' }}</div>
-                                    <div><strong>Resi:</strong> {{ $transaction->delivery_code ?? '-' }}</div>
-                                @endif
-                            </div>
-                            @if($transaction->payment_proof)
-                                <div class="mt-4">
-                                    <strong>Bukti Pembayaran:</strong>
-                                    <img src="{{ asset('storage/' . $transaction->payment_proof) }}" class="mt-2 w-48 rounded border">
+                        <!-- DETAIL BARANG -->
+                        <div class="mt-10 border-t pt-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-5">Detail Barang</h3>
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Kiri: Info Barang -->
+                                <div class="space-y-5">
+                                    <!-- Nama Barang -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Barang</label>
+                                        <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                            {{ $transaction->product->name }}
+                                        </div>
+                                    </div>
+
+                                    <!-- Kategori -->
+                                    @if(isset($transaction->product->category))
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-1">Kategori Barang</label>
+                                            <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                                {{ $transaction->product->category->name ?? 'Tidak ada kategori' }}
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <!-- Asal Barang -->
+                                    @if(request('type') === 'buy')
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-1">Asal Barang</label>
+                                            <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                                {{ $transaction->product->origin ?? 'Tidak tersedia' }}
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <!-- Jumlah / Berat -->
+                                    @if(request('type') === 'buy')
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-1">Jumlah Barang</label>
+                                            <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                                {{ $transaction->quantity }} Unit
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-1">Berat Barang</label>
+                                            <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                                {{ $transaction->weight ?? '-' }} kg
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
-                            @endif
+
+                                <!-- Kanan: Foto + Deskripsi -->
+                                <div class="space-y-5">
+                                    <!-- Foto Barang -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Foto Barang</label>
+                                        <div class="border border-gray-300 rounded-md p-2 bg-white">
+                                            @if($transaction->product->image)
+                                                <img src="{{ asset('storage/' . $transaction->product->image) }}" 
+                                                    class="w-full h-48 object-cover rounded-md" alt="Foto Barang">
+                                            @else
+                                                <div class="w-full h-48 bg-gray-200 border-2 border-dashed rounded-md flex items-center justify-center text-gray-500">
+                                                    Tidak ada foto
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <!-- Deskripsi -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Deskripsi Barang</label>
+                                        <div class="border border-gray-300 rounded-md px-4 py-2 bg-white min-h-24">
+                                            {{ $transaction->product->description ?? 'Tidak ada deskripsi.' }}
+                                        </div>
+                                        @if(request('type') === 'send')
+                                            <p class="text-xs text-gray-500 mt-1">Dimensi: {{ $transaction->dimension ?? '-' }}</p>
+                                            <p class="text-xs text-gray-500">No. Resi: {{ $transaction->delivery_code ?? '-' }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- MODAL BUKTI TRANSAKSI -->
+                    @if($transaction->payment_proof)
+                    <div id="proofModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+                        <div class="bg-white rounded-lg max-w-2xl w-full p-6 relative">
+                            <button onclick="document.getElementById('proofModal').classList.add('hidden')"
+                                    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                            <h3 class="text-lg font-semibold mb-4">Bukti Pembayaran</h3>
+                            <img src="{{ asset('storage/' . $transaction->payment_proof) }}" class="w-full rounded-md" alt="Bukti">
+                        </div>
+                    </div>
+                    @endif
 
                 @else
                     <!-- === DAFTAR TRANSAKSI === -->
@@ -197,21 +330,35 @@
                                         </td>
                                         <td class="p-3 text-center">JST{{ $trx->id }}</td>
                                         <td class="p-3 text-center">{{ $trx->created_at->format('d-m-Y') }}</td>
-                                        <td class="p-3 text-center">
-                                            <span class="px-2 py-1 rounded-full text-xs font-medium
-                                                {{ $trx->payment_status === 'approved' ? 'bg-green-100 text-green-700' :
-                                                   ($trx->payment_status === 'declined' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
-                                                {{ ucfirst($trx->payment_status) }}
-                                            </span>
+                                        <td class="p-3 text-center font-semibold">
+                                            @if($trx->payment_status == 'pending')
+                                                <span class="text-red-500">Belum Bayar</span>
+                                            @elseif($trx->payment_status == 'approved')
+                                                <span class="text-green-600">Selesai</span>
+                                            @elseif($trx->payment_status == 'declined')
+                                                <span class="text-red-500">Dibatalkan</span>
+                                            @else
+                                                <span class="text-gray-500">-</span>
+                                            @endif
                                         </td>
-                                        <td class="p-3 text-center font-medium">Rp{{ number_format($trx->total_price ?? 0, 0, ',', '.') }}</td>
+                                        <td class="p-3 text-center font-medium">
+                                            @if($trx->total_price)
+                                                Rp{{ number_format($trx->total_price, 0, ',', '.') }}
+                                            @elseif($trx->calculated_total ?? false)
+                                                Rp{{ number_format($trx->calculated_total, 0, ',', '.') }}
+                                            @else
+                                                <span class="text-gray-500">-</span>
+                                            @endif
+                                        </td>
                                         <td class="p-3 text-center">{{ $trx->paymentMethod->name ?? '-' }}</td>
                                         <td class="p-3 flex justify-center gap-2">
                                             <button class="p-2 rounded-md transition hover:scale-110" style="background-color: #FAB00580;">
                                                 <x-icons.icon name="pencil" class="w-4 h-4 text-white" />
                                             </button>
-                                            <a href="{{ route('superadmin.transactions', array_merge(request()->query(), ['transaction_id' => $trx->id])) }}"
-                                               class="p-2 rounded-md transition hover:scale-110" style="background-color: #0095DA80;">
+                                            <a href="{{ route('superadmin.transactions', array_merge(request()->query(), [
+                                                'type' => $trx instanceof \App\Models\BuyTransaction ? 'buy' : 'send',
+                                                'transaction_id' => $trx->id
+                                            ])) }}" class="p-2 rounded-md transition hover:scale-110" style="background-color: #0095DA80;">
                                                 <x-icons.icon name="eye" class="w-4 h-4 text-white" />
                                             </a>
                                             <button class="p-2 rounded-md transition hover:scale-110" style="background-color: #FA525280;"
