@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(UserSeeder::class); // Seed user dulu
+        $this->call(UserDetailSeeder::class); // Lalu detail user
         $this->call(ProductCategorySeeder::class); // Lalu category
         $this->call(ProductSeeder::class); // Terakhir produk
         $this->call(PaymentMethodSeeder::class); // Seed metode pembayaran

@@ -24,8 +24,8 @@ class SuperadminTransactionController extends Controller
 
             $transaction = $model::with(
                 $type === 'buy'
-                    ? ['buyer', 'traveler', 'product.category', 'paymentMethod']
-                    : ['sender', 'reciever', 'product.category', 'paymentMethod']
+                    ? ['buyer.detail', 'traveler.detail', 'product.category', 'paymentMethod']
+                    : ['sender.detail', 'reciever.detail', 'product.category', 'paymentMethod']
             )->findOrFail($transaction_id);
 
             return view('_superadmin.transactions.index', compact('transaction', 'type'));
@@ -35,9 +35,9 @@ class SuperadminTransactionController extends Controller
 
         // Join dengan user & payment method
         if ($type === 'buy') {
-            $query->with(['buyer', 'traveler', 'paymentMethod', 'product.category']);
+            $query->with(['buyer.detail', 'traveler.detail', 'paymentMethod', 'product.category']);
         } else {
-            $query->with(['sender', 'reciever', 'paymentMethod', 'product.category']);
+            $query->with(['sender.detail', 'reciever.detail', 'paymentMethod', 'product.category']);
         }
 
         if ($type === 'send') {

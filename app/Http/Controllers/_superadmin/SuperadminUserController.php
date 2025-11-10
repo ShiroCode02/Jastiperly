@@ -16,6 +16,9 @@ class SuperadminUserController extends Controller
         // Role yang dapat ditampilkan oleh Superadmin
         $allowedRoles = ['traveler', 'customer', 'admin', 'finance'];
 
+        // Total pengguna untuk tampilan
+        $totalUsers = User::whereIn('role', $allowedRoles)->count();
+
         // Query user
         $query = User::with('detail')
             ->whereIn('role', $allowedRoles)
@@ -24,10 +27,9 @@ class SuperadminUserController extends Controller
         // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-            });
+            $query->whereHas('detail', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            })->orWhere('email', 'like', "%{$search}%");
         }
 
         // Filter tab (Traveler, Penitip, Admin, Finance)
@@ -44,8 +46,8 @@ class SuperadminUserController extends Controller
             }
         }
 
-        $users = $query->paginate(10);
+        $users = $query->paginate(3);
 
-        return view('_superadmin.users.index', compact('users', 'title'));
+        return view('_superadmin.users.index', compact('users', 'title', 'totalUsers'));
     }
 }

@@ -10,7 +10,7 @@ class SendTransaction extends Model
     protected $fillable = [
         'sender_id', 'reciever_id', 'product_id', 'dimension', 'weight', 'delivery_code',
         'delivery_method', 'delivery_type', 'delivery_image', 'payment_method_id', 'payment_proof',
-        'payment_status'
+        'payment_status', 'pickup_address', 'delivery_address'
     ];
 
     public function sender(): BelongsTo

@@ -56,7 +56,7 @@
                                         <img src="{{ $user->photo_url ?? asset('images/default-avatar.png') }}" 
                                              class="w-10 h-10 rounded-full object-cover">
                                     </td>
-                                    <td class="p-3 text-center font-semibold">{{ $user->name }}</td>
+                                    <td class="p-3 text-center font-semibold">{{ $user->detail->name }}</td>
                                     <td class="p-3 text-center text-gray-700">{{ $user->email }}</td>
                                     <td class="p-3 text-center">
                                         @php
@@ -96,7 +96,7 @@
 
                 <!-- Footer tabel -->
                 <div class="flex justify-between items-center bg-white/50 p-3 shadow-md hover:bg-blue-100 transition">
-                    <span class="text-gray-700 text-sm">Total {{ count($users) }}</span>
+                    <span class="text-gray-700 text-sm">Total {{ $totalUsers }}</span>
                     <div class="flex gap-2 items-center">
                         <button class="px-2 py-1 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">&lt;</button>
                         <span class="text-blue-800 font-semibold">1</span>

@@ -15,7 +15,6 @@ class UserSeeder extends Seeder
     {
         // Superadmin (ID 1)
         User::create([
-            'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
             'password' => Hash::make('password'),
             'role' => 'superadmin',
@@ -24,7 +23,6 @@ class UserSeeder extends Seeder
 
         // Admin (ID 2)
         User::create([
-            'name' => 'Admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
             'role' => 'admin',
@@ -33,7 +31,6 @@ class UserSeeder extends Seeder
 
         // Finance (ID 3)
         User::create([
-            'name' => 'Finance',
             'email' => 'finance@example.com',
             'password' => Hash::make('password'),
             'role' => 'finance',
@@ -42,7 +39,6 @@ class UserSeeder extends Seeder
 
         // Traveler 1 (ID 4)
         User::create([
-            'name' => 'Traveler 1',
             'email' => 'traveler1@example.com',
             'password' => Hash::make('password'),
             'role' => 'traveler',
@@ -51,7 +47,6 @@ class UserSeeder extends Seeder
 
         // Traveler 2 (ID 5)
         User::create([
-            'name' => 'Traveler 2',
             'email' => 'traveler2@example.com',
             'password' => Hash::make('password'),
             'role' => 'traveler',
@@ -60,7 +55,6 @@ class UserSeeder extends Seeder
 
         // Customer 1 (ID 6)
         User::create([
-            'name' => 'Customer 1',
             'email' => 'customer1@example.com',
             'password' => Hash::make('password'),
             'role' => 'customer',
@@ -69,7 +63,6 @@ class UserSeeder extends Seeder
 
         // Customer 2 (ID 7)
         User::create([
-            'name' => 'Customer 2',
             'email' => 'customer2@example.com',
             'password' => Hash::make('password'),
             'role' => 'customer',

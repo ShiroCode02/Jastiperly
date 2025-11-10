@@ -21,6 +21,8 @@ class SendTransactionSeeder extends Seeder
                 'delivery_image' => $this->fakeDelivery('jne_reguler.jpg'),
                 'payment_method_id' => 1, 'payment_status' => 'approved',
                 'payment_proof' => $this->fakeProof('send_approved_1.jpg'),
+                'pickup_address' => 'Jl. Thamrin No. 78, Jakarta Pusat', // DARI USER DETAIL
+                'delivery_address' => 'Jl. Malioboro No. 56, Yogyakarta', // DARI USER DETAIL
             ],
             // Luar Negeri - Berjalan
             [
@@ -30,6 +32,8 @@ class SendTransactionSeeder extends Seeder
                 'delivery_image' => null,
                 'payment_method_id' => 4, 'payment_status' => 'pending',
                 'payment_proof' => $this->fakeProof('send_pending_1.jpg'),
+                'pickup_address' => 'Jl. Malioboro No. 56, Yogyakarta',
+                'delivery_address' => 'Jl. Sudirman No. 123, Jakarta Selatan',
             ],
             // Dalam Negeri - Dibatalkan
             [
@@ -39,31 +43,14 @@ class SendTransactionSeeder extends Seeder
                 'delivery_image' => $this->fakeDelivery('jnt_kargo.jpg'),
                 'payment_method_id' => 2, 'payment_status' => 'declined',
                 'payment_proof' => $this->fakeProof('send_declined_1.jpg'),
+                'pickup_address' => 'Jl. Thamrin No. 78, Jakarta Pusat',
+                'delivery_address' => 'Jl. Malioboro No. 56, Yogyakarta',
             ],
         ];
 
         foreach ($transactions as $trx) {
             SendTransaction::create($trx);
         }
-    }
-
-    private function fakeDelivery($filename)
-    {
-        $path = 'delivery/' . $filename;
-        $fullPath = storage_path('app/public/' . $path);
-
-        if (!file_exists($fullPath)) {
-            $image = imagecreatetruecolor(300, 200);
-            $bg = imagecolorallocate($image, 255, 255, 255);
-            $text = imagecolorallocate($image, 0, 0, 0);
-            imagefill($image, 0, 0, $bg);
-            imagestring($image, 5, 50, 80, 'Resi Pengiriman', $text);
-            imagestring($image, 3, 50, 110, $filename, $text);
-            imagejpeg($image, $fullPath);
-            imagedestroy($image);
-        }
-
-        return $path;
     }
 
     private function fakeProof($filename)
@@ -78,6 +65,28 @@ class SendTransactionSeeder extends Seeder
             imagefill($image, 0, 0, $bg);
             imagestring($image, 5, 50, 130, 'Bukti Transfer', $text);
             imagestring($image, 3, 50, 160, $filename, $text);
+            imagejpeg($image, $fullPath);
+            imagedestroy($image);
+        }
+
+        return $path;
+    }
+
+    private function fakeDelivery($filename)
+    {
+        $path = 'delivery/' . $filename;
+        $fullPath = storage_path('app/public/' . $path);
+
+        if (!file_exists($fullPath)) {
+            $image = imagecreatetruecolor(400, 200);
+            $bg = imagecolorallocate($image, 255, 255, 255);
+            $border = imagecolorallocate($image, 0, 0, 0);
+            $text = imagecolorallocate($image, 0, 0, 0);
+            imagefill($image, 0, 0, $bg);
+            imagerectangle($image, 0, 0, 399, 199, $border);
+            imagestring($image, 5, 100, 80, 'RESI PENGIRIMAN', $text);
+            imagestring($image, 4, 100, 110, $filename, $text);
+            imagestring($image, 3, 100, 140, 'JNE EXPRESS', $text);
             imagejpeg($image, $fullPath);
             imagedestroy($image);
         }
