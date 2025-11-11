@@ -13,7 +13,7 @@
                 <div class="mt-2 px-4 flex justify-between items-center">
                     <div>
                         <h2 class="text-2xl font-bold text-blue-900">
-                            Hi, {{ Auth::user()->name }}
+                            Hi, {{ Auth::user()->detail->name }}
                         </h2>
                         <p class="text-gray-600">Welcome back to SuperAdmin Dashboard</p>
                     </div>
@@ -82,8 +82,8 @@
                             <tr class="text-center hover:bg-blue-50">
                                 <td class="p-2 border border-black">{{ $index + 1 }}</td>
                                 <td class="p-2 border border-black">#JSTP{{ $trx->id }}</td>
-                                <td class="p-2 border border-black">{{ $trx->traveler?->name ?? ($trx->sender?->name ?? '-') }}</td>
-                                <td class="p-2 border border-black">{{ $trx->buyer?->name ?? ($trx->reciever?->name ?? '-') }}</td>
+                                <td class="p-2 border border-black">{{ $trx->traveler?->detail->name ?? ($trx->sender?->detail->name ?? '-') }}</td>
+                                <td class="p-2 border border-black">{{ $trx->buyer?->detail->name ?? ($trx->reciever?->detail->name ?? '-') }}</td>
                                 <td class="p-2 border border-black">Rp{{ number_format($trx->total_price ?? 0, 0, ',', '.') }}</td>
 
                                 <!-- LAYANAN -->

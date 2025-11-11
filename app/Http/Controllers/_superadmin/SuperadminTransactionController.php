@@ -13,6 +13,7 @@ class SuperadminTransactionController extends Controller
 {
     public function index(Request $request)
     {
+        $title = 'Transaksi';
         $type = $request->get('type', 'buy'); // buy | send
         $status = $request->get('status');
         $location = $request->get('location');
@@ -28,7 +29,7 @@ class SuperadminTransactionController extends Controller
                     : ['sender.detail', 'reciever.detail', 'product.category', 'paymentMethod']
             )->findOrFail($transaction_id);
 
-            return view('_superadmin.transactions.index', compact('transaction', 'type'));
+            return view('_superadmin.transactions.detail', compact('transaction', 'type'));
         }
 
         $query = $type === 'buy' ? BuyTransaction::query() : SendTransaction::query();
@@ -77,8 +78,7 @@ class SuperadminTransactionController extends Controller
         }
 
         $transactions = $query->latest()->paginate(10)->appends($request->query());
-
-        return view('_superadmin.transactions.index', compact('transactions', 'type'));
+        return view('_superadmin.transactions.index', compact('title', 'transactions', 'type'));
     }
 
     public function export(Request $request)
@@ -88,6 +88,59 @@ class SuperadminTransactionController extends Controller
         $filename .= '_' . now()->format('Y-m-d') . '.xlsx';
 
         return Excel::download(new TransactionsExport($request->all()), $filename);
+    }
+
+    public function edit($id)
+    {
+        $type = request('type', 'buy');
+        $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
+
+        $transaction = $model::with(
+            $type === 'buy'
+                ? ['buyer.detail', 'traveler.detail', 'product.category', 'paymentMethod']
+                : ['sender.detail', 'reciever.detail', 'product.category', 'paymentMethod']
+        )->findOrFail($id);
+
+        return view('_superadmin.transactions.edit', compact('transaction', 'type'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $type = $request->input('type', 'buy');
+        $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
+
+        $transaction = $model::findOrFail($id);
+
+        $validated = $request->validate([
+            // Titip Beli
+            'quantity' => 'required|integer|min:1',
+            'total_price' => 'required|numeric|min:0',
+            'payment_status' => 'required|in:pending,approved,declined',
+            'payment_proof' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            // Titip Kirim
+            'weight' => 'nullable|numeric|min:0',
+            'dimension' => 'nullable|string|max:50',
+            'delivery_code' => 'nullable|string|max:50',
+            'delivery_method' => 'nullable|string|max:50',
+            'delivery_type' => 'nullable|in:Dalam Negeri,Luar Negeri',
+            'pickup_address' => 'nullable|string',
+            'delivery_address' => 'nullable|string',
+        ]);
+
+        // Upload bukti pembayaran baru (jika ada)
+        if ($request->hasFile('payment_proof')) {
+            $path = $request->file('payment_proof')->store('payment_proofs', 'public');
+            $validated['payment_proof'] = $path;
+        } else {
+            unset($validated['payment_proof']);
+        }
+
+        $transaction->update($validated);
+
+        return redirect()
+            ->route('superadmin.transactions', ['type' => $type, 'transaction_id' => $id])
+            ->with('success', 'Transaksi berhasil diperbarui.');
     }
 
     public function destroy($id)

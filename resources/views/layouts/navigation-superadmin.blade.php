@@ -15,11 +15,14 @@
 
     // Cek apakah ini halaman detail transaksi (ADA transaction_id)
     $isTransactionDetail = request('transaction_id');
+
+    // Cek apakah ini halaman edit transaksi (ADA transaction_id + URL mengandung 'edit')
+    $isEditTransaction = request()->route()->getName() === 'superadmin.transactions.edit';
 @endphp
 
 <nav class="flex items-center justify-between h-[78px] border border-[rgba(142,142,147,0.5)] shadow-sm px-6 rounded-xl" style="background-color: transparent;">
     <!-- Kiri: Judul Halaman (HILANG DI DETAIL) -->
-    @if(!$isProductDetail && !$isTransactionDetail)
+    @if(!$isProductDetail && !$isTransactionDetail && !$isEditTransaction)
         <div class="flex items-center space-x-2">
             <h1 class="text-[35px] font-semibold text-gray-800 tracking-wide">
                 {{ $title }}
@@ -32,7 +35,7 @@
     <!-- Kanan: Profil User -->
     <div class="flex items-center space-x-4">
         <!-- SEARCH BAR – Hanya di halaman tertentu & BUKAN DETAIL -->
-        @if($showSearch && !$isProductDetail && !$isTransactionDetail)
+        @if($showSearch && !$isProductDetail && !$isTransactionDetail && !$isEditTransaction)
             <div class="relative mr-6">
                 <form action="{{ route(request()->route()->getName()) }}" method="GET" class="flex items-center">
                     <input type="text" 
@@ -61,7 +64,7 @@
             <x-dropdown align="right" width="48">
                 <x-slot name="trigger">
                     <button class="flex items-center gap-2 text-gray-700 focus:outline-none">
-                        <span class="font-medium text-[20px] text-gray-800">{{ Auth::user()->name }}</span>
+                        <span class="font-medium text-[20px] text-gray-800">{{ Auth::user()->detail->name }}</span>
                         <img src="{{ asset('images/profile.jpg') }}" alt="Profile" class="w-[50px] h-[50px] rounded-full border">
                         <svg class="fill-current h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />

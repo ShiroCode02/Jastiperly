@@ -27,8 +27,8 @@
                     @foreach ($menus as $menu)
                         <li>
                             <a href="{{ isset($menu['route']) ? route($menu['route']) : '#' }}"
-                               class="group flex items-center gap-6 px-5 py-3 rounded-lg transition-all duration-200 
-                                      {{ request()->routeIs($menu['route'] ?? '') ? 'bg-[#0A0E5C] font-semibold rounded-r-full' : 'hover:bg-[#0A0E5C]/70 hover:rounded-r-full' }}">
+                            class="group flex items-center gap-6 px-5 py-3 rounded-lg transition-all duration-200 
+                                    {{ request()->routeIs($menu['route'] . '*') ? 'bg-[#0A0E5C] font-semibold rounded-r-full' : 'hover:bg-[#0A0E5C]/70 hover:rounded-r-full' }}">
                                 <div class="w-[60px]"></div>
                                 <span class="menu-text flex-1 text-[17px] font-bold tracking-wide text-gray-100 group-hover:text-white transition-all duration-300 opacity-100 translate-x-0">
                                     {{ $menu['name'] }}
@@ -56,11 +56,11 @@
                         <li>
                             <a href="{{ isset($menu['route']) ? route($menu['route']) : '#' }}"
                                class="group flex items-center py-3 rounded-lg transition-all duration-200 
-                                      {{ request()->routeIs($menu['route'] ?? '') ? 'bg-[#0A0E5C] font-semibold' : 'hover:bg-[#FFFFFF]/20' }}">
+                                    {{ request()->routeIs($menu['route'] . '*') ? 'bg-[#0A0E5C] font-semibold' : 'hover:bg-[#FFFFFF]/20' }}">
                                 <div class="w-[97px] flex justify-center z-30">
                                     <img src="{{ asset('icons/' . $menu['icon']) }}" 
-                                         alt="{{ $menu['name'] }}" 
-                                         class="w-[25px] h-[25px] filter brightness-0 invert group-hover:opacity-90">
+                                        alt="{{ $menu['name'] }}" 
+                                        class="w-[25px] h-[25px] filter brightness-0 invert group-hover:opacity-90">
                                 </div>
                                 <div class="flex-1"></div>
                             </a>
