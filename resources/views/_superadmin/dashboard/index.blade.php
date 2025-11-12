@@ -102,11 +102,11 @@
                                 <!-- STATUS -->
                                 <td class="p-2 border border-black">
                                     @if($trx->payment_status == 'pending')
-                                        <span class="text-red-500 font-semibold">Belum Bayar</span>
+                                        <span class="text-yellow-500 font-semibold">Belum Bayar</span>
                                     @elseif($trx->payment_status == 'approved')
                                         <span class="text-green-600 font-semibold">Selesai</span>
                                     @elseif($trx->payment_status == 'declined')
-                                        <span class="text-gray-500">Dibatalkan</span>
+                                        <span class="text-red-500">Dibatalkan</span>
                                     @else
                                         <span class="text-gray-500">-</span>
                                     @endif

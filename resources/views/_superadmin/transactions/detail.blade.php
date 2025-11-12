@@ -146,7 +146,9 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-700 mb-1">Berat Barang</label>
-                                        <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">{{ $transaction->weight ?? '-' }} kg</div>
+                                        <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                            {{ $transaction->weight ? preg_replace('/[^0-9.]/', '', $transaction->weight) . ' kg' : '-' }}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -238,7 +240,7 @@
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Status</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
                                         @if($transaction->payment_status == 'pending')
-                                            <span class="text-red-500 font-semibold">Belum Bayar</span>
+                                            <span class="text-yellow-500 font-semibold">Belum Bayar</span>
                                         @elseif($transaction->payment_status == 'approved')
                                             <span class="text-green-600 font-semibold">Selesai</span>
                                         @elseif($transaction->payment_status == 'declined')

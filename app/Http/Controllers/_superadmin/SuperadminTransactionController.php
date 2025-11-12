@@ -8,6 +8,7 @@ use App\Models\SendTransaction;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TransactionsExport;
+use App\Exports\TransactionsDetailExport;
 
 class SuperadminTransactionController extends Controller
 {
@@ -83,7 +84,27 @@ class SuperadminTransactionController extends Controller
 
     public function export(Request $request)
     {
+        // $transactionId = $request->get('transaction_id');
         $type = $request->get('type', 'buy');
+
+        // JIKA ADA transaction_id → EXPORT 1 TRANSAKSI SAJA
+        //if ($transactionId) {
+        //    $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
+        //    $transaction = $model::with([
+        //        'buyer.detail', 'traveler.detail', 'sender.detail', 'reciever.detail',
+        //        'product.category', 'paymentMethod'
+        //    ])->findOrFail($transactionId);
+
+        //    $filename = ($type === 'buy' ? 'Detail_Titip_Beli' : 'Detail_Titip_Kirim');
+        //    $filename .= "_ID{$transaction->id}_" . now()->format('Y-m-d') . '.xlsx';
+
+        //    return Excel::download(
+        //        new TransactionsDetailExport($transaction, $type),
+        //        $filename
+        //    );
+        //}
+
+        // JIKA TIDAK → EXPORT DAFTAR (SEPERTI BIASA)
         $filename = $type === 'buy' ? 'Transaksi_Titip_Beli' : 'Transaksi_Titip_Kirim';
         $filename .= '_' . now()->format('Y-m-d') . '.xlsx';
 
@@ -108,32 +129,42 @@ class SuperadminTransactionController extends Controller
     {
         $type = $request->input('type', 'buy');
         $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
-
         $transaction = $model::findOrFail($id);
 
-        $validated = $request->validate([
-            // Titip Beli
-            'quantity' => 'required|integer|min:1',
-            'total_price' => 'required|numeric|min:0',
+        // VALIDASI BERBEDA PER TIPE
+        $rules = [
             'payment_status' => 'required|in:pending,approved,declined',
             'payment_proof' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ];
 
-            // Titip Kirim
-            'weight' => 'nullable|numeric|min:0',
-            'dimension' => 'nullable|string|max:50',
-            'delivery_code' => 'nullable|string|max:50',
-            'delivery_method' => 'nullable|string|max:50',
-            'delivery_type' => 'nullable|in:Dalam Negeri,Luar Negeri',
-            'pickup_address' => 'nullable|string',
-            'delivery_address' => 'nullable|string',
-        ]);
+        if ($type === 'buy') {
+            $rules += [
+                'quantity' => 'required|integer|min:1',
+                'total_price' => 'required|numeric|min:0',
+            ];
+        } else { // send
+            $rules += [
+                'weight' => 'nullable|numeric|min:0',
+                'dimension' => 'nullable|string|max:50',
+                'delivery_code' => 'nullable|string|max:50',
+                'delivery_method' => 'nullable|string|max:50',
+                'delivery_type' => 'nullable|in:Dalam Negeri,Luar Negeri',
+                'pickup_address' => 'nullable|string',
+                'delivery_address' => 'nullable|string',
+            ];
+        }
 
-        // Upload bukti pembayaran baru (jika ada)
+        $validated = $request->validate($rules);
+
+        // Upload bukti
         if ($request->hasFile('payment_proof')) {
             $path = $request->file('payment_proof')->store('payment_proofs', 'public');
             $validated['payment_proof'] = $path;
-        } else {
-            unset($validated['payment_proof']);
+        }
+
+        // SIMPAN weight JIKA DIISI
+        if ($request->filled('weight')) {
+            $validated['weight'] = (string) $request->weight;
         }
 
         $transaction->update($validated);
@@ -143,10 +174,15 @@ class SuperadminTransactionController extends Controller
             ->with('success', 'Transaksi berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy($id = null)
     {
         $type = request('type', 'buy');
         $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
+
+        // Support when $id is not provided as a method parameter (use route param or request input)
+        if (!isset($id)) {
+            $id = request()->route('id') ?? request('id') ?? request('transaction_id');
+        }
 
         $transaction = $model::findOrFail($id);
         $transaction->delete();

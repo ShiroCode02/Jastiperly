@@ -23,7 +23,7 @@
                     <td class="p-3 text-center">JST{{ $trx->id }}</td>
                     <td class="p-3 text-center">{{ $trx->created_at->format('d-m-Y') }}</td>
                     <td class="p-3 text-center font-semibold">
-                        @if($trx->payment_status == 'pending') <span class="text-red-500">Belum Bayar</span>
+                        @if($trx->payment_status == 'pending') <span class="text-yellow-500">Belum Bayar</span>
                         @elseif($trx->payment_status == 'approved') <span class="text-green-600">Selesai</span>
                         @elseif($trx->payment_status == 'declined') <span class="text-red-500">Dibatalkan</span>
                         @else <span class="text-gray-500">-</span> @endif

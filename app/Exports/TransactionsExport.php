@@ -80,22 +80,24 @@ class TransactionsExport implements FromCollection, WithHeadings, WithMapping
         static $index = 0;
         $index++;
 
+        $isBuy = $trx instanceof BuyTransaction;
+
         $statusText = match ($trx->payment_status) {
             'approved' => 'Selesai',
-            'pending' => 'Belum Bayar',
-            'declined' => 'Dibatalkan',
-            default => '-',
+            'pending'   => $isBuy ? 'Belum Bayar' : 'Belum Selesai',
+            'declined'  => 'Dibatalkan',
+            default     => '-',
         };
 
         return [
             $index,
-            'JST' . $trx->id,
-            $trx instanceof BuyTransaction ? $trx->buyer->name : $trx->sender->name,
+            $isBuy ? '#JSTP' . $trx->id : 'TKR' . $trx->id,
+            $isBuy ? $trx->buyer->name : $trx->sender->name,
             $trx->created_at->format('d-m-Y'),
             $statusText,
             'Rp' . number_format($trx->total_price ?? 0, 0, ',', '.'),
             $trx->paymentMethod->name ?? '-',
-            $trx instanceof BuyTransaction ? 'Titip Beli' : 'Titip Kirim',
+            $isBuy ? 'Titip Beli' : 'Titip Kirim',
         ];
     }
 }

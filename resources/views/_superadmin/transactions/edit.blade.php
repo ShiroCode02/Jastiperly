@@ -134,8 +134,12 @@
                                         </div>
                                         <div>
                                             <label class="block text-sm font-semibold text-gray-700 mb-1">Berat Barang</label>
-                                            <input type="number" step="0.1" name="weight" value="{{ $transaction->weight }}" 
-                                                   class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"> kg
+                                            <div class="flex items-center gap-2">
+                                                <input type="number" step="0.01" name="weight" value="{{ old('weight', preg_replace('/[^0-9.]/', '', $transaction->weight)) }}" 
+                                                    class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                                                    placeholder="0.00" min="0">
+                                                <span class="text-gray-600 font-medium whitespace-nowrap">kg</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div>
@@ -203,10 +207,10 @@
                                         <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal Transaksi</label>
                                         <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">{{ $transaction->created_at->format('d-m-Y') }}</div>
                                     </div>
-                                    <div>
-                                        <label class="block text-sm font-semibold text-gray-700 mb-1">Total Transaksi</label>
-                                        <input type="number" name="total_price" value="{{ $transaction->total_price }}" required 
-                                               class="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500">
+                                    <div class="relative">
+                                        <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600 font-medium">Rp</span>
+                                        <input type="number" name="total_price" value="{{ (int) $transaction->total_price }}" required 
+                                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="0" min="0">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-700 mb-1">Status</label>
@@ -298,8 +302,6 @@
                             </div>
                         </div>
                     @endif
-
-                    {{-- TOMBOL SIMPAN DIPINDAH KE HEADER → HAPUS DARI SINI --}}
                 </form>
 
                 <!-- MODAL BUKTI -->

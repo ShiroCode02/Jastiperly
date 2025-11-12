@@ -16,7 +16,7 @@ class SendTransactionSeeder extends Seeder
             // Dalam Negeri - Selesai
             [
                 'sender_id' => 6, 'reciever_id' => 7, 'product_id' => 2,
-                'dimension' => '20x15x10', 'weight' => '0.5 kg', 'delivery_code' => 'JNE123456789',
+                'dimension' => '20x15x10', 'weight' => '0.5', 'delivery_code' => 'JNE123456789',
                 'delivery_method' => 'Reguler', 'delivery_type' => 'Dalam Negeri',
                 'delivery_image' => $this->fakeDelivery('jne_reguler.jpg'),
                 'payment_method_id' => 1, 'payment_status' => 'approved',
@@ -27,7 +27,7 @@ class SendTransactionSeeder extends Seeder
             // Luar Negeri - Berjalan
             [
                 'sender_id' => 7, 'reciever_id' => 6, 'product_id' => 6,
-                'dimension' => '30x20x15', 'weight' => '1.2 kg', 'delivery_code' => null,
+                'dimension' => '30x20x15', 'weight' => '1.2', 'delivery_code' => null,
                 'delivery_method' => 'Express', 'delivery_type' => 'Luar Negeri',
                 'delivery_image' => null,
                 'payment_method_id' => 4, 'payment_status' => 'pending',
@@ -38,7 +38,7 @@ class SendTransactionSeeder extends Seeder
             // Dalam Negeri - Dibatalkan
             [
                 'sender_id' => 6, 'reciever_id' => 7, 'product_id' => 8,
-                'dimension' => '25x18x12', 'weight' => '0.8 kg', 'delivery_code' => 'JNT987654321',
+                'dimension' => '25x18x12', 'weight' => '0.8', 'delivery_code' => 'JNT987654321',
                 'delivery_method' => 'Kargo', 'delivery_type' => 'Dalam Negeri',
                 'delivery_image' => $this->fakeDelivery('jnt_kargo.jpg'),
                 'payment_method_id' => 2, 'payment_status' => 'declined',
