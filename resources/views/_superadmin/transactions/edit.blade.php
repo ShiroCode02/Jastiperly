@@ -176,9 +176,10 @@
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white flex justify-between items-center">
                                         <span>{{ $transaction->paymentMethod->name ?? '-' }}</span>
                                         @if($transaction->payment_proof)
-                                            <button type="button" onclick="document.getElementById('proofModal').classList.remove('hidden')"
+                                            <button type="button" 
+                                                    onclick="showProofModal('{{ asset('storage/' . $transaction->payment_proof) }}')"
                                                     class="text-blue-600 text-xs underline hover:text-blue-800">
-                                                Lihat Bukti
+                                                Lihat Bukti Transaksi
                                             </button>
                                         @endif
                                     </div>
@@ -242,9 +243,10 @@
                                         <div class="border border-gray-300 rounded-md px-4 py-2 bg-white flex justify-between items-center">
                                             <span>{{ $transaction->paymentMethod->name ?? '-' }}</span>
                                             @if($transaction->payment_proof)
-                                                <button type="button" onclick="document.getElementById('proofModal').classList.remove('hidden')"
+                                                <button type="button" 
+                                                        onclick="showProofModal('{{ asset('storage/' . $transaction->payment_proof) }}')"
                                                         class="text-blue-600 text-xs underline hover:text-blue-800">
-                                                    Lihat Bukti
+                                                    Lihat Bukti Transaksi
                                                 </button>
                                             @endif
                                         </div>
@@ -303,23 +305,8 @@
                         </div>
                     @endif
                 </form>
-
-                <!-- MODAL BUKTI -->
-                @if($transaction->payment_proof)
-                    <div id="proofModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
-                        <div class="bg-white rounded-lg max-w-2xl w-full p-6 relative">
-                            <button type="button" onclick="document.getElementById('proofModal').classList.add('hidden')"
-                                    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                            <h3 class="text-lg font-semibold mb-4">Bukti Pembayaran</h3>
-                            <img src="{{ asset('storage/' . $transaction->payment_proof) }}" class="w-full rounded-md" alt="Bukti">
-                        </div>
-                    </div>
-                @endif
             </div>
+            @include('_superadmin.transactions.components.payment-proof-modal', ['proof' => $transaction->payment_proof])
         </div>
     </div>
 

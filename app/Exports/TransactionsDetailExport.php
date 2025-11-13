@@ -1,10 +1,8 @@
 <?php
-// app/Exports/TransactionsDetailExport.php
+
 
 namespace App\Exports;
 
-use App\Models\BuyTransaction;
-use App\Models\SendTransaction;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -28,7 +26,7 @@ class TransactionsDetailExport implements FromCollection, WithHeadings, WithMapp
 
     public function headings(): array
     {
-        return [
+        $common = [
             'ID Transaksi',
             'Tipe',
             'Tanggal Transaksi',
@@ -41,34 +39,60 @@ class TransactionsDetailExport implements FromCollection, WithHeadings, WithMapp
             'Kontak Pengguna 2',
             'Nama Barang',
             'Kategori',
-            'Jumlah/Berat',
-            'Ukuran/Dimensi',
-            'Asal Barang',
             'Deskripsi Barang',
-            'Alamat Pengambilan',
-            'Alamat Tujuan',
-            'Metode Pengiriman',
-            'Resi Pengiriman',
-            'Jenis Pengiriman',
         ];
+
+        if ($this->type === 'buy') {
+            return array_merge($common, [
+                'Jumlah Barang',
+                'Asal Barang',
+            ]);
+        } else {
+            return array_merge($common, [
+                'Berat Barang',
+                'Ukuran/Dimensi',
+                'Alamat Pengambilan',
+                'Alamat Tujuan',
+                'Metode Pengiriman',
+                'Resi Pengiriman',
+                'Jenis Pengiriman',
+            ]);
+        }
     }
 
     public function map($trx): array
     {
         $isBuy = $this->type === 'buy';
 
-        // Pengguna 1 & 2
-        $user1Name = $isBuy ? ($trx->buyer->detail->name ?? $trx->buyer->name) : ($trx->sender->detail->name ?? $trx->sender->name);
-        $user1Phone = $isBuy ? ($trx->buyer->detail->phone ?? '-') : ($trx->sender->detail->phone ?? '-');
-        $user2Name = $isBuy ? ($trx->traveler->detail->name ?? $trx->traveler->name) : ($trx->reciever->detail->name ?? $trx->reciever->name);
-        $user2Phone = $isBuy ? ($trx->traveler->detail->phone ?? '-') : ($trx->reciever->detail->phone ?? '-');
+        // === DATA PENGGUNA ===
+        $user1Name = $isBuy 
+            ? ($trx->buyer->detail->name ?? $trx->buyer->name) 
+            : ($trx->sender->detail->name ?? $trx->sender->name);
+        $user1Phone = $isBuy 
+            ? ($trx->buyer->detail->phone ?? '-') 
+            : ($trx->sender->detail->phone ?? '-');
+        $user2Name = $isBuy 
+            ? ($trx->traveler->detail->name ?? $trx->traveler->name) 
+            : ($trx->reciever->detail->name ?? $trx->reciever->name);
+        $user2Phone = $isBuy 
+            ? ($trx->traveler->detail->phone ?? '-') 
+            : ($trx->reciever->detail->phone ?? '-');
 
-        // Barang
-        $quantityWeight = $isBuy ? ($trx->quantity . ' Unit') : ($trx->weight . ' kg');
-        $dimension = $isBuy ? '-' : ($trx->dimension ?? '-');
-        $origin = $isBuy ? ($trx->product->origin ?? '-') : '-';
+        // === DATA BARANG ===
+        $quantity = $isBuy ? $trx->quantity . ' Unit' : null;
+        $weight = !$isBuy ? (preg_replace('/[^0-9.]/', '', $trx->weight ?? '') . ' kg') : null;
+        $dimension = !$isBuy ? ($trx->dimension ?? '-') : null;
+        $origin = $isBuy ? ($trx->product->origin ?? '-') : null;
 
-        return [
+        // === DATA PENGIRIMAN ===
+        $pickup = !$isBuy ? ($trx->pickup_address ?? '-') : null;
+        $delivery = !$isBuy ? ($trx->delivery_address ?? '-') : null;
+        $method = !$isBuy ? ($trx->delivery_method ?? '-') : null;
+        $code = !$isBuy ? ($trx->delivery_code ?? '-') : null;
+        $typeDelivery = !$isBuy ? ($trx->delivery_type ?? '-') : null;
+
+        // === DATA UMUM ===
+        $commonData = [
             $isBuy ? '#JSTP' . $trx->id : 'TKR' . $trx->id,
             $isBuy ? 'Titip Beli' : 'Titip Kirim',
             $trx->created_at->format('d-m-Y H:i'),
@@ -81,23 +105,32 @@ class TransactionsDetailExport implements FromCollection, WithHeadings, WithMapp
             $user2Phone,
             $trx->product->name,
             $trx->product->category->name ?? '-',
-            $quantityWeight,
-            $dimension,
-            $origin,
             $trx->product->description ?? '-',
-            $isBuy ? '-' : ($trx->pickup_address ?? '-'),
-            $isBuy ? '-' : ($trx->delivery_address ?? '-'),
-            $isBuy ? '-' : ($trx->delivery_method ?? '-'),
-            $isBuy ? '-' : ($trx->delivery_code ?? '-'),
-            $isBuy ? '-' : ($trx->delivery_type ?? '-'),
         ];
+
+        if ($isBuy) {
+            return array_merge($commonData, [
+                $quantity,
+                $origin,
+            ]);
+        } else {
+            return array_merge($commonData, [
+                $weight,
+                $dimension,
+                $pickup,
+                $delivery,
+                $method,
+                $code,
+                $typeDelivery,
+            ]);
+        }
     }
 
     private function getStatusText($status)
     {
         return match ($status) {
             'approved' => 'Selesai',
-            'pending' => 'Belum Bayar / Belum Selesai',
+            'pending' => $this->type === 'buy' ? 'Belum Bayar' : 'Belum Selesai',
             'declined' => 'Dibatalkan',
             default => '-',
         };

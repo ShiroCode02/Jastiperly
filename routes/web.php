@@ -88,6 +88,8 @@ Route::middleware(['auth',])->prefix('superadmin')->group(function () {
 
     // Refunds List
     Route::get('/refunds', [SuperadminRefundController::class, 'index'])->name('superadmin.refunds');
+    Route::get('/refunds/{refund}', [SuperadminRefundController::class, 'show'])->name('superadmin.refunds.show');
+    Route::get('/refunds/export', [SuperadminRefundController::class, 'export'])->name('superadmin.refunds.export');
 
     // Settings
     Route::get('/settings', [SuperadminSettingController::class, 'index'])->name('superadmin.settings');

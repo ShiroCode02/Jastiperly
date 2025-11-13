@@ -187,7 +187,8 @@
                                 <div class="border border-gray-300 rounded-md px-4 py-2 bg-white flex justify-between items-center">
                                     <span>{{ $transaction->paymentMethod->name ?? '-' }}</span>
                                     @if($transaction->payment_proof)
-                                        <button onclick="document.getElementById('proofModal').classList.remove('hidden')"
+                                        <button type="button" 
+                                                onclick="showProofModal('{{ asset('storage/' . $transaction->payment_proof) }}')"
                                                 class="text-blue-600 text-xs underline hover:text-blue-800">
                                             Lihat Bukti Transaksi
                                         </button>
@@ -294,7 +295,8 @@
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white flex justify-between items-center">
                                         <span>{{ $transaction->paymentMethod->name ?? '-' }}</span>
                                         @if($transaction->payment_proof)
-                                            <button onclick="document.getElementById('proofModal').classList.remove('hidden')"
+                                            <button type="button" 
+                                                    onclick="showProofModal('{{ asset('storage/' . $transaction->payment_proof) }}')"
                                                     class="text-blue-600 text-xs underline hover:text-blue-800">
                                                 Lihat Bukti Transaksi
                                             </button>
@@ -390,6 +392,7 @@
                     </div>
                 @endif
             </div>
+            @include('_superadmin.transactions.components.payment-proof-modal', ['proof' => $transaction->payment_proof])
         </div>
     </div>
 

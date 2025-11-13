@@ -13,14 +13,17 @@
                                 ? \App\Models\BuyTransaction::count()
                                 : \App\Models\SendTransaction::count();
                         @endphp
-                        <a href="{{ route('superadmin.transactions', ['type' => $type]) }}"
-                        class="flex items-center gap-2 px-4 py-1.5 rounded-md text-black font-medium
-                                hover:bg-white transition {{ request('type', 'buy') === $type ? 'bg-white text-black' : 'bg-transparent' }}">
-                            <span>{{ $label }}</span>
-                            <span class="text-gray-400 text-sm font-bold flex items-center justify-center ml-1">
-                                {{ $count }}
-                            </span>
-                        </a>
+                        <form method="GET" action="{{ route('superadmin.transactions') }}" class="inline">
+                            <input type="hidden" name="type" value="{{ $type }}">
+                            <button type="submit"
+                                    class="flex items-center gap-2 px-4 py-1.5 rounded-md text-black font-medium
+                                        hover:bg-white transition {{ request('type', 'buy') === $type ? 'bg-white text-black' : 'bg-transparent' }}">
+                                <span>{{ $label }}</span>
+                                <span class="text-gray-400 text-sm font-bold flex items-center justify-center ml-1">
+                                    {{ $count }}
+                                </span>
+                            </button>
+                        </form>
                         @if($loop->first)<div class="w-0.5 bg-black h-4"></div>@endif
                     @endforeach
                 </div>

@@ -73,48 +73,58 @@ class SuperadminTransactionController extends Controller
 
         // Search
         if ($search) {
-            $query->whereHas($type === 'buy' ? 'buyer' : 'sender', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%");
-            })->orWhere('id', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search, $type) {
+                $q->whereHas($type === 'buy' ? 'buyer.detail' : 'sender.detail', function ($sub) use ($search) {
+                    $sub->where('name', 'like', "%{$search}%");
+                })->orWhere('id', 'like', "%{$search}%");
+            });
         }
 
         $transactions = $query->latest()->paginate(10)->appends($request->query());
         return view('_superadmin.transactions.index', compact('title', 'transactions', 'type'));
     }
 
-    public function export(Request $request)
+    public function export()
     {
-        // $transactionId = $request->get('transaction_id');
-        $type = $request->get('type', 'buy');
+        $type = request()->get('type', 'buy');
+        $transactionId = request()->get('transaction_id');
 
-        // JIKA ADA transaction_id → EXPORT 1 TRANSAKSI SAJA
-        //if ($transactionId) {
-        //    $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
-        //    $transaction = $model::with([
-        //        'buyer.detail', 'traveler.detail', 'sender.detail', 'reciever.detail',
-        //        'product.category', 'paymentMethod'
-        //    ])->findOrFail($transactionId);
+        // === EXPORT DETAIL: 1 TRANSAKSI ===
+        if ($transactionId) {
+            $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
 
-        //    $filename = ($type === 'buy' ? 'Detail_Titip_Beli' : 'Detail_Titip_Kirim');
-        //    $filename .= "_ID{$transaction->id}_" . now()->format('Y-m-d') . '.xlsx';
+            // RELASI BERBEDA PER TIPE
+            $with = $type === 'buy'
+                ? ['buyer.detail', 'traveler.detail', 'product.category', 'paymentMethod']
+                : ['sender.detail', 'reciever.detail', 'product.category', 'paymentMethod'];
 
-        //    return Excel::download(
-        //        new TransactionsDetailExport($transaction, $type),
-        //        $filename
-        //    );
-        //}
+            $transaction = $model::with($with)->findOrFail($transactionId);
+
+            $filename = ($type === 'buy' ? 'Detail_Titip_Beli' : 'Detail_Titip_Kirim');
+            $filename .= "_ID{$transaction->id}_" . now()->format('Y-m-d') . '.xlsx';
+
+            return Excel::download(
+                new TransactionsDetailExport($transaction, $type),
+                $filename
+            );
+        }
 
         // JIKA TIDAK → EXPORT DAFTAR (SEPERTI BIASA)
         $filename = $type === 'buy' ? 'Transaksi_Titip_Beli' : 'Transaksi_Titip_Kirim';
         $filename .= '_' . now()->format('Y-m-d') . '.xlsx';
 
-        return Excel::download(new TransactionsExport($request->all()), $filename);
+        return Excel::download(new TransactionsExport(request()->all()), $filename);
     }
 
-    public function edit($id)
+    public function edit($id = null)
     {
         $type = request('type', 'buy');
         $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
+
+        // Support when $id is not provided as a method parameter (use route param or request input)
+        if (!isset($id)) {
+            $id = request()->route('id') ?? request('id') ?? request('transaction_id');
+        }
 
         $transaction = $model::with(
             $type === 'buy'
@@ -125,13 +135,20 @@ class SuperadminTransactionController extends Controller
         return view('_superadmin.transactions.edit', compact('transaction', 'type'));
     }
 
-    public function update(Request $request, $id)
+    public function update($id = null)
     {
-        $type = $request->input('type', 'buy');
-        $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
-        $transaction = $model::findOrFail($id);
+        if (!isset($id)) {
+            $id = request()->route('id') ?? request('id') ?? request('transaction_id');
+        }
 
-        // VALIDASI BERBEDA PER TIPE
+        if (!$id) {
+            abort(400, 'ID Transaksi wajib diisi.');
+        }
+
+        $type = request()->input('type', 'buy');
+        $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
+        $transaction = $model::findOrFail($id); // SEKARANG AMAN
+
         $rules = [
             'payment_status' => 'required|in:pending,approved,declined',
             'payment_proof' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -142,7 +159,7 @@ class SuperadminTransactionController extends Controller
                 'quantity' => 'required|integer|min:1',
                 'total_price' => 'required|numeric|min:0',
             ];
-        } else { // send
+        } else {
             $rules += [
                 'weight' => 'nullable|numeric|min:0',
                 'dimension' => 'nullable|string|max:50',
@@ -154,23 +171,21 @@ class SuperadminTransactionController extends Controller
             ];
         }
 
-        $validated = $request->validate($rules);
+        $validated = request()->validate($rules);
 
-        // Upload bukti
-        if ($request->hasFile('payment_proof')) {
-            $path = $request->file('payment_proof')->store('payment_proofs', 'public');
+        if (request()->hasFile('payment_proof')) {
+            $path = request()->file('payment_proof')->store('payment_proofs', 'public');
             $validated['payment_proof'] = $path;
         }
 
-        // SIMPAN weight JIKA DIISI
-        if ($request->filled('weight')) {
-            $validated['weight'] = (string) $request->weight;
+        if (request()->filled('weight')) {
+            $validated['weight'] = (string) request()->input('weight');
         }
 
         $transaction->update($validated);
 
         return redirect()
-            ->route('superadmin.transactions', ['type' => $type, 'transaction_id' => $id])
+            ->route('superadmin.transactions', ['type' => $type, 'transaction_id' => $id]) // AMAN
             ->with('success', 'Transaksi berhasil diperbarui.');
     }
 
@@ -179,12 +194,14 @@ class SuperadminTransactionController extends Controller
         $type = request('type', 'buy');
         $model = $type === 'buy' ? BuyTransaction::class : SendTransaction::class;
 
-        // Support when $id is not provided as a method parameter (use route param or request input)
-        if (!isset($id)) {
-            $id = request()->route('id') ?? request('id') ?? request('transaction_id');
+        // Determine transaction id from parameter, route or request input
+        $transactionId = $id ?? request()->route('id') ?? request('id') ?? request('transaction_id');
+
+        if (!$transactionId) {
+            abort(400, 'Transaction ID is required');
         }
 
-        $transaction = $model::findOrFail($id);
+        $transaction = $model::findOrFail($transactionId);
         $transaction->delete();
 
         return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');

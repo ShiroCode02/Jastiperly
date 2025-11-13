@@ -51,9 +51,18 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
 
-                    <!-- Hidden input untuk tab (jika ada) -->
+                    <!-- Hidden input untuk tab -->
                     @if(request('tab'))
                         <input type="hidden" name="tab" value="{{ request('tab') }}">
+                    @endif
+
+                    <!-- Transaksi Filter -->
+                    <input type="hidden" name="type" value="{{ request('type', 'buy') }}">
+                    @if(request('status'))
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                    @endif
+                    @if(request('location'))
+                        <input type="hidden" name="location" value="{{ request('location') }}">
                     @endif
                 </form>
             </div>

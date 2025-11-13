@@ -1,5 +1,5 @@
 <!-- Modal Hapus -->
-<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
         <h3 class="text-lg font-semibold mb-4 text-red-600">Hapus Transaksi?</h3>
         <p class="text-gray-600 mb-6">Data akan dihapus permanen dan tidak dapat dikembalikan.</p>
