@@ -90,6 +90,8 @@ Route::middleware(['auth',])->prefix('superadmin')->group(function () {
     Route::get('/refunds', [SuperadminRefundController::class, 'index'])->name('superadmin.refunds');
     Route::get('/refunds/{refund}', [SuperadminRefundController::class, 'show'])->name('superadmin.refunds.show');
     Route::get('/refunds/export', [SuperadminRefundController::class, 'export'])->name('superadmin.refunds.export');
+    Route::patch('/refunds/{refund}/approve', [SuperadminRefundController::class, 'approve'])->name('superadmin.refund.approve');
+    Route::patch('/refunds/{refund}/decline', [SuperadminRefundController::class, 'decline'])->name('superadmin.refund.decline');
 
     // Settings
     Route::get('/settings', [SuperadminSettingController::class, 'index'])->name('superadmin.settings');

@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PaymentMethodSeeder::class); // Seed metode pembayaran
         $this->call(BuyTransactionSeeder::class); // Seed transaksi pembelian
         $this->call(SendTransactionSeeder::class); // Seed transaksi pengiriman
+        $this->call(RefundSeeder::class); // Seed Refund transaksi pembelian
         // Kalau mau tambah seeder lain, tambahin di sini
     }
 }

@@ -3,12 +3,12 @@
         <thead class="bg-[#577BC1]/40 text-blue-900">
             <tr>
                 <th class="p-3 text-center font-semibold">No</th>
-                <th class="p-3 text-center font-semibold">ID Refund</th>
-                <th class="p-3 text-center font-semibold">ID Transaksi</th>
                 <th class="p-3 text-center font-semibold">Nama Penitip</th>
+                <th class="p-3 text-center font-semibold">ID Transaksi</th>
                 <th class="p-3 text-center font-semibold">Tanggal</th>
                 <th class="p-3 text-center font-semibold">Status</th>
-                <th class="p-3 text-center font-semibold">Alasan</th>
+                <th class="p-3 text-center font-semibold">Total Transaksi</th>
+                <th class="p-3 text-center font-semibold">Pembayaran</th>
                 <th class="p-3 text-center font-semibold">Aksi</th>
             </tr>
         </thead>
@@ -20,29 +20,61 @@
                     $buyer = $transaction->buyer->detail ?? null;
                 @endphp
                 <tr class="border-b hover:bg-blue-100 transition">
+                    <!-- No -->
                     <td class="p-3 text-center">{{ $start + $index }}</td>
-                    <td class="p-3 text-center font-mono">RF{{ $refund->id }}</td>
-                    <td class="p-3 text-center font-mono">JST{{ $transaction->id }}</td>
-                    <td class="p-3 text-center font-semibold">{{ $buyer?->name ?? '-' }}</td>
-                    <td class="p-3 text-center">{{ $refund->created_at->format('d-m-Y') }}</td>
+
+                    <!-- Nama Penitip -->
                     <td class="p-3 text-center font-semibold">
-                        @if($refund->status == 'pending') <span class="text-yellow-500">Menunggu</span>
-                        @elseif($refund->status == 'approved') <span class="text-green-600">Disetujui</span>
-                        @elseif($refund->status == 'declined') <span class="text-red-500">Ditolak</span>
-                        @else <span class="text-gray-500">-</span> @endif
+                        {{ $buyer?->name ?? '-' }}
                     </td>
-                    <td class="p-3 text-center text-xs">{{ Str::limit($refund->reason, 50) }}</td>
+
+                    <!-- ID Transaksi -->
+                    <td class="p-3 text-center font-mono">JST{{ $transaction->id }}</td>
+
+                    <!-- Tanggal -->
+                    <td class="p-3 text-center">{{ $refund->created_at->format('d-m-Y') }}</td>
+
+                    <!-- Status Refund -->
+                    <td class="p-3 text-center font-semibold">
+                        @if($refund->status == 'pending')
+                            <span class="text-yellow-500">Proses</span>
+                        @elseif($refund->status == 'approved')
+                            <span class="text-green-600">Disetujui</span>
+                        @elseif($refund->status == 'declined')
+                            <span class="text-red-500">Ditolak</span>
+                        @else
+                            <span class="text-gray-500">-</span>
+                        @endif
+                    </td>
+
+                    <!-- Total Transaksi -->
+                    <td class="p-3 text-center font-medium">
+                        Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
+                    </td>
+
+                    <!-- Pembayaran -->
+                    <td class="p-3 text-center">
+                        {{ $transaction->paymentMethod->name ?? '-' }}
+                    </td>
+
+                    <!-- Aksi -->
                     <td class="p-3 flex justify-center gap-2">
+                        <!-- EDIT (belum ada rute) -->
                         <a href="#" 
-                            class="p-2 rounded-md transition hover:scale-110" 
-                            style="background-color: #FAB00580;"
-                            title="Edit Refund">
+                           class="p-2 rounded-md transition hover:scale-110" 
+                           style="background-color: #FAB00580;"
+                           title="Edit Refund">
                             <x-icons.icon name="pencil" class="w-4 h-4 text-white" />
                         </a>
+
+                        <!-- LIHAT DETAIL -->
                         <a href="{{ route('superadmin.refunds.show', $refund->id) }}"
-                           class="p-2 rounded-md transition hover:scale-110" style="background-color: #0095DA80;">
+                           class="p-2 rounded-md transition hover:scale-110" 
+                           style="background-color: #0095DA80;">
                             <x-icons.icon name="eye" class="w-4 h-4 text-white" />
                         </a>
+
+                        <!-- HAPUS (belum ada) -->
                         <button type="button"
                                 class="p-2 rounded-md transition hover:scale-110" 
                                 style="background-color: #FA525280;"
@@ -53,7 +85,11 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="8" class="text-center text-gray-500 py-6">Tidak ada pengembalian dana</td></tr>
+                <tr>
+                    <td colspan="8" class="text-center text-gray-500 py-6">
+                        Tidak ada pengembalian dana
+                    </td>
+                </tr>
             @endforelse
         </tbody>
     </table>

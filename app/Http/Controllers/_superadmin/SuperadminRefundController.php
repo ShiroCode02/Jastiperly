@@ -34,10 +34,22 @@ class SuperadminRefundController extends Controller
         return view('_superadmin.refunds.index', compact('refunds'));
     }
 
-    public function show($id)
+    public function show(Refund $refund)
     {
-        $refund = Refund::with(['buyTransaction.buyer.detail', 'buyTransaction.traveler.detail', 'buyTransaction.product'])->findOrFail($id);
-        return view('_superadmin.refunds.show', compact('refund'));
+        $refund->load(['buyTransaction.buyer.detail', 'buyTransaction.traveler.detail', 'buyTransaction.product.category', 'buyTransaction.paymentMethod']);
+        return view('_superadmin.refunds.detail', compact('refund'));
+    }
+
+    public function approve(Refund $refund)
+    {
+        $refund->update(['status' => 'approved']);
+        return back()->with('success', 'Refund disetujui!');
+    }
+
+    public function decline(Refund $refund)
+    {
+        $refund->update(['status' => 'declined']);
+        return back()->with('error', 'Refund ditolak!');
     }
 
     public function export(Request $request)
