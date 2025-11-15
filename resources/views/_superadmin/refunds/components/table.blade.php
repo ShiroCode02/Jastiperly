@@ -39,7 +39,7 @@
                         @if($refund->status == 'pending')
                             <span class="text-yellow-500">Proses</span>
                         @elseif($refund->status == 'approved')
-                            <span class="text-green-600">Disetujui</span>
+                            <span class="text-green-600">Selesai</span>
                         @elseif($refund->status == 'declined')
                             <span class="text-red-500">Ditolak</span>
                         @else
@@ -59,11 +59,10 @@
 
                     <!-- Aksi -->
                     <td class="p-3 flex justify-center gap-2">
-                        <!-- EDIT (belum ada rute) -->
-                        <a href="#" 
+                        <!-- EDIT -->
+                        <a href="{{ route('superadmin.refunds.edit', $refund->id) }}" 
                            class="p-2 rounded-md transition hover:scale-110" 
-                           style="background-color: #FAB00580;"
-                           title="Edit Refund">
+                           style="background-color: #FAB00580;">
                             <x-icons.icon name="pencil" class="w-4 h-4 text-white" />
                         </a>
 
@@ -74,12 +73,11 @@
                             <x-icons.icon name="eye" class="w-4 h-4 text-white" />
                         </a>
 
-                        <!-- HAPUS (belum ada) -->
+                        <!-- HAPUS -->
                         <button type="button"
                                 class="p-2 rounded-md transition hover:scale-110" 
                                 style="background-color: #FA525280;"
-                                title="Hapus Refund"
-                                onclick="alert('Fitur hapus belum tersedia')">
+                                onclick="confirmDeleteRefund({{ $refund->id }})">
                             <x-icons.icon name="trash" class="w-4 h-4 text-white" />
                         </button>
                     </td>

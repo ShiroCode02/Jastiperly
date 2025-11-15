@@ -40,20 +40,41 @@ class SuperadminRefundController extends Controller
         return view('_superadmin.refunds.detail', compact('refund'));
     }
 
-    public function approve(Refund $refund)
+    public function edit(Refund $refund)
     {
-        $refund->update(['status' => 'approved']);
-        return back()->with('success', 'Refund disetujui!');
+        $refund->load(['buyTransaction.buyer.detail', 'buyTransaction.product']);
+        return view('_superadmin.refunds.edit', compact('refund'));
     }
 
-    public function decline(Refund $refund)
+    public function update(Request $request, Refund $refund)
     {
-        $refund->update(['status' => 'declined']);
-        return back()->with('error', 'Refund ditolak!');
+        $validated = $request->validate([
+            'reason' => 'required|string|max:1000',
+            'status' => 'required|in:pending,approved,declined',
+        ]);
+
+        $refund->update($validated);
+
+        return redirect()
+            ->route('superadmin.refunds.show', $refund)
+            ->with('success', 'Refund berhasil diperbarui.');
+    }
+
+    public function destroy(Refund $refund)
+    {
+        $refund->delete();
+
+        return redirect()
+            ->route('superadmin.refunds')
+            ->with('success', 'Refund berhasil dihapus.');
     }
 
     public function export(Request $request)
     {
-        return Excel::download(new RefundsExport($request->all()), 'refund-data.xlsx');
+        $filename = $request->has('refund')
+            ? 'refund-detail-' . $request->refund . '.xlsx'
+            : 'refund-data.xlsx';
+
+        return Excel::download(new RefundsExport($request->all()), $filename);
     }
 }

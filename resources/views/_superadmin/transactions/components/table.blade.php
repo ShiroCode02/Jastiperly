@@ -39,7 +39,7 @@
                            class="p-2 rounded-md transition hover:scale-110" style="background-color: #FAB00580;">
                             <x-icons.icon name="pencil" class="w-4 h-4 text-white" />
                         </a>
-                        <a href="{{ route('superadmin.transactions', array_merge(request()->query(), ['type' => $trx instanceof \App\Models\BuyTransaction ? 'buy' : 'send', 'transaction_id' => $trx->id])) }}"
+                        <a href="{{ route('superadmin.transactions.show', ['transaction' => $trx->id, 'type' => $trx instanceof \App\Models\BuyTransaction ? 'buy' : 'send']) }}"
                            class="p-2 rounded-md transition hover:scale-110" style="background-color: #0095DA80;">
                             <x-icons.icon name="eye" class="w-4 h-4 text-white" />
                         </a>

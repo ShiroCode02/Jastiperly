@@ -10,6 +10,7 @@
         </div>
     </div>
 
+    @include('_superadmin.refunds.components.delete-modal')
     <script>
         document.getElementById('main-content').classList.remove('initial-hidden');
         document.getElementById('navbar-header').classList.remove('initial-hidden');

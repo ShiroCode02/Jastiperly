@@ -62,78 +62,24 @@
 
                 <!-- Tabel Transaksi Terbaru -->
                 <div class="bg-white/40 p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
-                    <h3 class="font-semibold mb-3">Transaksi Terbaru</h3>
-                    <table class="w-full text-sm border-collapse border-black">
-                        <thead>
-                            <tr class="bg-[#577BC1] text-white">
-                                <th class="p-2 border border-black">No</th>
-                                <th class="p-2 border border-black">ID Transaksi</th>
-                                <th class="p-2 border border-black">Nama Traveler</th>
-                                <th class="p-2 border border-black">Nama Penitip</th>
-                                <th class="p-2 border border-black">Total Transaksi</th>
-                                <th class="p-2 border border-black">Layanan</th>
-                                <th class="p-2 border border-black">Metode Pembayaran</th>
-                                <th class="p-2 border border-black">Status</th>
-                                <th class="p-2 border border-black">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($latestTransactions as $index => $trx)
-                            <tr class="text-center hover:bg-blue-50">
-                                <td class="p-2 border border-black">{{ $index + 1 }}</td>
-                                <td class="p-2 border border-black">#JSTP{{ $trx->id }}</td>
-                                <td class="p-2 border border-black">{{ $trx->traveler?->detail->name ?? ($trx->sender?->detail->name ?? '-') }}</td>
-                                <td class="p-2 border border-black">{{ $trx->buyer?->detail->name ?? ($trx->reciever?->detail->name ?? '-') }}</td>
-                                <td class="p-2 border border-black">Rp{{ number_format($trx->total_price ?? 0, 0, ',', '.') }}</td>
+                    <h3 class="font-semibold mb-3 flex items-center gap-2">
+                        Transaksi Terbaru
+                        <span id="loading-spinner" class="htmx-indicator hidden">
+                            <svg class="animate-spin h-4 w-4 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                    </h3>
 
-                                <!-- LAYANAN -->
-                                <td class="p-2 border border-black">
-                                    @php
-                                        $type = $trx->type ?? ($trx instanceof \App\Models\BuyTransaction ? 'buy' : 'send');
-                                    @endphp
-                                    <span class="px-2 py-1 rounded-full text-xs font-medium {{ $type === 'buy' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700' }}">
-                                        {{ $type === 'buy' ? 'Titip Beli' : 'Titip Kirim' }}
-                                    </span>
-                                </td>
-
-                                <!-- METODE PEMBAYARAN -->
-                                <td class="p-2 border border-black">{{ $trx->paymentMethod?->name ?? '-' }}</td>
-
-                                <!-- STATUS -->
-                                <td class="p-2 border border-black">
-                                    @if($trx->payment_status == 'pending')
-                                        <span class="text-yellow-500 font-semibold">Belum Bayar</span>
-                                    @elseif($trx->payment_status == 'approved')
-                                        <span class="text-green-600 font-semibold">Selesai</span>
-                                    @elseif($trx->payment_status == 'declined')
-                                        <span class="text-red-500">Dibatalkan</span>
-                                    @else
-                                        <span class="text-gray-500">-</span>
-                                    @endif
-                                </td>
-
-                                <!-- AKSI -->
-                                <td class="p-2 border border-black">
-                                    @php
-                                        $type = $trx->type ?? ($trx instanceof \App\Models\BuyTransaction ? 'buy' : 'send');
-                                        $detailRoute = route('superadmin.transactions', [
-                                            'transaction_id' => $trx->id,
-                                            'type' => $type
-                                        ]);
-                                    @endphp
-                                    <a href="{{ $detailRoute }}" 
-                                    class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-lg">
-                                        Detail
-                                    </a>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr><td colspan="9" class="text-center text-gray-500 py-4">Tidak ada transaksi</td></tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                    <div class="mt-4">
-                        {{ $latestTransactions->links() }}
+                    <!-- CARD KOSONG → HTMX ISI -->
+                    <div id="latest-transactions-card"
+                        hx-get="{{ route('superadmin.dashboard.transactions') }}"
+                        hx-trigger="load"
+                        hx-target="#latest-transactions-card"
+                        hx-swap="innerHTML"
+                        hx-indicator="#loading-spinner">
+                        <!-- Kosong -->
                     </div>
                 </div>
             </div>

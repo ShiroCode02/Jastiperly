@@ -50,7 +50,7 @@
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-1">Nomor Rekening</label>
                                 <div class="border border-gray-300 rounded-md px-4 py-2 bg-white font-mono">
-                                    {{ $transaction->buyer->detail->account_number ?? '08928389249932874' }}
+                                    {{ $transaction->buyer->detail->bank_number ?? 'Tidak Terdeteksi' }}
                                 </div>
                             </div>
                             <div>
@@ -97,51 +97,55 @@
                         </div>
                     </div>
 
-                    <!-- TOTAL HARGA & REFUND -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-lg">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Total Harga yang sudah dibayar</label>
-                            <div class="border border-gray-300 rounded-md px-4 py-2 bg-white font-bold text-green-600">
-                                Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
+                    <!-- TOTAL + BUKTI + ALASAN + STATUS -->
+                    <div class="bg-gray-50/80 rounded-xl p-6 border border-gray-300">
+                        <!-- TOTAL HARGA & REFUND -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-lg">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Total Harga yang sudah dibayar</label>
+                                <div class="border border-gray-300 rounded-md px-4 py-2 bg-white font-bold text-green-600">
+                                    Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Total Refund</label>
+                                <div class="border border-gray-300 rounded-md px-4 py-2 bg-white font-bold text-red-600">
+                                    Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Total Refund</label>
-                            <div class="border border-gray-300 rounded-md px-4 py-2 bg-white font-bold text-red-600">
-                                Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- LINK BUKTI + ALASAN REFUND -->
-                    <div class="flex items-center gap-2 mb-4">
-                        <button type="button"
-                                onclick="showProofModal('{{ asset('storage/' . $transaction->payment_proof) }}')"
-                                class="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-blue-700 bg-white border border-blue-600 rounded-full hover:bg-blue-50 hover:border-blue-700 hover:text-blue-800 transition-all duration-200 shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            Lihat Bukti Transaksi
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Alasan Refund Transaksi</label>
-                            <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
-                                {{ $refund->reason }}
-                            </div>
+                        <!-- LIHAT BUKTI -->
+                        <div class="mb-6">
+                            <button type="button"
+                                    onclick="showProofModal('{{ asset('storage/' . $transaction->payment_proof) }}')"
+                                    class="inline-flex items-center gap-1.5 px-4 py-1.5 text-sm font-medium text-blue-700 bg-white border border-blue-600 rounded-full hover:bg-blue-50 hover:border-blue-700 hover:text-blue-800 transition-all duration-200 shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Lihat Bukti Transaksi
+                            </button>
                         </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Status</label>
-                            <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
-                                @if($refund->status == 'pending')
-                                    <span class="text-yellow-600 font-bold">Menunggu Validasi</span>
-                                @elseif($refund->status == 'approved')
-                                    <span class="text-green-600 font-bold">Selesai</span>
-                                @elseif($refund->status == 'declined')
-                                    <span class="text-red-600 font-bold">Ditolak</span>
-                                @endif
+
+                        <!-- ALASAN & STATUS -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Alasan Refund Transaksi</label>
+                                <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                    {{ $refund->reason }}
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Status</label>
+                                <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
+                                    @if($refund->status == 'pending')
+                                        <span class="text-yellow-500 font-bold">Proses</span>
+                                    @elseif($refund->status == 'approved')
+                                        <span class="text-green-600 font-bold">Selesai</span>
+                                    @elseif($refund->status == 'declined')
+                                        <span class="text-red-500 font-bold">Ditolak</span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>

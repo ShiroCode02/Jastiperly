@@ -19,7 +19,6 @@ class SuperadminProductController extends Controller
         $tab = $request->input('tab', 'Traveler');
         $filter = $request->input('filter');
         $search = $request->input('search');
-        $product_id = $request->input('product_id');
 
         $query = Product::with(['submiter', 'category']);
 
@@ -37,7 +36,6 @@ class SuperadminProductController extends Controller
             $query->where('approval', 'declined');
         }
 
-        // === TAMBAH PENCARIAN ===
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -49,19 +47,22 @@ class SuperadminProductController extends Controller
         $products = $query->latest()->paginate(10);
         $products->appends($request->query());
 
-        $selectedProduct = $product_id 
-        ? Product::with(['submiter', 'category'])->find($product_id) 
-        : null;
-
-        return view('_superadmin.products.index', compact('title', 'products', 'tab', 'selectedProduct'));
+        return view('_superadmin.products.index', compact('title', 'products', 'tab'));
     }
 
-    public function show($id)
+    public function detail(Request $request)
     {
-        return redirect()->route('superadmin.products', [
-            'tab' => request('tab', 'Traveler'),
-            'product_id' => $id
-        ]);
+        $title = 'Detail Produk';
+        $tab = $request->input('tab', 'Traveler');
+        $product_id = $request->input('product_id');
+
+        if (!$product_id) {
+            return redirect()->route('superadmin.products');
+        }
+
+        $product = Product::with(['submiter', 'category'])->findOrFail($product_id);
+
+        return view('_superadmin.products.detail', compact('title', 'product', 'tab'));
     }
 
     public function approve($id)

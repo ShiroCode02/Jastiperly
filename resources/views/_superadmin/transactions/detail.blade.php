@@ -7,10 +7,7 @@
             <div class="flex-1 px-6 pb-6 pt-48 space-y-6">
                 <!-- KONTEN DETAIL -->
                 @php
-                    $isSend = request('type') === 'send';
-                    $transaction = $isSend
-                        ? \App\Models\SendTransaction::with(['sender', 'reciever', 'product', 'paymentMethod'])->findOrFail(request('transaction_id'))
-                        : \App\Models\BuyTransaction::with(['buyer', 'traveler', 'product', 'paymentMethod', 'refund'])->findOrFail(request('transaction_id'));
+                    $isSend = $type === 'send'; // $type dari controller
                 @endphp
 
                 @if($isSend)
@@ -255,7 +252,7 @@
 
                             <!-- KANAN: Pengguna & Metode -->
                             <div class="space-y-5">
-                                @if(request('type') === 'buy')
+                                @if($type === 'buy')
                                     <!-- Penitip -->
                                     <div>
                                         <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Penitip</label>
@@ -331,7 +328,7 @@
                                     @endif
 
                                     <!-- Asal Barang -->
-                                    @if(request('type') === 'buy')
+                                    @if($type === 'buy')
                                         <div>
                                             <label class="block text-sm font-semibold text-gray-700 mb-1">Asal Barang</label>
                                             <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
@@ -341,7 +338,7 @@
                                     @endif
 
                                     <!-- Jumlah / Berat -->
-                                    @if(request('type') === 'buy')
+                                    @if($type === 'buy')
                                         <div>
                                             <label class="block text-sm font-semibold text-gray-700 mb-1">Jumlah Barang</label>
                                             <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
@@ -381,7 +378,7 @@
                                         <div class="border border-gray-300 rounded-md px-4 py-2 bg-white min-h-24">
                                             {{ $transaction->product->description ?? 'Tidak ada deskripsi.' }}
                                         </div>
-                                        @if(request('type') === 'send')
+                                        @if($type === 'send')
                                             <p class="text-xs text-gray-500 mt-1">Dimensi: {{ $transaction->dimension ?? '-' }}</p>
                                             <p class="text-xs text-gray-500">No. Resi: {{ $transaction->delivery_code ?? '-' }}</p>
                                         @endif

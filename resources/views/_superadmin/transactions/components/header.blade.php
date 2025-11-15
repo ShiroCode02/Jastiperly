@@ -3,7 +3,7 @@
     @include('layouts.navigation-superadmin', ['title' => 'Transaksi'])
 
     <div class="mt-2 flex justify-between items-center">
-        @if(!request('transaction_id') && !request()->is('*edit*'))
+        @if(!request()->route('transaction') && !request()->is('*edit*'))
             <!-- TAB + FILTER + UNDUH (Hanya di daftar) -->
             <div class="flex gap-3 items-center">
                 <div class="flex gap-3 bg-[#FFF6E3] mt-3 px-6 py-1 rounded-md items-center">
@@ -94,7 +94,7 @@
             <!-- DETAIL / EDIT: Kembali + Simpan/Unduh -->
             <div class="flex justify-between items-center w-full mt-4">
                 <div class="flex items-center gap-3 ml-6">
-                    <a href="{{ route('superadmin.transactions', request()->except('transaction_id')) }}"
+                    <a href="{{ route('superadmin.transactions', request()->except('transaction')) }}"
                        class="text-blue-900 hover:text-blue-600 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -111,7 +111,7 @@
                         <span>Simpan</span>
                     </button>
                 @else
-                    <a href="{{ route('superadmin.transactions.export', array_merge(request()->query(), ['transaction_id' => request('transaction_id')])) }}"
+                    <a href="{{ route('superadmin.transactions.export', array_merge(request()->query(), ['transaction' => request()->route('transaction')])) }}"
                        class="flex items-center gap-2 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold px-4 py-1 rounded-md shadow transition">
                         <span>Unduh Data</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">

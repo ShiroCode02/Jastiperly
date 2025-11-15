@@ -65,6 +65,7 @@ Route::middleware(['auth'])->prefix('finance')->group(function () {
 // --------------------------------------------------- SUPERADMIN -------------------------------------------------------
 Route::middleware(['auth',])->prefix('superadmin')->group(function () {
     Route::get('/dashboard', [SuperadminDashboardController::class, 'index'])->name('superadmin.dashboard');
+    Route::get('/superadmin/dashboard/transactions', [SuperadminDashboardController::class, 'transactions'])->name('superadmin.dashboard.transactions');
 
     // Users List
     Route::get('/users', [SuperadminUserController::class, 'index'])->name('superadmin.users');
@@ -72,7 +73,7 @@ Route::middleware(['auth',])->prefix('superadmin')->group(function () {
     // Products List
     Route::get('/products', [SuperadminProductController::class, 'index'])->name('superadmin.products');
     Route::get('/products/export', [SuperadminProductController::class, 'export'])->name('superadmin.products.export');
-    Route::get('/products/{id}', [SuperadminProductController::class, 'show'])->name('superadmin.products.show');
+    Route::get('/products/detail', [SuperadminProductController::class, 'detail'])->name('superadmin.products.detail');
     Route::post('/products/{id}/approve', [SuperadminProductController::class, 'approve'])->name('superadmin.products.approve');
     Route::post('/products/{id}/reject', [SuperadminProductController::class, 'reject'])->name('superadmin.products.reject');
 
@@ -81,17 +82,20 @@ Route::middleware(['auth',])->prefix('superadmin')->group(function () {
     Route::get('/transactions/export', [SuperadminTransactionController::class, 'export'])->name('superadmin.transactions.export');
 
     // Transaction Details
-    Route::get('/transactions/detail/{id}', [SuperadminTransactionController::class, 'detail'])->name('superadmin.transactions.detail');
+    Route::get('/transactions/{transaction}', [SuperadminTransactionController::class, 'show'])->name('superadmin.transactions.show');
     Route::get('/transactions/{id}/edit', [SuperadminTransactionController::class, 'edit'])->name('superadmin.transactions.edit');
     Route::put('/transactions/{id}', [SuperadminTransactionController::class, 'update'])->name('superadmin.transactions.update');
     Route::delete('/transactions/{id}', [SuperadminTransactionController::class, 'destroy'])->name('superadmin.transactions.destroy');
 
     // Refunds List
     Route::get('/refunds', [SuperadminRefundController::class, 'index'])->name('superadmin.refunds');
-    Route::get('/refunds/{refund}', [SuperadminRefundController::class, 'show'])->name('superadmin.refunds.show');
     Route::get('/refunds/export', [SuperadminRefundController::class, 'export'])->name('superadmin.refunds.export');
-    Route::patch('/refunds/{refund}/approve', [SuperadminRefundController::class, 'approve'])->name('superadmin.refund.approve');
-    Route::patch('/refunds/{refund}/decline', [SuperadminRefundController::class, 'decline'])->name('superadmin.refund.decline');
+
+    // Refunds Details
+    Route::get('/refunds/{refund}', [SuperadminRefundController::class, 'show'])->name('superadmin.refunds.show');
+    Route::get('/refunds/{refund}/edit', [SuperadminRefundController::class, 'edit'])->name('superadmin.refunds.edit');
+    Route::put('/refunds/{refund}', [SuperadminRefundController::class, 'update'])->name('superadmin.refunds.update');
+    Route::delete('/refunds/{refund}', [SuperadminRefundController::class, 'destroy'])->name('superadmin.refunds.destroy');
 
     // Settings
     Route::get('/settings', [SuperadminSettingController::class, 'index'])->name('superadmin.settings');

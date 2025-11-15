@@ -11,18 +11,24 @@
     $showSearch = in_array(request()->route()->getName(), $pagesWithSearch);
 
     // Cek apakah ini halaman detail produk
-    $isProductDetail = request()->route()->getName() === 'superadmin.products' && request('product_id');
+    $isProductDetail = request()->route()->getName() === 'superadmin.products.detail' && request('product_id');
 
-    // Cek apakah ini halaman detail transaksi (ADA transaction_id)
-    $isTransactionDetail = request('transaction_id');
+    // Cek apakah ini halaman detail transaksi
+    $isTransactionDetail = request()->route()->getName() === 'superadmin.transactions.show' && request('transaction');
 
-    // Cek apakah ini halaman edit transaksi (ADA transaction_id + URL mengandung 'edit')
+    // Cek apakah ini halaman edit transaksi
     $isEditTransaction = request()->route()->getName() === 'superadmin.transactions.edit';
+
+    // Cek apakah ini halaman detail refund
+    $isRefundDetail = request()->route()->getName() === 'superadmin.refunds.show' && request('refund');
+    
+    // Gabungkan semua kondisi detail
+    $isAnyDetail = $isProductDetail || $isTransactionDetail || $isRefundDetail || $isEditTransaction;
 @endphp
 
 <nav class="flex items-center justify-between h-[78px] border border-[rgba(142,142,147,0.5)] shadow-sm px-6 rounded-xl" style="background-color: transparent;">
     <!-- Kiri: Judul Halaman (HILANG DI DETAIL) -->
-    @if(!$isProductDetail && !$isTransactionDetail && !$isEditTransaction)
+    @if(!$isAnyDetail)
         <div class="flex items-center space-x-2">
             <h1 class="text-[35px] font-semibold text-gray-800 tracking-wide">
                 {{ $title }}
@@ -35,7 +41,7 @@
     <!-- Kanan: Profil User -->
     <div class="flex items-center space-x-4">
         <!-- SEARCH BAR – Hanya di halaman tertentu & BUKAN DETAIL -->
-        @if($showSearch && !$isProductDetail && !$isTransactionDetail && !$isEditTransaction)
+        @if($showSearch && !$isAnyDetail)
             <div class="relative mr-6">
                 <form action="{{ route(request()->route()->getName()) }}" method="GET" class="flex items-center">
                     <input type="text" 

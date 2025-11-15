@@ -92,7 +92,7 @@ class TransactionsExport implements FromCollection, WithHeadings, WithMapping
         return [
             $index,
             $isBuy ? '#JSTP' . $trx->id : 'TKR' . $trx->id,
-            $isBuy ? $trx->buyer->name : $trx->sender->name,
+            $isBuy ? $trx->buyer->detail->name : $trx->sender->detail->name,
             $trx->created_at->format('d-m-Y'),
             $statusText,
             'Rp' . number_format($trx->total_price ?? 0, 0, ',', '.'),

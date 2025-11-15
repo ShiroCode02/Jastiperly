@@ -77,6 +77,8 @@ class SuperadminDashboardController extends Controller
             ->unionAll($latestSend)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+        
+        $latestTransactions->appends($request->query());
 
         // ==== 5️⃣ RETURN VIEW ====
         return view('_superadmin.dashboard.index', compact(
@@ -90,5 +92,23 @@ class SuperadminDashboardController extends Controller
             'chartData',
             'latestTransactions'
         ));
+    }
+
+    public function transactions(Request $request)
+    {
+        $latestBuy = BuyTransaction::with(['buyer', 'traveler', 'paymentMethod'])
+            ->select('id', 'buyer_id', 'traveler_id', 'total_price', 'payment_status', 'payment_method_id', DB::raw("'buy' as type"), 'created_at')
+            ->latest();
+
+        $latestSend = SendTransaction::with(['sender', 'reciever', 'paymentMethod'])
+            ->select('id', 'sender_id as traveler_id', 'reciever_id as buyer_id', DB::raw("0 as total_price"), 'payment_status', 'payment_method_id', DB::raw("'send' as type"), 'created_at')
+            ->latest();
+
+        $latestTransactions = $latestBuy
+            ->unionAll($latestSend)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('_superadmin.dashboard.components.latest-transactions', compact('latestTransactions'));
     }
 }

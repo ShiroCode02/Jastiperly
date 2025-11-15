@@ -13,6 +13,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     </head>
     <body class="font-sans antialiased bg-[#DBEDFF] min-h-screen">
         
