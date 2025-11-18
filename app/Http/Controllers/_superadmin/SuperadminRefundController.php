@@ -15,8 +15,9 @@ class SuperadminRefundController extends Controller
         $query = Refund::with(['buyTransaction.buyer.detail', 'buyTransaction.product']);
 
         if ($request->location) {
-            $query->whereHas('buyTransaction.product', function ($q) use ($request) {
-                $q->where('origin', 'like', "%{$request->location}%");
+            $delivery_type = $request->location === 'dalam' ? 'Dalam Negeri' : 'Luar Negeri';
+            $query->whereHas('buyTransaction', function ($q) use ($delivery_type) {
+                $q->where('delivery_type', $delivery_type);
             });
         }
 

@@ -10,7 +10,7 @@
                     @foreach (['buy' => 'Titip Beli', 'send' => 'Titip Kirim'] as $type => $label)
                         @php
                             $count = $type === 'buy'
-                                ? \App\Models\BuyTransaction::count()
+                                ? \App\Models\BuyTransaction::whereDoesntHave('refund')->count()
                                 : \App\Models\SendTransaction::count();
                         @endphp
                         <form method="GET" action="{{ route('superadmin.transactions') }}" class="inline">
@@ -28,31 +28,31 @@
                     @endforeach
                 </div>
                 <!-- FILTER LOKASI: DI KANAN TAB -->
-                @if(request('type', 'buy') === 'send')
-                    <form method="GET" class="flex items-center">
-                        <div class="relative">
-                            <select name="location" onchange="this.form.submit()"
-                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                                <option value="">Semua Lokasi</option>
-                                <option value="dalam" {{ request('location') == 'dalam' ? 'selected' : '' }}>Dalam Negeri</option>
-                                <option value="luar" {{ request('location') == 'luar' ? 'selected' : '' }}>Luar Negeri</option>
-                            </select>
-                            <div class="border border-gray-300 rounded-md mt-3 px-4 py-3 text-sm bg-white flex items-center justify-between pointer-events-none min-w-[110px]">
-                                <span class="text-left">
-                                    {{ request('location') == 'dalam' ? 'Dalam Negeri' : (request('location') == 'luar' ? 'Luar Negeri' : 'Semua Lokasi') }}
-                                </span>
-                                <svg class="w-4 h-4 text-gray-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </div>
+                <form method="GET" class="flex items-center">
+                    <div class="relative">
+                        <select name="location" onchange="this.form.submit()"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                            <option value="">Semua Lokasi</option>
+                            <option value="dalam" {{ request('location') == 'dalam' ? 'selected' : '' }}>Dalam Negeri</option>
+                            <option value="luar" {{ request('location') == 'luar' ? 'selected' : '' }}>Luar Negeri</option>
+                        </select>
+                        <div class="border border-gray-300 rounded-md mt-3 px-4 py-3 text-sm bg-white flex items-center justify-between pointer-events-none min-w-[110px]">
+                            <span class="text-left">
+                                {{ request('location') == 'dalam' ? 'Dalam Negeri' : (request('location') == 'luar' ? 'Luar Negeri' : 'Semua Lokasi') }}
+                            </span>
+                            <svg class="w-4 h-4 text-gray-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
                         </div>
-                        <input type="hidden" name="type" value="{{ request('type', 'buy') }}">
-                        @if(request('status'))
-                            <input type="hidden" name="status" value="{{ request('status') }}">
-                        @endif
-                        @if(request('search'))<input type="hidden" name="search" value="{{ request('search') }}"> @endif
-                    </form>
-                @endif
+                    </div>
+                    <input type="hidden" name="type" value="{{ request('type', 'buy') }}">
+                    @if(request('status'))
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                    @endif
+                    @if(request('search'))
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                    @endif
+                </form>
             </div>
 
             <div class="flex items-center gap-3 mt-6">

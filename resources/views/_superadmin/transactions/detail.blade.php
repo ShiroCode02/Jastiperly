@@ -85,9 +85,15 @@
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Status</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
-                                        <span class="text-green-600 font-semibold">
-                                            {{ $transaction->payment_status == 'approved' ? 'Selesai' : 'Belum Selesai' }}
-                                        </span>
+                                        @if($transaction->payment_status == 'pending')
+                                            <span class="text-yellow-500 font-semibold">Belum Bayar</span>
+                                        @elseif($transaction->payment_status == 'approved')
+                                            <span class="text-green-600 font-semibold">Selesai</span>
+                                        @elseif($transaction->payment_status == 'declined')
+                                            <span class="text-red-500 font-semibold">Dibatalkan</span>
+                                        @else
+                                            <span class="text-gray-500 font-semibold">-</span>
+                                        @endif
                                     </div>
                                 </div>
 

@@ -10,18 +10,29 @@ class RefundSeeder extends Seeder
 {
     public function run(): void
     {
-        // AMBIL 6 TRANSAKSI APPROVED DENGAN ID TERTENTU (BUKAN ACAK)
-        $transactions = BuyTransaction::where('payment_status', 'approved')
-            ->orderBy('id') // urut dari kecil → konsisten
-            ->take(6)
+        // AMBIL 3 TRANSAKSI "Dalam Negeri"
+        $dalam = BuyTransaction::where('payment_status', 'approved')
+            ->where('delivery_type', 'Dalam Negeri')
+            ->inRandomOrder()
+            ->take(3)
             ->get();
 
+        // AMBIL 3 TRANSAKSI "Luar Negeri"
+        $luar = BuyTransaction::where('payment_status', 'approved')
+            ->where('delivery_type', 'Luar Negeri')
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
+
+        // GABUNGKAN
+        $transactions = $dalam->merge($luar);
+
         if ($transactions->count() < 6) {
-            $this->command->error('Kurang dari 6 transaksi approved! Jalankan BuyTransactionSeeder dulu.');
+            $this->command->error('Kurang data untuk variasi Dalam/Luar Negeri. Pastikan BuyTransactionSeeder punya keduanya.');
             return;
         }
 
-        // ALASAN & STATUS DITENTUKAN MANUAL → SESUAI BRD
+        // ALASAN & STATUS TETAP SAMA
         $refunds = [
             ['reason' => 'Barang rusak saat pengiriman', 'status' => 'pending'],
             ['reason' => 'Warna tidak sesuai pesanan', 'status' => 'pending'],
@@ -39,6 +50,6 @@ class RefundSeeder extends Seeder
             ]);
         }
 
-        $this->command->info('6 data refund DITENTUKAN berhasil dibuat: 3 pending, 2 approved, 1 declined.');
+        $this->command->info('6 refund berhasil dibuat: 3 Dalam Negeri, 3 Luar Negeri.');
     }
 }

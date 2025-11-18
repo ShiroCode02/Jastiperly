@@ -28,10 +28,10 @@ class TransactionsExport implements FromCollection, WithHeadings, WithMapping
         $query = $type === 'buy' ? BuyTransaction::query() : SendTransaction::query();
 
         if ($type === 'buy') {
-            $query->with(['buyer', 'traveler', 'paymentMethod', 'product.category']);
-            $query->whereDoesntHave('refund'); // HILANGKAN REFUND
+            $query->with(['buyer.detail', 'traveler.detail', 'paymentMethod', 'product.category']);
+            $query->whereDoesntHave('refund');
         } else {
-            $query->with(['sender', 'reciever', 'paymentMethod', 'product.category']);
+            $query->with(['sender.detail', 'reciever.detail', 'paymentMethod', 'product.category']);
         }
 
         // FILTER STATUS
@@ -45,15 +45,15 @@ class TransactionsExport implements FromCollection, WithHeadings, WithMapping
             }
         }
 
-        // FILTER LOKASI (hanya Titip Kirim)
-        if ($type === 'send' && $location) {
+        // FILTER LOKASI — JALAN DI BUY & SEND
+        if ($location) {
             $delivery_type = $location === 'dalam' ? 'Dalam Negeri' : 'Luar Negeri';
             $query->where('delivery_type', $delivery_type);
         }
 
         // SEARCH
         if ($search) {
-            $query->whereHas($type === 'buy' ? 'buyer' : 'sender', function ($q) use ($search) {
+            $query->whereHas($type === 'buy' ? 'buyer.detail' : 'sender.detail', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%");
             })->orWhere('id', 'like', "%{$search}%");
         }

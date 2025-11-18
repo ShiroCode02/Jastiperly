@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class BuyTransaction extends Model
 {
     protected $fillable = [
-        'buyer_id', 'traveler_id', 'product_id', 'quantity', 'total_price',
+        'buyer_id', 'traveler_id', 'product_id', 'quantity', 'total_price', 'delivery_type', 
         'payment_method_id', 'payment_proof', 'payment_status'
     ];
 

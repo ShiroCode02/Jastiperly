@@ -40,7 +40,7 @@ class SuperadminTransactionController extends Controller
             elseif ($status === 'dibatalkan') $query->where('payment_status', 'declined');
         }
 
-        if ($type === 'send' && $location) {
+        if ($location) {
             $delivery_type = $location === 'dalam' ? 'Dalam Negeri' : 'Luar Negeri';
             $query->where('delivery_type', $delivery_type);
         }

@@ -21,13 +21,21 @@ class RefundsExport implements FromCollection, WithHeadings, WithMapping
     {
         $query = Refund::with(['buyTransaction.buyer.detail', 'buyTransaction.product']);
 
-        // HANYA SEARCH
+        // SEARCH
         if ($this->request['search'] ?? null) {
             $query->whereHas('buyTransaction', function ($q) {
                 $q->where('id', 'like', "%{$this->request['search']}%")
-                  ->orWhereHas('buyer.detail', function ($qq) {
-                      $qq->where('name', 'like', "%{$this->request['search']}%");
-                  });
+                ->orWhereHas('buyer.detail', function ($qq) {
+                    $qq->where('name', 'like', "%{$this->request['search']}%");
+                });
+            });
+        }
+
+        // FILTER LOKASI — BARU DITAMBAH
+        if ($this->request['location'] ?? null) {
+            $delivery_type = $this->request['location'] === 'dalam' ? 'Dalam Negeri' : 'Luar Negeri';
+            $query->whereHas('buyTransaction', function ($q) use ($delivery_type) {
+                $q->where('delivery_type', $delivery_type);
             });
         }
 
