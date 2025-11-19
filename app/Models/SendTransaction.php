@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SendTransaction extends Model
 {
     protected $fillable = [
-        'sender_id', 'reciever_id', 'product_id', 'dimension', 'weight', 'delivery_code',
-        'delivery_method', 'delivery_type', 'delivery_image', 'payment_method_id', 'payment_proof',
-        'payment_status', 'pickup_address', 'delivery_address'
+        'sender_id', 'reciever_id', 'product_id', 'dimension', 'weight', 'pickup_address', 'delivery_address', 'delivery_code',
+        'delivery_method', 'delivery_type', 'delivery_image', 'total_price', 'payment_method_id', 'payment_proof',
+        'payment_status'
     ];
 
     public function sender(): BelongsTo

@@ -50,13 +50,32 @@
                     </div>
 
                     <div class="bg-white/40 p-4 rounded-xl shadow-[0_0_10px_rgba(0,0,0,0.25)]">
-                        <h3 class="font-semibold mb-3">Total Aktivitas</h3>
-                        <ul class="space-y-3">
-                            <li class="flex justify-between"><span>Transaksi Selesai</span> <span class="text-green-600 font-bold">{{ $transaksiSelesai }}</span></li>
-                            <li class="flex justify-between"><span>Transaksi Berjalan</span> <span class="text-yellow-500 font-bold">{{ $transaksiBerjalan }}</span></li>
-                            <li class="flex justify-between"><span>Transaksi Dibatalkan</span> <span class="text-red-500 font-bold">{{ $transaksiDibatalkan }}</span></li>
-                            <li class="flex justify-between"><span>Titip Kirim</span> <span class="text-blue-500 font-bold">{{ $titipKirim }}</span></li>
-                        </ul>
+                        <h3 class="font-semibold mb-6 text-lg text-black">Total Aktivitas</h3>
+                        @php
+                            $activities = [
+                                ['label' => 'Transaksi Selesai',     'value' => $transaksiSelesai,     'color' => 'bg-green-500'],
+                                ['label' => 'Transaksi Berjalan',    'value' => $transaksiBerjalan,    'color' => 'bg-yellow-400'],
+                                ['label' => 'Transaksi Dibatalkan',  'value' => $transaksiDibatalkan,  'color' => 'bg-red-500'],
+                                ['label' => 'Titip Kirim',           'value' => $titipKirim,           'color' => 'bg-blue-500'],
+                            ];
+
+                            $max = collect($activities)->max('value');
+                            if($max == 0) $max = 1; // biar ga error division by zero
+                        @endphp
+
+                        @foreach($activities as $act)
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-gray-700 font-medium">{{ $act['label'] }}</span>
+                                    <span class="font-bold text-gray-900 text-lg">{{ number_format($act['value']) }}</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+                                    <div class="{{ $act['color'] }} h-3 rounded-full"
+                                        style="width: {{ $act['value'] / $max * 100 }}%">
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 

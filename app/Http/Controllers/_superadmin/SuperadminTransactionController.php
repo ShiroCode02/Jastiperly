@@ -27,11 +27,6 @@ class SuperadminTransactionController extends Controller
             $query->whereDoesntHave('refund');
         } else {
             $query->with(['sender.detail', 'reciever.detail', 'paymentMethod', 'product.category']);
-            $query->addSelect([
-                'calculated_total' => \App\Models\Product::select('price')
-                    ->whereColumn('products.id', 'send_transactions.product_id')
-                    ->limit(1)
-            ]);
         }
 
         if ($status && in_array($status, ['selesai', 'berjalan', 'dibatalkan'])) {

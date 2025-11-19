@@ -20,7 +20,7 @@
                     <td class="p-3 text-center font-semibold">
                         {{ $trx instanceof \App\Models\BuyTransaction ? $trx->buyer->detail->name : $trx->sender->detail->name }}
                     </td>
-                    <td class="p-3 text-center">JST{{ $trx->id }}</td>
+                    <td class="p-3 text-center">JSTP{{ $trx->id }}</td>
                     <td class="p-3 text-center">{{ $trx->created_at->format('d-m-Y') }}</td>
                     <td class="p-3 text-center font-semibold">
                         @if($trx->payment_status == 'pending') <span class="text-yellow-500">Belum Bayar</span>
@@ -29,9 +29,11 @@
                         @else <span class="text-gray-500">-</span> @endif
                     </td>
                     <td class="p-3 text-center font-medium">
-                        @if($trx->total_price) Rp{{ number_format($trx->total_price, 0, ',', '.') }}
-                        @elseif($trx->calculated_total ?? false) Rp{{ number_format($trx->calculated_total, 0, ',', '.') }}
-                        @else <span class="text-gray-500">-</span> @endif
+                        @if($trx->total_price ?? false)
+                            Rp{{ number_format($trx->total_price, 0, ',', '.') }}
+                        @else
+                            <span class="text-gray-500">-</span>
+                        @endif
                     </td>
                     <td class="p-3 text-center">{{ $trx->paymentMethod->name ?? '-' }}</td>
                     <td class="p-3 flex justify-center gap-2">

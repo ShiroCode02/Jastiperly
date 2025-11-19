@@ -64,7 +64,7 @@ class SuperadminDashboardController extends Controller
                 'id',
                 'sender_id as traveler_id',
                 'reciever_id as buyer_id',
-                DB::raw("0 as total_price"),
+                'total_price',
                 'payment_status',
                 'payment_method_id',
                 DB::raw("'send' as type"),
@@ -101,7 +101,7 @@ class SuperadminDashboardController extends Controller
             ->latest();
 
         $latestSend = SendTransaction::with(['sender', 'reciever', 'paymentMethod'])
-            ->select('id', 'sender_id as traveler_id', 'reciever_id as buyer_id', DB::raw("0 as total_price"), 'payment_status', 'payment_method_id', DB::raw("'send' as type"), 'created_at')
+            ->select('id', 'sender_id as traveler_id', 'reciever_id as buyer_id', 'total_price', 'payment_status', 'payment_method_id', DB::raw("'send' as type"), 'created_at')
             ->latest();
 
         $latestTransactions = $latestBuy
