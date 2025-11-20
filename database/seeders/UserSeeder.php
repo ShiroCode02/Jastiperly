@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
             'email' => 'finance@example.com',
             'password' => Hash::make('password'),
             'role' => 'finance',
-            'account_status' => 'active',
+            'account_status' => 'inactive',
         ]);
 
         // Traveler 1 (ID 4)
@@ -58,7 +58,7 @@ class UserSeeder extends Seeder
             'email' => 'customer1@example.com',
             'password' => Hash::make('password'),
             'role' => 'customer',
-            'account_status' => 'active',
+            'account_status' => 'inactive',
         ]);
 
         // Customer 2 (ID 7)

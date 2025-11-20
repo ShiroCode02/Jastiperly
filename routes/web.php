@@ -69,6 +69,11 @@ Route::middleware(['auth',])->prefix('superadmin')->group(function () {
 
     // Users List
     Route::get('/users', [SuperadminUserController::class, 'index'])->name('superadmin.users');
+    Route::get('/users/export', [SuperadminUserController::class, 'export'])->name('superadmin.users.export');
+
+    // Users Details
+    Route::get('/users/{user}', [SuperadminUserController::class, 'show'])->name('superadmin.users.show');
+    Route::delete('/users/{user}', [SuperadminUserController::class, 'destroy'])->name('superadmin.users.destroy');
 
     // Products List
     Route::get('/products', [SuperadminProductController::class, 'index'])->name('superadmin.products');

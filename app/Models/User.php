@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -51,5 +53,30 @@ class User extends Authenticatable
     public function detail()
     {
         return $this->hasOne(UserDetail::class);
+    }
+
+    public function getDisplayStatusAttribute(): string
+    {
+        if ($this->account_status === 'inactive') {
+            return 'Nonaktif';
+        }
+
+        $lastActivity = DB::table('sessions')
+            ->where('user_id', $this->id)
+            ->max('last_activity');
+
+        // Belum pernah login / session sudah expired (logout otomatis)
+        if (!$lastActivity) {
+            return 'Offline';
+        }
+
+        $minutesAgo = now()->diffInMinutes(Carbon::createFromTimestamp($lastActivity));
+
+        if ($minutesAgo < 1) {
+            return 'Online';
+        }
+
+        // Masih ada session aktif = masih login, walau sudah agak lama
+        return 'Aktif';
     }
 }
