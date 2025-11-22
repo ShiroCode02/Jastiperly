@@ -15,7 +15,7 @@
 
                             <!-- FOTO -->
                             <div class="w-[200px]">
-                                <img src="{{ $user->profile_photo_url }}" 
+                                <img src="{{ $user->profile_image_url }}"
                                     alt="Foto Profil {{ $user->name }}"
                                     class="w-[200px] h-[300px] object-cover rounded-3xl border border-gray-300 shadow">
 

@@ -15,18 +15,18 @@
                 <tr class="border-b hover:bg-blue-100 transition">
                     <td class="p-3 text-center">{{ $user->id }}</td>
                     <td class="p-3 justify-center flex">
-                        <img src="{{ $user->photo_url ?? asset('images/default-avatar.png') }}"
-                             class="w-10 h-10 rounded-full object-cover">
+                        <img src="{{ $user->profile_image_url }}"
+                             class="w-[50px] h-[50px] rounded-full object-cover">
                     </td>
-                    <td class="p-3 text-center font-semibold">{{ $user->name }}</td>
-                    <td class="p-3 text-center text-gray-700">{{ $user->email }}</td>
+                    <td class="p-3 text-center">{{ $user->name }}</td>
+                    <td class="p-3 text-center">{{ $user->email }}</td>
                     <td class="p-3 text-center">
                         @php
                             $statusColors = [
-                                'Online'    => 'text-green-600 font-semibold',
-                                'Aktif'     => 'text-blue-600 font-medium',
+                                'Online'    => 'text-green-600',
+                                'Aktif'     => 'text-blue-600',
                                 'Offline'   => 'text-gray-500',
-                                'Nonaktif'  => 'text-red-600 font-medium',
+                                'Nonaktif'  => 'text-red-600',
                             ];
                         @endphp
                         <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">

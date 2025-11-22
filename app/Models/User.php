@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,34 +13,20 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
-        'account_status', // Tambahkan kolom baru
+        'account_status',
+        'profile_image',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -51,12 +36,18 @@ class User extends Authenticatable
             'account_status' => 'string',
         ];
     }
-    
+
     public function detail()
     {
         return $this->hasOne(UserDetail::class);
     }
 
+    public function detailHistories()
+    {
+        return $this->hasMany(UserDetailHistory::class);
+    }
+
+    // FIX: Status online/offline yang benar & aman
     public function getDisplayStatusAttribute(): string
     {
         if ($this->account_status === 'inactive') {
@@ -67,35 +58,23 @@ class User extends Authenticatable
             ->where('user_id', $this->id)
             ->max('last_activity');
 
-        if ($lastActivity) {
-            return 'Online';
-        }
-
-        $minutesAgo = now()->diffInMinutes(Carbon::createFromTimestamp(!$lastActivity));
-
-        if ($minutesAgo < 1) {
+        if (!$lastActivity) {
             return 'Offline';
         }
 
-        return 'Aktif';
+        $minutesAgo = now()->diffInMinutes(Carbon::createFromTimestamp($lastActivity));
+
+        return $minutesAgo < 5 ? 'Online' : 'Aktif';
     }
 
-    public function detailHistories()
-    {
-        return $this->hasMany(UserDetailHistory::class);
-    }
+    // Profile image
+    protected $appends = ['profile_image_url'];
 
-    protected $appends = ['profile_photo_url'];
-
-    public function getProfilePhotoUrlAttribute()
+    public function getProfileImageUrlAttribute()
     {
-        return $this->profile_photo_path
-            ? Storage::url($this->profile_photo_path)
-            : $this->defaultProfilePhotoUrl();
-    }
-
-    protected function defaultProfilePhotoUrl()
-    {
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
+        return $this->profile_image
+            ? Storage::url($this->profile_image)
+            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) 
+              . '&color=344CB7&background=EBF4FF&bold=true&size=256';
     }
 }
