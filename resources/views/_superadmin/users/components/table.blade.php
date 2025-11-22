@@ -18,7 +18,7 @@
                         <img src="{{ $user->photo_url ?? asset('images/default-avatar.png') }}"
                              class="w-10 h-10 rounded-full object-cover">
                     </td>
-                    <td class="p-3 text-center font-semibold">{{ $user->detail->name }}</td>
+                    <td class="p-3 text-center font-semibold">{{ $user->name }}</td>
                     <td class="p-3 text-center text-gray-700">{{ $user->email }}</td>
                     <td class="p-3 text-center">
                         @php

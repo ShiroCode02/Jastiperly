@@ -7,7 +7,10 @@ use App\Models\User;
 use App\Models\BuyTransaction;
 use App\Models\SendTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UsersExport;
 
 class SuperadminUserController extends Controller
 {
@@ -55,15 +58,53 @@ class SuperadminUserController extends Controller
     {
         $user->load('detail');
 
+        $session = DB::table('sessions')
+            ->where('user_id', $user->id)
+            ->orderBy('last_activity', 'desc')
+            ->first();
+
+        // Perbaiki timezone jadi WIB (UTC+7)
+        $user->last_login_at = $session?->last_activity
+            ? \Carbon\Carbon::createFromTimestamp($session->last_activity)->timezone('UTC')
+            : null;
+
+        // "Browser + OS"
+        if ($session?->user_agent) {
+            $ua = $session->user_agent;
+
+            // Deteksi browser
+            $browser = 'Unknown';
+            if (str_contains($ua, 'Chrome')) $browser = 'Chrome';
+            elseif (str_contains($ua, 'Firefox')) $browser = 'Firefox';
+            elseif (str_contains($ua, 'Safari') && !str_contains($ua, 'Chrome')) $browser = 'Safari';
+            elseif (str_contains($ua, 'Edg')) $browser = 'Edge';
+
+            // Deteksi OS
+            $os = 'Unknown';
+            if (str_contains($ua, 'Windows NT 10.0')) $os = 'Windows 10/11';
+            elseif (str_contains($ua, 'Windows NT 6.3')) $os = 'Windows 8.1';
+            elseif (str_contains($ua, 'Windows NT 6.1')) $os = 'Windows 7';
+            elseif (str_contains($ua, 'Macintosh')) $os = 'macOS';
+            elseif (str_contains($ua, 'Android')) $os = 'Android';
+            elseif (str_contains($ua, 'iPhone') || str_contains($ua, 'iPad')) $os = 'iOS';
+
+            $user->last_login_device = "$browser - $os";
+        } else {
+            $user->last_login_device = '-';
+        }
+
         // Hitung statistik traveler
         if ($user->role === 'traveler') {
             $user->total_transaction = BuyTransaction::where('traveler_id', $user->id)->count() + SendTransaction::where('sender_id', $user->id)->count();
             $user->successful_transaction = BuyTransaction::where('traveler_id', $user->id)->where('payment_status', 'approved')->count() + SendTransaction::where('sender_id', $user->id)->where('payment_status', 'approved')->count();
+            $user->failed_transaction = BuyTransaction::where('traveler_id', $user->id)->where('payment_status', 'declined')->count() + SendTransaction::where('sender_id', $user->id)->where('payment_status', 'declined')->count();
         }
 
         // Hitung statistik customer
         if ($user->role === 'customer') {
             $user->total_transaction = BuyTransaction::where('buyer_id', $user->id)->count() + SendTransaction::where('reciever_id', $user->id)->count();
+            $user->successful_transaction = BuyTransaction::where('buyer_id', $user->id)->where('payment_status', 'approved')->count() + SendTransaction::where('reciever_id', $user->id)->where('payment_status', 'approved')->count();
+            $user->failed_transaction = BuyTransaction::where('buyer_id', $user->id)->where('payment_status', 'declined')->count() + SendTransaction::where('reciever_id', $user->id)->where('payment_status', 'declined')->count();
         }
 
         return view('_superadmin.users.detail', compact('user'));

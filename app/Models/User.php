@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -19,6 +20,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'name',
         'email',
         'password',
         'role',
@@ -65,18 +67,35 @@ class User extends Authenticatable
             ->where('user_id', $this->id)
             ->max('last_activity');
 
-        // Belum pernah login / session sudah expired (logout otomatis)
-        if (!$lastActivity) {
-            return 'Offline';
-        }
-
-        $minutesAgo = now()->diffInMinutes(Carbon::createFromTimestamp($lastActivity));
-
-        if ($minutesAgo < 1) {
+        if ($lastActivity) {
             return 'Online';
         }
 
-        // Masih ada session aktif = masih login, walau sudah agak lama
+        $minutesAgo = now()->diffInMinutes(Carbon::createFromTimestamp(!$lastActivity));
+
+        if ($minutesAgo < 1) {
+            return 'Offline';
+        }
+
         return 'Aktif';
+    }
+
+    public function detailHistories()
+    {
+        return $this->hasMany(UserDetailHistory::class);
+    }
+
+    protected $appends = ['profile_photo_url'];
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        return $this->profile_photo_path
+            ? Storage::url($this->profile_photo_path)
+            : $this->defaultProfilePhotoUrl();
+    }
+
+    protected function defaultProfilePhotoUrl()
+    {
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
     }
 }

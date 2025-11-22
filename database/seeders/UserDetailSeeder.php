@@ -19,7 +19,7 @@ class UserDetailSeeder extends Seeder
             [
                 'user_id' => 1,
                 'verified_type' => true,
-                'name' => 'Super Admin',
+                'name' => 'Superadmin Jastiperly',
                 'phone' => '0800000000',
                 'address' => 'Kantor Pusat Jastiperly',
                 'date_birth' => '2000-01-01',
@@ -29,7 +29,7 @@ class UserDetailSeeder extends Seeder
             [
                 'user_id' => 2,
                 'verified_type' => true,
-                'name' => 'Admin',
+                'name' => 'Admin Jastiperly',
                 'phone' => '0800000001',
                 'address' => 'Kantor Pusat Jastiperly',
                 'date_birth' => '2000-02-02',
@@ -39,7 +39,7 @@ class UserDetailSeeder extends Seeder
             [
                 'user_id' => 3,
                 'verified_type' => true,
-                'name' => 'Finance',
+                'name' => 'Finance Jastiperly',
                 'phone' => '0800000002',
                 'address' => 'Kantor Pusat Jastiperly',
                 'date_birth' => '2000-03-03',

@@ -15,7 +15,8 @@
 
                             <!-- FOTO -->
                             <div class="w-[200px]">
-                                <img src="{{ $user->detail->account_image ? asset('storage/'.$user->detail->account_image) : asset('images/default-avatar.png') }}"
+                                <img src="{{ $user->profile_photo_url }}" 
+                                    alt="Foto Profil {{ $user->name }}"
                                     class="w-[200px] h-[300px] object-cover rounded-3xl border border-gray-300 shadow">
 
                                 <!-- NAMA -->
@@ -42,61 +43,169 @@
                             </div>
 
                             <!-- INFORMASI UMUM -->
-                            <div class="bg-gray-50 flex-1 border border-[#C0C0C0] rounded-lg p-5">
-                                <h3 class="text-lg font-medium text-[#000957] border-b-[2px] border-[#344CB7]">
-                                    Informasi Umum
-                                </h3>
+                            <div class="flex-1">
+                                <div class="bg-gray-50 border border-[#C0C0C0] rounded-lg p-5">
+                                    <h3 class="text-lg font-medium text-[#000957] border-b-[2px] border-[#344CB7]">
+                                        Informasi Umum
+                                    </h3>
 
-                                <table class="w-full text-[15px] font-medium">
-                                    <tr class="border-b border-gray-500">
-                                        <td class="w-40 py-2 text-gray-600">Nama Lengkap</td>
-                                        <td class="py-2 text-gray-600 text-right">{{ $user->detail->name ?? '-' }}</td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Username</td>
-                                        <td class="py-2 text-gray-600 text-right">{{ $user->username ?? '-' }}</td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Email</td>
-                                        <td class="py-2 text-gray-600 text-right">{{ $user->email }}</td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Telepon</td>
-                                        <td class="py-2 text-gray-600 text-right">{{ $user->detail->phone ?? '-' }}</td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Alamat</td>
-                                        <td class="py-2 text-gray-600 text-right">{{ $user->detail->address ?? '-' }}</td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Tanggal Lahir</td>
-                                        <td class="py-2 text-gray-600 text-right">
-                                            {{ $user->detail->date_birth ? \Carbon\Carbon::parse($user->detail->date_birth)->format('d/m/Y') : '-' }}
-                                        </td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Jenis Kelamin</td>
-                                        <td class="py-2 text-gray-600 text-right">{{ $user->detail->gender ?? '-' }}</td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Tanggal Bergabung</td>
-                                        <td class="py-2 text-gray-600 text-right">{{ $user->created_at->format('d F Y') }}</td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Status Akun</td>
-                                        <td class="py-2 text-gray-600 text-right font-semibold text-blue-800">{{ ucfirst($user->role) }}</td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Password (hash)</td>
-                                        <td class="py-2 text-gray-600 text-right font-mono">•••••••••••••••••••</td>
-                                    </tr>
-                                    <tr class="border-b border-gray-500">
-                                        <td class="py-2 text-gray-600">Status Aktivitas</td>
-                                        <td class="py-2 text-gray-600 text-right text-green-700">Online</td>
-                                    </tr>
-                                </table>
+                                    <table class="w-full text-[15px] font-medium">
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600">Nama Lengkap</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->name ?? '-' }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Username</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->detail->name ?? '-' }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Email</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->email }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Telepon</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->detail->phone ?? '-' }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Negara/Kota Asal</td>
+                                            <td class="py-2 text-gray-600 text-right">-</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Alamat</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->detail->address ?? '-' }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Tanggal Lahir</td>
+                                            <td class="py-2 text-gray-600 text-right">
+                                                {{ $user->detail->date_birth ? \Carbon\Carbon::parse($user->detail->date_birth)->format('d/m/Y') : '-' }}
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Jenis Kelamin</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->detail->gender ?? '-' }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Tanggal Bergabung</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->created_at->format('d F Y') }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Status Akun</td>
+                                            <td class="py-2 text-gray-600 text-right font-semibold text-blue-800">{{ ucfirst($user->role) }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Password (hash)</td>
+                                            <td class="py-2 text-gray-600 text-right font-mono">{{ $user->password ? '•••••••••••••••••••' : '-' }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Status Aktivitas</td>
+                                            <td class="py-2 text-gray-600 text-right">
+                                                @php
+                                                    $statusColors = [
+                                                        'Online'    => 'text-green-600',
+                                                        'Aktif'     => 'text-blue-600',
+                                                        'Offline'   => 'text-gray-500',
+                                                        'Nonaktif'  => 'text-red-600',
+                                                    ];
+                                                @endphp
+                                                <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">
+                                                    {{ $user->display_status }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600 align-top">Foto KTP</td>
+                                            <td class="py-2 text-right">
+                                                @if($user->detail?->id_card_image)
+                                                    <img src="{{ asset('storage/' . $user->detail->id_card_image) }}" 
+                                                        alt="KTP" 
+                                                        class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
+                                                @else
+                                                    <span class="text-gray-400 italic text-sm">Belum upload</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600 align-top">Foto Rekening</td>
+                                            <td class="py-2 text-right">
+                                                @if($user->detail?->account_image)
+                                                    <img src="{{ asset('storage/' . $user->detail->account_image) }}" 
+                                                        alt="Rekening" 
+                                                        class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
+                                                @else
+                                                    <span class="text-gray-400 italic text-sm">Belum upload</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600 align-top">Foto Paspor</td>
+                                            <td class="py-2 text-right">
+                                                @if($user->detail?->pasport_image)
+                                                    <img src="{{ asset('storage/' . $user->detail->pasport_image) }}" 
+                                                        alt="Paspor" 
+                                                        class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
+                                                @else
+                                                    <span class="text-gray-400 italic text-sm">Belum upload</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- CARD AKTIVITAS-->
+                                <div class="mt-8 bg-gray-50 border border-[#C0C0C0] rounded-lg p-5">
+                                    <h3 class="text-lg font-medium text-[#000957] border-b-[2px] border-[#344CB7]">Aktivitas</h3>
+
+                                    <table class="w-full text-[15px] font-medium">
+                                        <tr class="border-b border-gray-500">
+                                            <td class="py-2 text-gray-600">Status</td>
+                                            <td class="py-2 text-gray-600 text-right">
+                                                @php
+                                                    $statusColors = [
+                                                        'Online'    => 'text-green-600',
+                                                        'Aktif'     => 'text-blue-600',
+                                                        'Offline'   => 'text-gray-500',
+                                                        'Nonaktif'  => 'text-red-600',
+                                                    ];
+                                                @endphp
+                                                <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">
+                                                    {{ $user->display_status }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600">Rating</td>
+                                            <td class="py-2 text-gray-600 text-right">-</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600">Login Terakhir</td>
+                                            <td class="py-2 text-gray-600 text-right">
+                                                {{ $user->last_login_at 
+                                                    ? $user->last_login_at->setTimezone('Asia/Jakarta')->translatedFormat('d F Y, H:i') . ' WIB'
+                                                    : '-' 
+                                                }}
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600">Lokasi Login</td>
+                                            <td class="py-2 text-gray-600 text-right">
+                                                {{ $user->last_login_device }}
+                                            </td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600">Total Transaksi</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->total_transaction ?? 0 }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600">Transaksi Berhasil</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->successful_transaction ?? 0 }}</td>
+                                        </tr>
+                                        <tr class="border-b border-gray-500">
+                                            <td class="w-40 py-2 text-gray-600">Transaksi Dibatalkan</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->failed_transaction ?? 0 }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
-
                         </div>
 
                         <!-- STATISTIK -->
@@ -119,37 +228,36 @@
                                 Riwayat Perubahan Data
                             </h3>
 
-                            <table class="w-full text-sm border-collapse">
+                            @if($user->detailHistories->count() > 0)
+                                <table class="w-full text-sm border-collapse">
 
-                                <!-- Header -->
-                                <thead>
-                                    <tr class="border-b border-black">
-                                        <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">Hari, Tanggal</th>
-                                        <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">Field</th>
-                                        <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[60%]">Perubahan</th>
-                                    </tr>
-                                </thead>
+                                    <!-- Header -->
+                                    <thead>
+                                        <tr class="border-b border-black">
+                                            <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">Hari, Tanggal</th>
+                                            <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">Field</th>
+                                            <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[60%]">Perubahan</th>
+                                        </tr>
+                                    </thead>
 
-                                <!-- Body -->
-                                <tbody>
-                                    <tr class="border-b border-black">
-                                        <td class="py-2 pl-4 text-gray-600">Senin, 7 April 2025</td>
-                                        <td class="py-2 pl-4 text-gray-600">Email</td>
-                                        <td class="py-2 pl-4 text-gray-600">jesjesfranc@gmail.com → jesicafranc01@gmail.com</td>
-                                    </tr>
-
-                                    <tr class="border-b border-black">
-                                        <td class="py-2 pl-4 text-gray-600">Senin, 12 April 2025</td>
-                                        <td class="py-2 pl-4 text-gray-600">Alamat</td>
-                                        <td class="py-2 pl-4 text-gray-600">Jl. Sudirman No.01 → Jl. Sudirman No.01, Yogyakarta</td>
-                                    </tr>
-                                </tbody>
-
-                            </table>
+                                    <!-- Body -->
+                                    <tbody>
+                                        @foreach($user->detailHistories as $log)
+                                            <tr class="border-b border-gray-300">
+                                                <td class="py-3 pl-4 text-gray-600">{{ $log->tanggal }}</td>
+                                                <td class="py-3 pl-4 text-gray-600 font-medium">{{ $log->field }}</td>
+                                                <td class="py-3 pl-4 text-gray-600">
+                                                    {{ $log->old_value }} → <span class="font-semibold text-[#344CB7]">{{ $log->new_value }}</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @else
+                                <p class="mt-4 text-gray-500 italic">Belum ada perubahan data.</p>
+                            @endif
                         </div>
-
                     </div>
-
                 </div>
             </div>
         </div>
