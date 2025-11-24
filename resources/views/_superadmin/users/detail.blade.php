@@ -394,6 +394,92 @@
                     }
                 }
             });
+            // GRAFIK TRANSAKSI — HANYA UNTUK TRAVELER & CUSTOMER
+            @if(in_array($user->role, ['traveler', 'customer']))
+                const ctx2 = document.getElementById('transactionChart')?.getContext('2d');
+                if (ctx2) {
+                    const transData = @json($user->transaction_data);
+                    const transLabels = @json($user->transaction_labels);
+                    const hasTrans = transData.some(val => val > 0);
+                    const maxTrans = hasTrans ? Math.max(...transData) : 50;
+                    let topTrans = Math.ceil(maxTrans);
+                    if (Number.isInteger(maxTrans)) {
+                        topTrans += 1;
+                    }
+
+                    new Chart(ctx2, {
+                        type: 'bar',
+                        data: {
+                            labels: transLabels,
+                            datasets: [{
+                                label: 'Jumlah Transaksi',
+                                data: transData,
+                                backgroundColor: '#FF5E1F',
+                                barThickness: 40
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: ctx => `Transaksi: ${ctx.parsed.y}`
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    grid: { display: false, drawBorder: false },
+                                    ticks: {
+                                        color: '#5E5E5E',
+                                        font: { size: 10 }
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    suggestedMax: topTrans,
+                                    ticks: {
+                                        stepSize: function(context) {
+                                            const max = context.chart.options.scales.y.suggestedMax;
+                                            if (max <= 10) return 1;
+                                            if (max <= 30) return 5;
+                                            if (max <= 70) return 10;
+                                            if (max <= 150) return 20;
+                                            return 25;
+                                        },
+                                        color: '#5E5E5E',
+                                        font: { size: 18 },
+                                        padding: 10,
+                                        callback: function(value, index, ticks) {
+                                            return value === ticks[ticks.length - 1].value ? '' : value;
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Jumlah Transaksi',
+                                        color: '#5E5E5E',
+                                        font: { size: 18 },
+                                    },
+                                    border: {
+                                        display: true,
+                                        color: '#000000',
+                                    },
+                                    grid: {
+                                        display: true,
+                                        color: '#000000',
+                                        drawTicks: false,
+                                        lineWidth: function(ctx) {
+                                            return ctx.index === ctx.chart.scales.y.ticks.length - 1 ? 0 : 1;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            @endif
         });
     </script>
 </x-app-layout>

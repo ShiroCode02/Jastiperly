@@ -159,37 +159,47 @@ class SuperadminUserController extends Controller
         // ===========================================================================
 
         // Hitung transaksi per hari (traveler & customer)
+        if (in_array($user->role, ['traveler', 'customer'])) {
+        $start = Carbon::now()->startOfWeek();
+        $end = Carbon::now()->endOfWeek();
+
+        $buyCount = BuyTransaction::where(
+                $user->role === 'traveler' ? 'traveler_id' : 'buyer_id', $user->id
+            )
+            ->whereBetween('created_at', [$start, $end])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
+            ->groupBy('date')
+            ->pluck('total', 'date');
+
+        $sendCount = SendTransaction::where(
+                $user->role === 'traveler' ? 'sender_id' : 'reciever_id', $user->id
+            )
+            ->whereBetween('created_at', [$start, $end])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
+            ->groupBy('date')
+            ->pluck('total', 'date');
+
+        $dailyTransactions = $buyCount->merge($sendCount)
+            ->groupBy('date')
+            ->map->sum()
+            ->toArray();
+
         $transactionData = [];
         $transactionLabels = [];
 
-        if (in_array($user->role, ['traveler', 'customer'])) {
-            $start = Carbon::now()->startOfWeek();
-            $end = Carbon::now()->endOfWeek();
-
-            $query = $user->role === 'traveler'
-                ? BuyTransaction::where('traveler_id', $user->id)
-                    ->orWhere('sender_id', $user->id)
-                : BuyTransaction::where('buyer_id', $user->id)
-                    ->orWhere('reciever_id', $user->id);
-
-            $dailyTransactions = $query
-                ->whereBetween('created_at', [$start, $end])
-                ->selectRaw('DATE(created_at) as date')
-                ->selectRaw('COUNT(*) as total')
-                ->groupBy('date')
-                ->pluck('total', 'date')
-                ->toArray();
-
-            for ($i = 6; $i >= 0; $i--) {
-                $date = Carbon::now()->subDays($i);
-                $dateKey = $date->format('Y-m-d');
-                $transactionLabels[] = $date->locale('id')->translatedFormat('l, j F');
-                $transactionData[] = $dailyTransactions[$dateKey] ?? 0;
-            }
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $dateKey = $date->format('Y-m-d');
+            $transactionLabels[] = $date->locale('id')->translatedFormat('l, j F');
+            $transactionData[] = $dailyTransactions[$dateKey] ?? 0;
         }
 
-        $user->transaction_labels = $transactionLabels ?? [];
-        $user->transaction_data = $transactionData ?? [];
+        $user->transaction_labels = $transactionLabels;
+        $user->transaction_data = $transactionData;
+    } else {
+        $user->transaction_labels = [];
+        $user->transaction_data = [];
+    }
         // ===========================================================================
 
         return view('_superadmin.users.detail', compact('user'));
