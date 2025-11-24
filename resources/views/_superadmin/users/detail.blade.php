@@ -66,13 +66,17 @@
                                             <td class="py-2 text-gray-600">Telepon</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail->phone ?? '-' }}</td>
                                         </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Negara/Kota Asal</td>
-                                            <td class="py-2 text-gray-600 text-right">-</td>
-                                        </tr>
+
+                                        @if($user->role === 'traveler')
+                                            <tr class="border-b border-gray-500">
+                                                <td class="py-2 text-gray-600">Negara/Kota Asal</td>
+                                                <td class="py-2 text-gray-600 text-right">{{ $user->city_country }}</td>
+                                            </tr>
+                                        @endif
+
                                         <tr class="border-b border-gray-500">
                                             <td class="py-2 text-gray-600">Alamat</td>
-                                            <td class="py-2 text-gray-600 text-right">{{ $user->detail->address ?? '-' }}</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->detail_address }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
                                             <td class="py-2 text-gray-600">Tanggal Lahir</td>
@@ -84,127 +88,147 @@
                                             <td class="py-2 text-gray-600">Jenis Kelamin</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail->gender ?? '-' }}</td>
                                         </tr>
+
+                                        @if(in_array($user->role, ['traveler', 'customer']))
+                                            <tr class="border-b border-gray-500">
+                                                <td class="py-2 text-gray-600">Rekening Bank</td>
+                                                <td class="py-2 text-gray-600 text-right">{{ $user->detail->bank_number . ' - ' . $user->detail->bank_name ?? '-' }}</td>
+                                            </tr>
+                                        @endif
+
                                         <tr class="border-b border-gray-500">
                                             <td class="py-2 text-gray-600">Tanggal Bergabung</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->created_at->format('d F Y') }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
                                             <td class="py-2 text-gray-600">Status Akun</td>
-                                            <td class="py-2 text-gray-600 text-right font-semibold text-blue-800">{{ ucfirst($user->role) }}</td>
+                                            <td class="py-2 text-green-600 text-right">{{ ucfirst($user->role) }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
                                             <td class="py-2 text-gray-600">Password (hash)</td>
                                             <td class="py-2 text-gray-600 text-right font-mono">{{ $user->password ? '•••••••••••••••••••' : '-' }}</td>
                                         </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Status Aktivitas</td>
-                                            <td class="py-2 text-gray-600 text-right">
-                                                @php
-                                                    $statusColors = [
-                                                        'Online'    => 'text-green-600',
-                                                        'Aktif'     => 'text-blue-600',
-                                                        'Offline'   => 'text-gray-500',
-                                                        'Nonaktif'  => 'text-red-600',
-                                                    ];
-                                                @endphp
-                                                <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">
-                                                    {{ $user->display_status }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600 align-top">Foto KTP</td>
-                                            <td class="py-2 text-right">
-                                                @if($user->detail?->id_card_image)
-                                                    <img src="{{ asset('storage/' . $user->detail->id_card_image) }}" 
-                                                        alt="KTP" 
-                                                        class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
-                                                @else
-                                                    <span class="text-gray-400 italic text-sm">Belum upload</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600 align-top">Foto Rekening</td>
-                                            <td class="py-2 text-right">
-                                                @if($user->detail?->account_image)
-                                                    <img src="{{ asset('storage/' . $user->detail->account_image) }}" 
-                                                        alt="Rekening" 
-                                                        class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
-                                                @else
-                                                    <span class="text-gray-400 italic text-sm">Belum upload</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600 align-top">Foto Paspor</td>
-                                            <td class="py-2 text-right">
-                                                @if($user->detail?->pasport_image)
-                                                    <img src="{{ asset('storage/' . $user->detail->pasport_image) }}" 
-                                                        alt="Paspor" 
-                                                        class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
-                                                @else
-                                                    <span class="text-gray-400 italic text-sm">Belum upload</span>
-                                                @endif
-                                            </td>
-                                        </tr>
+
+                                        @if (in_array($user->role, ['admin', 'finance']))
+                                            <tr class="border-b border-gray-500">
+                                                <td class="py-2 text-gray-600">Status Aktivitas</td>
+                                                <td class="py-2 text-gray-600 text-right">
+                                                    @php
+                                                        $statusColors = [
+                                                            'Online'    => 'text-green-600',
+                                                            'Aktif'     => 'text-blue-600',
+                                                            'Offline'   => 'text-gray-500',
+                                                            'Nonaktif'  => 'text-red-600',
+                                                        ];
+                                                    @endphp
+                                                    <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">
+                                                        {{ $user->display_status }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        @endif
+
+                                        @if($user->role === 'traveler')
+                                            <tr class="border-b border-gray-500">
+                                                <td class="w-40 py-2 text-gray-600 align-top">Foto KTP</td>
+                                                <td class="py-2 text-right">
+                                                    @if($user->detail?->id_card_image)
+                                                        <img src="{{ asset('storage/' . $user->detail->id_card_image) }}" 
+                                                            alt="KTP" 
+                                                            class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
+                                                    @else
+                                                        <span class="text-gray-400 italic text-sm">Belum upload</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr class="border-b border-gray-500">
+                                                <td class="w-40 py-2 text-gray-600 align-top">Foto Rekening</td>
+                                                <td class="py-2 text-right">
+                                                    @if($user->detail?->account_image)
+                                                        <img src="{{ asset('storage/' . $user->detail->account_image) }}" 
+                                                            alt="Rekening" 
+                                                            class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
+                                                    @else
+                                                        <span class="text-gray-400 italic text-sm">Belum upload</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr class="border-b border-gray-500">
+                                                <td class="w-40 py-2 text-gray-600 align-top">Foto Paspor</td>
+                                                <td class="py-2 text-right">
+                                                    @if($user->detail?->pasport_image)
+                                                        <img src="{{ asset('storage/' . $user->detail->pasport_image) }}" 
+                                                            alt="Paspor" 
+                                                            class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
+                                                    @else
+                                                        <span class="text-gray-400 italic text-sm">Belum upload</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </table>
                                 </div>
 
                                 <!-- CARD AKTIVITAS-->
-                                <div class="mt-8 bg-gray-50 border border-[#C0C0C0] rounded-lg p-5">
-                                    <h3 class="text-lg font-medium text-[#000957] border-b-[2px] border-[#344CB7]">Aktivitas</h3>
+                                @if(in_array($user->role, ['traveler', 'customer']))
+                                    <div class="mt-8 bg-gray-50 border border-[#C0C0C0] rounded-lg p-5">
+                                        <h3 class="text-lg font-medium text-[#000957] border-b-[2px] border-[#344CB7]">Aktivitas</h3>
 
-                                    <table class="w-full text-[15px] font-medium">
-                                        <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Status</td>
-                                            <td class="py-2 text-gray-600 text-right">
-                                                @php
-                                                    $statusColors = [
-                                                        'Online'    => 'text-green-600',
-                                                        'Aktif'     => 'text-blue-600',
-                                                        'Offline'   => 'text-gray-500',
-                                                        'Nonaktif'  => 'text-red-600',
-                                                    ];
-                                                @endphp
-                                                <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">
-                                                    {{ $user->display_status }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600">Rating</td>
-                                            <td class="py-2 text-gray-600 text-right">-</td>
-                                        </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600">Login Terakhir</td>
-                                            <td class="py-2 text-gray-600 text-right">
-                                                {{ $user->last_login_at 
-                                                    ? $user->last_login_at->setTimezone('Asia/Jakarta')->translatedFormat('d F Y, H:i') . ' WIB'
-                                                    : '-' 
-                                                }}
-                                            </td>
-                                        </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600">Lokasi Login</td>
-                                            <td class="py-2 text-gray-600 text-right">
-                                                {{ $user->last_login_device }}
-                                            </td>
-                                        </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600">Total Transaksi</td>
-                                            <td class="py-2 text-gray-600 text-right">{{ $user->total_transaction ?? 0 }}</td>
-                                        </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600">Transaksi Berhasil</td>
-                                            <td class="py-2 text-gray-600 text-right">{{ $user->successful_transaction ?? 0 }}</td>
-                                        </tr>
-                                        <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600">Transaksi Dibatalkan</td>
-                                            <td class="py-2 text-gray-600 text-right">{{ $user->failed_transaction ?? 0 }}</td>
-                                        </tr>
-                                    </table>
-                                </div>
+                                        <table class="w-full text-[15px] font-medium">
+                                            <tr class="border-b border-gray-500">
+                                                <td class="py-2 text-gray-600">Status</td>
+                                                <td class="py-2 text-gray-600 text-right">
+                                                    @php
+                                                        $statusColors = [
+                                                            'Online'    => 'text-green-600',
+                                                            'Aktif'     => 'text-blue-600',
+                                                            'Offline'   => 'text-gray-500',
+                                                            'Nonaktif'  => 'text-red-600',
+                                                        ];
+                                                    @endphp
+                                                    <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">
+                                                        {{ $user->display_status }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+
+                                            @if($user->role === 'traveler')
+                                                <tr class="border-b border-gray-500">
+                                                    <td class="w-40 py-2 text-gray-600">Rating</td>
+                                                    <td class="py-2 text-gray-600 text-right">-</td>
+                                                </tr>
+                                                <tr class="border-b border-gray-500">
+                                                    <td class="w-40 py-2 text-gray-600">Login Terakhir</td>
+                                                    <td class="py-2 text-gray-600 text-right">
+                                                        {{ $user->last_login_at 
+                                                            ? $user->last_login_at->translatedFormat('d F Y, H:i') . ' WIB'
+                                                            : '-' 
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-b border-gray-500">
+                                                    <td class="w-40 py-2 text-gray-600">Lokasi Login</td>
+                                                    <td class="py-2 text-gray-600 text-right">
+                                                        {{ $user->last_login_device }}
+                                                    </td>
+                                                </tr>
+                                            @endif
+
+                                            <tr class="border-b border-gray-500">
+                                                <td class="w-40 py-2 text-gray-600">Total Transaksi</td>
+                                                <td class="py-2 text-gray-600 text-right">{{ $user->total_transaction ?? 0 }}</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-500">
+                                                <td class="w-40 py-2 text-gray-600">Transaksi Berhasil</td>
+                                                <td class="py-2 text-gray-600 text-right">{{ $user->successful_transaction ?? 0 }}</td>
+                                            </tr>
+                                            <tr class="border-b border-gray-500">
+                                                <td class="w-40 py-2 text-gray-600">Transaksi Dibatalkan</td>
+                                                <td class="py-2 text-gray-600 text-right">{{ $user->failed_transaction ?? 0 }}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
@@ -214,13 +238,24 @@
                                 Statistik Durasi Aktivitas
                             </h3>
 
-                            <canvas id="activityChart" height="120"></canvas>
+                            <canvas id="activityChart" height="100"></canvas>
 
                             <p class="text-lg text-gray-600 mt-3">
                                 Grafik ini menunjukkan frekuensi login selama seminggu terakhir.
                             </p>
                         </div>
 
+                        @if(in_array($user->role, ['traveler', 'customer']))
+                            <div class="mt-10">
+                                <h3 class="text-xl font-medium text-[#000957] border-b-[2px] border-[#FF5E1F] mb-4">
+                                    Statistik Jumlah Transaksi
+                                </h3>
+                                <canvas id="transactionChart" height="100"></canvas>
+                                <p class="text-lg text-gray-600 mt-3">
+                                    Grafik ini menunjukkan jumlah transaksi per hari selama seminggu terakhir.
+                                </p>
+                            </div>
+                        @endif
 
                         <!-- RIWAYAT PERUBAHAN DATA -->
                         <div class="mt-10">
@@ -271,8 +306,12 @@
 
             const ctx = document.getElementById('activityChart').getContext('2d');
 
-            const dataPoints = [4, 6, 6.2, 3.8, 5.6, 4.4, 5];
-            const maxValue = Math.max(...dataPoints);
+            const dataPoints = @json($user->chart_data);
+            const labels = @json($user->chart_labels);
+
+            const hasData = dataPoints.some(val => val > 0);
+            const maxValue = hasData ? Math.max(...dataPoints) : 6;
+
             let suggestedTop = Math.ceil(maxValue);
             if (Number.isInteger(maxValue)) {
                 suggestedTop += 1;
@@ -281,15 +320,7 @@
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: [
-                        'Senin, 1 April',
-                        'Selasa, 1 April',
-                        'Rabu, 1 April',
-                        'Kamis, 1 April',
-                        'Jumat, 1 April',
-                        'Sabtu, 1 April',
-                        'Minggu, 1 April'
-                    ],
+                    labels: labels,
                     datasets: [{
                         label: 'Durasi (Jam)',
                         data: dataPoints,
@@ -300,9 +331,22 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const totalMinutes = Math.round(context.parsed.y * 60);
+                                    const hours = Math.floor(totalMinutes / 60);
+                                    const minutes = totalMinutes % 60;
 
-                    plugins: { legend: { display: false } },
-
+                                    if (hours === 0) return `Durasi: ${minutes} menit`;
+                                    if (minutes === 0) return `Durasi: ${hours} jam`;
+                                    return `Durasi: ${hours} jam ${minutes} menit`;
+                                }
+                            }
+                        }
+                    },
                     scales: {
                         x: {
                             grid: { display: false, drawBorder: false },
@@ -314,15 +358,13 @@
 
                         y: {
                             beginAtZero: true,
-                            suggestedMax: suggestedTop,   // ← otomatis berdasarkan data minggu ini
+                            suggestedMax: suggestedTop,
 
                             ticks: {
                                 stepSize: 1,
                                 color: '#5E5E5E',
                                 font: { size: 18 },
                                 padding: 10,
-
-                                // sembunyikan angka paling atas
                                 callback: function(value) {
                                     return value === suggestedTop ? '' : value;
                                 }
@@ -344,8 +386,6 @@
                                 display: true,
                                 color: '#000000',
                                 drawTicks: false,
-
-                                // sembunyikan garis horizontal paling atas
                                 lineWidth: function(ctx) {
                                     return ctx.index === ctx.chart.scales.y.ticks.length - 1 ? 0 : 1;
                                 }

@@ -8,6 +8,7 @@ use App\Models\BuyTransaction;
 use App\Models\SendTransaction;
 use App\Models\LoginHistory;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
@@ -63,14 +64,37 @@ class SuperadminUserController extends Controller
         ->latest('logged_in_at')
         ->first();
 
-        // Perbaiki timezone jadi WIB (UTC+7)
+        // Data login terakhir
         $user->last_login_at = $last?->logged_in_at
-            ? \Carbon\Carbon::parse($last->logged_in_at)->timezone('UTC')
+            ? \Carbon\Carbon::parse($last->logged_in_at)->setTimezone('Asia/Jakarta')
             : null;
 
         $user->last_login_device = $last && $last->user_agent
             ? $this->parseDevice($last->user_agent)
             : '-';
+        // ===========================================================================
+
+        // Pisah alamat dan kota/negara
+        if ($user->detail?->address) {
+            $address = trim($user->detail->address);
+            $parts = array_filter(array_map('trim', explode(',', $address)));
+
+            // Kalau ada koma DAN lebih dari 1 bagian → bagian terakhir = Kota/Negara
+            if (count($parts) > 1) {
+                $user->city_country = end($parts);
+                array_pop($parts);
+                $user->detail_address = implode(', ', $parts);
+            }
+            // Kalau gak ada koma atau cuma 1 bagian → semua jadi alamat, kota kosong
+            else {
+                $user->city_country = '-';
+                $user->detail_address = $address;
+            }
+        } else {
+            $user->city_country = '-';
+            $user->detail_address = '-';
+        }
+        // ===========================================================================
 
         // Hitung statistik traveler
         if ($user->role === 'traveler') {
@@ -85,6 +109,88 @@ class SuperadminUserController extends Controller
             $user->successful_transaction = BuyTransaction::where('buyer_id', $user->id)->where('payment_status', 'approved')->count() + SendTransaction::where('reciever_id', $user->id)->where('payment_status', 'approved')->count();
             $user->failed_transaction = BuyTransaction::where('buyer_id', $user->id)->where('payment_status', 'declined')->count() + SendTransaction::where('reciever_id', $user->id)->where('payment_status', 'declined')->count();
         }
+        // ===========================================================================
+
+        // Grafik aktivitas login 7 hari terakhir
+        $weekStart = Carbon::now()->startOfWeek(); // Senin
+        $weekEnd = Carbon::now()->endOfWeek(); // Minggu
+
+        // Ambil data login dalam seminggu terakhir
+        $rawLogins = LoginHistory::where('user_id', $user->id)
+            ->where('logged_in_at', '>=', $weekStart)
+            ->orderBy('logged_in_at')
+            ->get();
+
+        $dailyActivity = [];
+
+        foreach ($rawLogins as $login) {
+            // Pastikan semua waktu dalam WIB (Asia/Jakarta)
+            $loginTime = $login->logged_in_at->setTimezone('Asia/Jakarta');
+            $dateKey = $loginTime->format('Y-m-d');
+
+            $endTime = $login->logged_out_at
+                ? $login->logged_out_at->setTimezone('Asia/Jakarta')
+                : now()->setTimezone('Asia/Jakarta');
+
+            // Hitung durasi dalam jam
+            $hours = $loginTime->diffInSeconds($endTime) / 3600.0;
+
+            if (!isset($dailyActivity[$dateKey])) {
+                $dailyActivity[$dateKey] = 0;
+            }
+            $dailyActivity[$dateKey] += $hours;
+        }
+
+        // Isi 7 hari terakhir (kalau gak ada data = 0 jam)
+        $chartData = [];
+        $chartLabels = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $dateKey = $date->format('Y-m-d');
+            $dayName = $date->locale('id')->translatedFormat('l, j F');
+
+            $chartLabels[] = $dayName;
+            $chartData[] = round($dailyActivity[$dateKey] ?? 0, 2); // 2 desimal
+        }
+
+        $user->chart_labels = $chartLabels;
+        $user->chart_data = $chartData;
+        // ===========================================================================
+
+        // Hitung transaksi per hari (traveler & customer)
+        $transactionData = [];
+        $transactionLabels = [];
+
+        if (in_array($user->role, ['traveler', 'customer'])) {
+            $start = Carbon::now()->startOfWeek();
+            $end = Carbon::now()->endOfWeek();
+
+            $query = $user->role === 'traveler'
+                ? BuyTransaction::where('traveler_id', $user->id)
+                    ->orWhere('sender_id', $user->id)
+                : BuyTransaction::where('buyer_id', $user->id)
+                    ->orWhere('reciever_id', $user->id);
+
+            $dailyTransactions = $query
+                ->whereBetween('created_at', [$start, $end])
+                ->selectRaw('DATE(created_at) as date')
+                ->selectRaw('COUNT(*) as total')
+                ->groupBy('date')
+                ->pluck('total', 'date')
+                ->toArray();
+
+            for ($i = 6; $i >= 0; $i--) {
+                $date = Carbon::now()->subDays($i);
+                $dateKey = $date->format('Y-m-d');
+                $transactionLabels[] = $date->locale('id')->translatedFormat('l, j F');
+                $transactionData[] = $dailyTransactions[$dateKey] ?? 0;
+            }
+        }
+
+        $user->transaction_labels = $transactionLabels ?? [];
+        $user->transaction_data = $transactionData ?? [];
+        // ===========================================================================
 
         return view('_superadmin.users.detail', compact('user'));
     }
