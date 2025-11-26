@@ -26,19 +26,16 @@
 
                                 <!-- TOMBOL STATUS AKUN -->
                                 <div class="mt-3 flex justify-center">
-                                    @if($user->account_status === 'active')
-                                        <!-- Jika aktif → tampilkan tombol Nonaktif -->
-                                        <button class="w-[225px] h-[35px] rounded-md text-white font-semibold
-                                                    bg-[#344CB7] hover:bg-[#FF5E1F] transition">
-                                            Nonaktif
+                                    <form action="{{ route('superadmin.users.toggleStatus', $user) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit"
+                                                class="w-[225px] h-[35px] rounded-md text-white font-semibold transition
+                                                    {{ $user->account_status === 'active' 
+                                                        ? 'bg-[#344CB7] hover:bg-[#FF5E1F]' 
+                                                        : 'bg-green-600 hover:bg-[#FF5E1F]' }}">
+                                            {{ $user->account_status === 'active' ? 'Nonaktifkan' : 'Aktifkan' }}
                                         </button>
-                                    @else
-                                        <!-- Jika nonaktif → tampilkan tombol Aktif -->
-                                        <button class="w-[225px] h-[35px] rounded-md text-white font-semibold
-                                                    bg-green-600 hover:bg-green-700 transition">
-                                            Aktif
-                                        </button>
-                                    @endif
+                                    </form>
                                 </div>
                             </div>
 
@@ -263,34 +260,9 @@
                                 Riwayat Perubahan Data
                             </h3>
 
-                            @if($user->detailHistories->count() > 0)
-                                <table class="w-full text-sm border-collapse">
-
-                                    <!-- Header -->
-                                    <thead>
-                                        <tr class="border-b border-black">
-                                            <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">Hari, Tanggal</th>
-                                            <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">Field</th>
-                                            <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[60%]">Perubahan</th>
-                                        </tr>
-                                    </thead>
-
-                                    <!-- Body -->
-                                    <tbody>
-                                        @foreach($user->detailHistories as $log)
-                                            <tr class="border-b border-gray-300">
-                                                <td class="py-3 pl-4 text-gray-600">{{ $log->tanggal }}</td>
-                                                <td class="py-3 pl-4 text-gray-600 font-medium">{{ $log->field }}</td>
-                                                <td class="py-3 pl-4 text-gray-600">
-                                                    {{ $log->old_value }} → <span class="font-semibold text-[#344CB7]">{{ $log->new_value }}</span>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @else
-                                <p class="mt-4 text-gray-500 italic">Belum ada perubahan data.</p>
-                            @endif
+                            <div id="history-table">
+                                @include('_superadmin.users.components.history-table')
+                            </div>
                         </div>
                     </div>
                 </div>

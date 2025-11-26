@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -44,7 +43,7 @@ class User extends Authenticatable
 
     public function detailHistories()
     {
-        return $this->hasMany(UserDetailHistory::class);
+        return $this->hasMany(UserDetailHistory::class)->latest('changed_at');
     }
 
     // FIX: Status online/offline yang benar & aman
@@ -54,17 +53,18 @@ class User extends Authenticatable
             return 'Nonaktif';
         }
 
-        $lastActivity = DB::table('sessions')
+        $isOnline = DB::table('sessions')
             ->where('user_id', $this->id)
-            ->max('last_activity');
+            ->whereNotNull('user_id')
+            ->exists();
 
-        if (!$lastActivity) {
-            return 'Offline';
+        if ($isOnline) {
+            return 'Online';
         }
 
-        $minutesAgo = now()->diffInMinutes(Carbon::createFromTimestamp($lastActivity));
+        $hasLoggedIn = \App\Models\LoginHistory::where('user_id', $this->id)->exists();
 
-        return $minutesAgo < 5 ? 'Online' : 'Aktif';
+        return $hasLoggedIn ? 'Offline' : 'Aktif';
     }
 
     // Profile image

@@ -32,9 +32,10 @@ class SuperadminUserController extends Controller
         // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->whereHas('detail', function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%");
-            })->orWhere('email', 'like', "%{$search}%");
+            $query->where(function($q) use ($search) {
+                $q->whereHas('detail', fn($qq) => $qq->where('name', 'like', "%{$search}%"))
+                ->orWhere('email', 'like', "%{$search}%");
+            });
         }
 
         // Filter tab (Traveler, Penitip, Admin, Finance)
@@ -112,8 +113,8 @@ class SuperadminUserController extends Controller
         // ===========================================================================
 
         // Grafik aktivitas login 7 hari terakhir
-        $weekStart = Carbon::now()->startOfWeek(); // Senin
-        $weekEnd = Carbon::now()->endOfWeek(); // Minggu
+        $weekStart = Carbon::now('UTC')->startOfWeek()->startOfDay();
+        $weekEnd = Carbon::now('UTC')->endOfWeek()->endOfDay();
 
         // Ambil data login dalam seminggu terakhir
         $rawLogins = LoginHistory::where('user_id', $user->id)
@@ -158,10 +159,10 @@ class SuperadminUserController extends Controller
         $user->chart_data = $chartData;
         // ===========================================================================
 
-        // Hitung transaksi per hari (traveler & customer)
+        // Grafik transaksi (traveler & customer)
         if (in_array($user->role, ['traveler', 'customer'])) {
-        $start = Carbon::now()->startOfWeek();
-        $end = Carbon::now()->endOfWeek();
+        $start = Carbon::now('UTC')->startOfWeek()->startOfDay();
+        $end = Carbon::now('UTC')->endOfWeek()->endOfDay();
 
         $buyCount = BuyTransaction::where(
                 $user->role === 'traveler' ? 'traveler_id' : 'buyer_id', $user->id
@@ -196,12 +197,16 @@ class SuperadminUserController extends Controller
 
         $user->transaction_labels = $transactionLabels;
         $user->transaction_data = $transactionData;
-    } else {
-        $user->transaction_labels = [];
-        $user->transaction_data = [];
-    }
+        } else {
+            $user->transaction_labels = [];
+            $user->transaction_data = [];
+        }
         // ===========================================================================
 
+        $user->detailHistories = $user->detailHistories()
+            ->orderBy ('changed_at', 'desc')
+            ->paginate(5);
+        
         return view('_superadmin.users.detail', compact('user'));
     }
 
@@ -223,6 +228,51 @@ class SuperadminUserController extends Controller
         elseif (str_contains($ua, 'iPhone') || str_contains($ua, 'iPad')) $os = 'iOS';
 
         return "$browser - $os";
+    }
+
+    public function edit(User $user)
+    {
+        $user->load('detail');
+        return view('_superadmin.users.edit', compact('user'));
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'role' => 'required|in:traveler,customer,admin,finance,superadmin',
+            'account_status' => 'required|in:active,inactive',
+            // detail
+            'detail.name' => 'required|string|max:255',
+            'detail.phone' => 'nullable|string|max:20',
+            'detail.address' => 'nullable|string',
+            'detail.date_birth' => 'nullable|date',
+            'detail.gender' => 'nullable|in:Laki-laki,Perempuan',
+            'detail.bank_name' => 'nullable|string',
+            'detail.bank_number' => 'nullable|string',
+        ]);
+
+        // Update user
+        $user->update($request->only('name', 'email', 'role', 'account_status'));
+
+        // Update atau buat user_detail
+        $user->detail()->updateOrCreate(
+            ['user_id' => $user->id],
+            $request->input('detail', [])
+        );
+
+        return redirect()
+            ->route('superadmin.users.show', $user)
+            ->with('success', 'Data pengguna berhasil diperbarui!');
+    }
+
+    public function toggleStatus(User $user)
+    {
+        $user->account_status = $user->account_status === 'active' ? 'inactive' : 'active';
+        $user->save();
+
+        return back()->with('success', 'Status akun berhasil diubah!');
     }
 
     public function destroy(User $user)

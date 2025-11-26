@@ -52,18 +52,18 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 // --------------------------------------------------- ADMIN -------------------------------------------------------
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users');
 });
 
 // --------------------------------------------------- FINANCE -------------------------------------------------------
-Route::middleware(['auth'])->prefix('finance')->group(function () {
+Route::middleware(['auth', 'role:finance'])->prefix('finance')->group(function () {
     Route::get('/dashboard', [FinanceDashboardController::class, 'index'])->name('finance.dashboard');
 });
 
 // --------------------------------------------------- SUPERADMIN -------------------------------------------------------
-Route::middleware(['auth',])->prefix('superadmin')->group(function () {
+Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->group(function () {
     Route::get('/dashboard', [SuperadminDashboardController::class, 'index'])->name('superadmin.dashboard');
     Route::get('/superadmin/dashboard/transactions', [SuperadminDashboardController::class, 'transactions'])->name('superadmin.dashboard.transactions');
 
@@ -73,6 +73,9 @@ Route::middleware(['auth',])->prefix('superadmin')->group(function () {
 
     // Users Details
     Route::get('/users/{user}', [SuperadminUserController::class, 'show'])->name('superadmin.users.show');
+    Route::post('/users/{user}/toggle-status', [SuperadminUserController::class, 'toggleStatus'])->name('superadmin.users.toggleStatus');
+    Route::get('/users/{user}/edit', [SuperadminUserController::class, 'edit'])->name('superadmin.users.edit');
+    Route::put('/users/{user}', [SuperadminUserController::class, 'update'])->name('superadmin.users.update');
     Route::delete('/users/{user}', [SuperadminUserController::class, 'destroy'])->name('superadmin.users.destroy');
 
     // Products List

@@ -28,12 +28,16 @@ class UserDetailObserver
         foreach ($dirty as $field => $newValue) {
             $oldValue = $original[$field] ?? null;
 
+            if (in_array($field, ['updated_at', 'created_at'])) {
+                continue;
+            }
+
             // Skip kalau nilai lama & baru sama (kadang terjadi karena casting)
             if ($oldValue === $newValue) continue;
 
             // Mapping nama field biar lebih manusiawi
             $fieldNames = [
-                'name' => 'Nama Lengkap',
+                'name' => 'Username',
                 'phone' => 'No. Handphone',
                 'address' => 'Alamat',
                 'date_birth' => 'Tanggal Lahir',

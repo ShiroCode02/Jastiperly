@@ -1,6 +1,6 @@
 <div class="rounded-t-lg overflow-hidden shadow-md bg-white/50">
     <table class="w-full text-sm border-collapse">
-        <thead class="bg-[#577BC166] text-blue-900">
+        <thead class="bg-[#577BC1]/40 text-blue-900">
             <tr>
                 <th class="p-3 text-center font-semibold">ID</th>
                 <th class="p-3 text-center font-semibold">Foto</th>
@@ -35,9 +35,11 @@
                     </td>
                     <td class="p-3 flex justify-center gap-2">
                         <!-- Edit -->
-                        <button class="p-2 rounded-md transition hover:scale-110" style="background-color: #FAB00580;">
-                            <x-icons.icon name="pencil" class="w-4 h-4" />
-                        </button>
+                        <a href="{{ route('superadmin.users.edit', $user) }}"
+                            class="p-2 rounded-md transition hover:scale-110"
+                            style="background-color: #FAB00580;">
+                                <x-icons.icon name="pencil" class="w-4 h-4" />
+                        </a>
                         <!-- View -->
                         <a href="{{ route('superadmin.users.show', $user) }}"
                             class="p-2 rounded-md transition hover:scale-110"

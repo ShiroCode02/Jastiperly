@@ -1,5 +1,5 @@
 <div class="bg-white/50 rounded-t-lg shadow-md divide-y divide-blue-100">
-    <div class="px-5 py-3 bg-[#577BC166] text-black font-semibold rounded-t-xl text-xl">
+    <div class="px-5 py-3 bg-[#577BC1]/40 text-black font-semibold rounded-t-xl text-xl">
         Daftar Produk
     </div>
     <div class="divide-y divide-blue-100">
