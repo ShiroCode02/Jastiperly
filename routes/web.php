@@ -107,4 +107,5 @@ Route::middleware(['auth', 'role:superadmin'])->prefix('superadmin')->group(func
 
     // Settings
     Route::get('/settings', [SuperadminSettingController::class, 'index'])->name('superadmin.settings');
+    Route::post('/settings', [SuperadminSettingController::class, 'update'])->name('superadmin.settings.update');
 });
