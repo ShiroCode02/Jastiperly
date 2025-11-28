@@ -6,17 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class SuperadminSettingController extends Controller
 {
     public function index()
-    {
+    {        
         $user = Auth::user();
         if ($user) {
-            $user->load('detail');
+            $user = User::with('detail')->find($user->id);
         } else {
             return redirect()->route('login')->with('error', 'Silakan login dulu.');
-        }        
+        }
         return view('_superadmin.settings.index', compact('user'));
     }
 
@@ -26,11 +27,11 @@ class SuperadminSettingController extends Controller
         $tab = $request->query('tab', 'profil');
         $user = Auth::user();
         if ($user) {
-            $user->load('detail');
+            $user = User::with('detail')->find($user->id);
         } else {
             return redirect()->route('login')->with('error', 'Silakan login dulu.');
         }
-
+        
         switch ($tab) {
 
             case 'profil':
@@ -51,22 +52,32 @@ class SuperadminSettingController extends Controller
     private function updateProfile(Request $request, $user)
     {
         $request->validate([
-            'full_name' => 'required|string|max:120',
-            'email' => 'required|email',
             'username' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'full_name' => 'required|string|max:120',
             'phone' => 'nullable|string|max:20',
             'gender' => 'nullable|in:Laki-laki,Perempuan',
             'address' => 'nullable|string',
+        ], [
+            // Custom pesan Indo buat required dan lain-lain
+            'username.required' => 'Username tidak boleh kosong.',
+            'username.max' => 'Username maksimal 100 karakter.',
+            'email.required' => 'Email tidak boleh kosong.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'full_name.required' => 'Nama lengkap tidak boleh kosong.',
+            'full_name.max' => 'Nama lengkap maksimal 120 karakter.',
+            'phone.max' => 'Nomor telepon maksimal 20 karakter.',
         ]);
 
         // update users table
-        $user->name = $request->full_name;
+        $user->name = $request->username;
         $user->email = $request->email;
         $user->save();
 
         // update user_details
         $user->detail->update([
-            'name' => $request->username,
+            'name' => $request->full_name,
             'phone' => $request->phone,
             'gender' => $request->gender,
             'address' => $request->address,

@@ -49,11 +49,11 @@
                                     <table class="w-full text-[15px] font-medium">
                                         <tr class="border-b border-gray-500">
                                             <td class="w-40 py-2 text-gray-600">Nama Lengkap</td>
-                                            <td class="py-2 text-gray-600 text-right">{{ $user->name ?? '-' }}</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->detail->name ?? '-' }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
                                             <td class="py-2 text-gray-600">Username</td>
-                                            <td class="py-2 text-gray-600 text-right">{{ $user->detail->name ?? '-' }}</td>
+                                            <td class="py-2 text-gray-600 text-right">{{ $user->name ?? '-' }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
                                             <td class="py-2 text-gray-600">Email</td>

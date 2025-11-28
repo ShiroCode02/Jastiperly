@@ -16,13 +16,16 @@
             </div>
 
             <div class="absolute left-4 top-6 flex items-center gap-6">
-                <div class="w-[200px] h-[200px] rounded-full overflow-hidden border-4 border-white shadow">
-                    @if(!empty($user->profile_image))
-                        <img src="{{ asset($user->profile_image) }}" alt="avatar" class="w-full h-full object-cover">
-                    @else
-                        {{-- fallback avatar --}}
-                        <img src="{{ asset('images/default-avatar.png') }}" alt="avatar" class="w-full h-full object-cover">
-                    @endif
+                <div class="relative group">
+                    <div class="w-[200px] h-[200px] rounded-full overflow-hidden border-4 border-white shadow">
+                        <img src="{{ $user->profile_image_url }}" alt="avatar" class="w-full h-full object-cover">
+                    </div>
+
+                    <div class="absolute right-0 bottom-0 bg-yellow-400 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                    </div>
                 </div>
 
                 <div class="text-[#000957]">
@@ -38,6 +41,12 @@
                         </div>
                     @endif
                 </div>
+            </div>
+            
+            <div class="absolute right-4 bottom-3 text-right text-[#000957] text-sm">
+                @if(isset($user->updated_at) || isset($user->detail->updated_at))
+                    Terakhir diperbarui: {{ max($user->updated_at, $user->detail->updated_at ?? $user->updated_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
+                @endif
             </div>
         </div>
 

@@ -15,7 +15,6 @@
 
     <script>
         document.getElementById('main-content').classList.remove('initial-hidden');
-        // header also has id 'navbar-header' per header component
         const h = document.getElementById('navbar-header');
         if (h) h.classList.remove('initial-hidden');
     </script>

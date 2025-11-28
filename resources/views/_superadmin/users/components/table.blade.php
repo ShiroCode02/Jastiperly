@@ -18,7 +18,7 @@
                         <img src="{{ $user->profile_image_url }}"
                              class="w-[50px] h-[50px] rounded-full object-cover">
                     </td>
-                    <td class="p-3 text-center">{{ $user->name }}</td>
+                    <td class="p-3 text-center">{{ $user->detail->name }}</td>
                     <td class="p-3 text-center">{{ $user->email }}</td>
                     <td class="p-3 text-center">
                         @php
