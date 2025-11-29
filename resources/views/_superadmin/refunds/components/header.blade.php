@@ -29,7 +29,7 @@
             <!-- UNDUH DAFTAR -->
             <div class="flex items-center gap-3 mt-6">
                 <a href="{{ route('superadmin.refunds.export', request()->query()) }}"
-                   class="flex items-center gap-2 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold px-4 py-1 rounded-md shadow transition">
+                   class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-4 py-1 rounded-md shadow transition">
                     <span>Unduh Data</span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
@@ -54,13 +54,13 @@
                 @if(request()->is('*edit*'))
                     <!-- TOMBOL SIMPAN -->
                     <button form="editForm" type="submit"
-                            class="flex items-center gap-2 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold px-10 py-1 rounded-md shadow transition">
+                            class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-10 py-1 rounded-md shadow transition">
                         <span>Simpan</span>
                     </button>
                 @else
                     <!-- TOMBOL UNDUH (DETAIL) -->
                     <a href="{{ route('superadmin.refunds.export', array_merge(request()->query(), ['refund' => request('refund')])) }}"
-                       class="flex items-center gap-2 bg-yellow-200 hover:bg-yellow-300 text-black font-semibold px-4 py-1 rounded-md shadow transition">
+                       class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-4 py-1 rounded-md shadow transition">
                         <span>Unduh Data</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />

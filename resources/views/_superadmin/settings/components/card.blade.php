@@ -1,7 +1,5 @@
 @php
-    // current tab (profil, preferensi, keamanan)
     $tab = request('tab', 'profil');
-    // user object should be passed from controller; fallback example:
     $user = $user ?? auth()->user();
 @endphp
 
@@ -9,14 +7,14 @@
     <div class="bg-white/50 rounded-xl shadow overflow-hidden">
         <!-- TOP: header image + avatar + name -->
         <div class="relative">
-            {{-- background banner (replace url with actual asset if available) --}}
-            <div class="h-[250px] w-full bg-cover bg-center"
-                 style="background-image: url('{{ asset('images/settings-bg.jpg') }}');">
-                <div class="absolute inset-0 bg-black/25"></div>
+            {{-- Latar belakang header --}}
+            <div class="h-[250px] w-full bg-cover bg-center opacity-70"
+                 style="background-image: url('{{ asset('images/superadmin/settings-bg.jpg') }}');">
+                <div class="absolute inset-0"></div>
             </div>
 
             <div class="absolute left-4 top-6 flex items-center gap-6">
-                <div class="relative group">
+                <div class="relative group cursor-pointer" onclick="openUploadProfileModal()">
                     <div class="w-[200px] h-[200px] rounded-full overflow-hidden border-4 border-white shadow">
                         <img src="{{ $user->profile_image_url }}" alt="avatar" class="w-full h-full object-cover">
                     </div>
@@ -34,7 +32,7 @@
                     </h1>
                     @if(isset($user->account_status))
                         <div class="mt-1 flex items-center gap-2">
-                            <span class="inline-block w-4 h-4 rounded-full {{ $user->account_status === 'active' ? 'bg-green-400' : 'bg-gray-400' }}"></span>
+                            <span class="inline-block w-4 h-4 rounded-full {{ $user->account_status === 'active' ? 'bg-[#10D006]' : 'bg-gray-500' }}"></span>
                             <span class="italic text-[25px]">
                                 {{ $user->account_status === 'active' ? 'Online' : ucfirst($user->account_status) }}
                             </span>
@@ -43,7 +41,7 @@
                 </div>
             </div>
             
-            <div class="absolute right-4 bottom-3 text-right text-[#000957] text-sm">
+            <div class="absolute right-4 bottom-3 text-right text-[#000957] text-sm font-bold">
                 @if(isset($user->updated_at) || isset($user->detail->updated_at))
                     Terakhir diperbarui: {{ max($user->updated_at, $user->detail->updated_at ?? $user->updated_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
                 @endif
@@ -81,5 +79,6 @@
                 @include('_superadmin.settings.tabs.profile', ['user' => $user])
             @endif
         </div>
+        @include('_superadmin.settings.components.upload-modal')
     </div>
 </div>

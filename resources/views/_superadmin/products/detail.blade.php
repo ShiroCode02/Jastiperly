@@ -63,13 +63,13 @@
                         <div class="mt-10 flex justify-end gap-10">
                             <button type="button"
                                     onclick="openRejectModal({{ $product->id }})"
-                                    class="w-40 h-12 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition">
+                                    class="w-40 h-10 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition">
                                 Tolak
                             </button>
                             <form method="POST" action="{{ route('superadmin.products.approve', $product->id) }}" class="inline">
                                 @csrf
                                 <button type="submit"
-                                        class="w-40 h-12 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition">
+                                        class="w-40 h-10 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition">
                                     Setujui
                                 </button>
                             </form>

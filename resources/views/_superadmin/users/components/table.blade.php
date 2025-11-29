@@ -43,15 +43,13 @@
                         <!-- View -->
                         <a href="{{ route('superadmin.users.show', $user) }}"
                             class="p-2 rounded-md transition hover:scale-110"
-                            style="background-color: #0095DA80;"
-                            title="Detail Pengguna">
+                            style="background-color: #0095DA80;">
                                 <x-icons.icon name="eye" class="w-4 h-4 text-white" />
                         </a>
                         <!-- Delete -->
-                        <button onclick="confirmDeleteUser({{ $user->id }})"
-                                class="p-2 rounded-md transition hover:scale-110"
+                        <button class="p-2 rounded-md transition hover:scale-110"
                                 style="background-color: #FA525280;"
-                                title="Hapus Pengguna">
+                                onclick="confirmDeleteUser({{ $user->id }})">
                             <x-icons.icon name="trash" class="w-4 h-4 text-white" />
                         </button>
                     </td>

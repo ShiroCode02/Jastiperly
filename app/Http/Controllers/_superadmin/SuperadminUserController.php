@@ -291,12 +291,17 @@ class SuperadminUserController extends Controller
 
     public function export(Request $request)
     {
-        // SEMENTARA: EXPORT KOSONG / DUMMY BIAR TIDAK ERROR
-        // Nanti diganti pakai Excel kalau sudah siap
-        return response()->json(['message' => 'Export user belum tersedia'])->send();
-        exit;
+        $userId = $request->get('user');
 
-        // KALAU SUDAH SIAP PAKAI EXCEL:
-        // return Excel::download(new UsersExport($request->all()), 'data-pengguna.xlsx');
+        // Jika user ID dikirim → Export detail user
+        if ($userId) {
+            $user = User::with('detail')->findOrFail($userId);
+            $filename = 'Detail_User_ID' . $user->id . '_' . now()->format('Y-m-d') . '.xlsx';
+
+            return Excel::download(new \App\Exports\UserDetailExport($user), $filename);
+        }
+
+        // Jika tidak ada user → export daftar user (default)
+        return Excel::download(new UsersExport($request), 'data-pengguna.xlsx');
     }
 }

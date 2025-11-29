@@ -51,37 +51,54 @@ class SuperadminSettingController extends Controller
 
     private function updateProfile(Request $request, $user)
     {
-        $request->validate([
-            'username' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'full_name' => 'required|string|max:120',
-            'phone' => 'nullable|string|max:20',
-            'gender' => 'nullable|in:Laki-laki,Perempuan',
-            'address' => 'nullable|string',
-        ], [
-            // Custom pesan Indo buat required dan lain-lain
-            'username.required' => 'Username tidak boleh kosong.',
-            'username.max' => 'Username maksimal 100 karakter.',
-            'email.required' => 'Email tidak boleh kosong.',
-            'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah terdaftar.',
-            'full_name.required' => 'Nama lengkap tidak boleh kosong.',
-            'full_name.max' => 'Nama lengkap maksimal 120 karakter.',
-            'phone.max' => 'Nomor telepon maksimal 20 karakter.',
-        ]);
+        $rules = [
+            'profile_image' => 'nullable|image|mimes:jpg,png|max:10240',
+        ];
+        $messages = [
+            'profile_image.image' => 'Foto profil harus berupa gambar.',
+            'profile_image.mimes' => 'Foto profil harus format jpg atau png.',
+            'profile_image.max' => 'Foto profil maksimal 10MB.',
+        ];
 
-        // update users table
-        $user->name = $request->username;
-        $user->email = $request->email;
+        if ($request->filled('username') || $request->filled('email') || $request->filled('full_name')) { // Kalau ada input teks (dari tab profil), require mereka
+            $rules = array_merge($rules, [
+                'username' => 'required|string|max:100',
+                'email' => 'required|email|unique:users,email,' . $user->id,
+                'full_name' => 'required|string|max:120',
+                'phone' => 'nullable|string|max:20',
+                'gender' => 'nullable|in:Laki-laki,Perempuan',
+                'address' => 'nullable|string',
+            ]);
+            $messages = array_merge($messages, [
+                'username.required' => 'Username tidak boleh kosong.',
+                'username.max' => 'Username maksimal 100 karakter.',
+                'email.required' => 'Email tidak boleh kosong.',
+                'email.email' => 'Format email tidak valid.',
+                'email.unique' => 'Email sudah terdaftar.',
+                'full_name.required' => 'Nama lengkap tidak boleh kosong.',
+                'full_name.max' => 'Nama lengkap maksimal 120 karakter.',
+                'phone.max' => 'Nomor telepon maksimal 20 karakter.',
+            ]);
+        }
+
+        $request->validate($rules, $messages);
+
+        // update users table kalau ada input
+        if ($request->filled('username')) $user->name = $request->username;
+        if ($request->filled('email')) $user->email = $request->email;
+        if ($request->hasFile('profile_image')) {
+            $path = $request->file('profile_image')->store('profile_images', 'public');
+            $user->profile_image = $path;
+        }
         $user->save();
 
-        // update user_details
-        $user->detail->update([
-            'name' => $request->full_name,
-            'phone' => $request->phone,
-            'gender' => $request->gender,
-            'address' => $request->address,
-        ]);
+        // update user_details kalau ada input
+        $detailUpdates = [];
+        if ($request->filled('full_name')) $detailUpdates['name'] = $request->full_name;
+        if ($request->filled('phone')) $detailUpdates['phone'] = $request->phone;
+        if ($request->filled('gender')) $detailUpdates['gender'] = $request->gender;
+        if ($request->filled('address')) $detailUpdates['address'] = $request->address;
+        if (!empty($detailUpdates)) $user->detail->update($detailUpdates);
 
         return back()->with('success', 'Profil berhasil diperbarui.');
     }
