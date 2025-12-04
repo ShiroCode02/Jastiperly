@@ -1,5 +1,5 @@
 <div class="rounded-t-lg overflow-hidden shadow-md bg-white/50">
-    <table class="w-full text-sm border-collapse">
+    <table class="w-full text-sm border-collapse align-middle">
         <thead class="bg-[#577BC1]/40 text-blue-900">
             <tr>
                 <th class="p-3 text-center font-semibold">ID</th>
@@ -14,7 +14,7 @@
             @forelse ($users as $index => $user)
                 <tr class="border-b hover:bg-blue-100 transition">
                     <td class="p-3 text-center">{{ $user->id }}</td>
-                    <td class="p-3 justify-center flex">
+                    <td class="p-3 flex justify-center">
                         <img src="{{ $user->profile_image_url }}"
                              class="w-[50px] h-[50px] rounded-full object-cover">
                     </td>
@@ -38,7 +38,7 @@
                         <a href="{{ route('superadmin.users.edit', $user) }}"
                             class="p-2 rounded-md transition hover:scale-110"
                             style="background-color: #FAB00580;">
-                                <x-icons.icon name="pencil" class="w-4 h-4" />
+                                <x-icons.icon name="pencil" class="w-4 h-4 text-white" />
                         </a>
                         <!-- View -->
                         <a href="{{ route('superadmin.users.show', $user) }}"

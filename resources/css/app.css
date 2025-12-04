@@ -31,4 +31,17 @@
     .pointer-events-none {
         pointer-events: none;
     }
+    /* Hilangkan flash saat refresh - sidebar open */
+    .sidebar-open-now #main-sidebar {
+        width: 312px !important;
+    }
+    .sidebar-open-now #sidebar-content {
+        transform: translateX(0) !important;
+    }
+    .sidebar-open-now #main-content {
+        margin-left: 312px !important;
+    }
+    .sidebar-open-now #navbar-header {
+        left: 312px !important;
+    }
 }

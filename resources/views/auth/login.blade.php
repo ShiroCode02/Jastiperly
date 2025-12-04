@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-auth-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -8,7 +8,27 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+
+            <div class="relative">
+
+                <!-- Icon Email (Feather Icon) -->
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                    <i data-feather="mail" class="w-5 h-5"></i>
+                </span>
+
+                <!-- Input -->
+                <input id="email"
+                    type="email"
+                    name="email"
+                    :value="old('email')"
+                    required
+                    autofocus
+                    autocomplete="username"
+                    class="block mt-1 w-full pl-10 pr-3 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md">
+                
+                <script>feather.replace();</script>
+            </div>
+
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -16,32 +36,72 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+            <div class="relative">
+
+                <!-- Icon Gembok -->
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">
+                    <i data-feather="lock" class="w-5 h-5"></i>
+                </span>
+
+                <!--  Input -->
+                <input id="password" 
+                    type="password" 
+                    name="password" 
+                    required 
+                    autocomplete="current-password"
+                    class="block mt-1 w-full pl-10 pr-10 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md">
+
+                <!-- Toggle Button -->
+                <button type="button"
+                    onclick="togglePassword()"
+                    class="absolute inset-y-0 right-3 flex items-center text-gray-600 hover:text-gray-800">
+                    <i id="eyeIcon" data-feather="eye" class="w-5"></i>
+                </button>
+
+                <script>feather.replace();</script>
+            </div>
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <!-- Lupa Kata Sandi -->
+        <div class="block mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                <a class="underline text-sm text-black hover:text-[#2C9DDE] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                    {{ __('Lupa Kata Sandi?') }}
                 </a>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+        </div>
+        
+        <!-- Tombol Login -->
+        <div class="flex items-center justify-center mt-4">
+            <x-primary-button class="ms-4">
+                {{ __('Masuk') }}
             </x-primary-button>
         </div>
+
+        <!-- Tombol Daftar -->
+        <div class="flex items-center justify-center mt-4 text-sm">
+            <span class="text-gray-600">Belum Punya Akun?</span>
+            <a class="underline text-sm text-[#2C9DDE] hover:text-[#1b7fb8] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ms-2" href="{{ route('register') }}">
+                {{ __('Daftar Sekarang') }}
+        </div>
     </form>
-</x-guest-layout>
+
+    <script>
+    function togglePassword() {
+        const input = document.getElementById('password');
+        const icon = document.getElementById('eyeIcon');
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.setAttribute('data-feather', 'eye');
+        } else {
+            input.type = "password";
+            icon.setAttribute('data-feather', 'eye-off');
+        }
+        feather.replace();
+    }
+    </script>
+</x-auth-layout>

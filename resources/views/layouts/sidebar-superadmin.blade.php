@@ -10,7 +10,12 @@
     ];
 @endphp
 
-<aside class="fixed top-0 left-0 h-screen w-[312px] text-white z-30">
+<aside id="main-sidebar"
+       class="fixed top-0 left-0 h-screen text-white z-30 
+              transition-all duration-300
+              w-[97px]   <!-- default closed -->
+              overflow-hidden">
+
     <!-- Lapisan Depan: Biru tua (statis) -->
     <div class="absolute inset-0 w-[97px] bg-[#000957] z-20"></div>
 
@@ -42,7 +47,7 @@
     </div>
 
     <!-- Konten Sidebar Statis: Logo dan Ikon -->
-    <div class="relative flex flex-col h-full">
+    <div class="relative w-[97px] flex flex-col h-full">
         <div class="flex items-center px-6 py-5 z-30">
             <div id="toggle-sidebar" class="w-[70px] cursor-pointer">
                 <img src="{{ asset('images/superadmin/logo.svg') }}" alt="Logo Jastiperly" class="w-[60px] h-[60px]">

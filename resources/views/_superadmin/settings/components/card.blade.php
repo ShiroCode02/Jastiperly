@@ -14,7 +14,7 @@
             </div>
 
             <div class="absolute left-4 top-6 flex items-center gap-6">
-                <div class="relative group cursor-pointer" onclick="openUploadProfileModal()">
+                <div class="relative group cursor-pointer rounded-full" onclick="openUploadProfileModal()">
                     <div class="w-[200px] h-[200px] rounded-full overflow-hidden border-4 border-white shadow">
                         <img src="{{ $user->profile_image_url }}" alt="avatar" class="w-full h-full object-cover">
                     </div>

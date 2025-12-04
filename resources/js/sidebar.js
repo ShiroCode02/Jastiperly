@@ -22,9 +22,12 @@ document.addEventListener('DOMContentLoaded', function () {
     let isSidebarOpen = localStorage.getItem('sidebarState') === 'open' ? true : false;
 
     const updateSidebarState = function () {
-        console.log('Updating sidebar state:', { isSidebarOpen });
+        const sidebar = document.getElementById('main-sidebar');
+
         if (isSidebarOpen) {
             // Buka sidebar
+            sidebar.classList.remove('w-[97px]');
+            sidebar.classList.add('w-[312px]');
             sidebarContent.classList.remove('-translate-x-full');
             sidebarContent.classList.add('translate-x-0');
             if (iconContent) iconContent.classList.remove('overflow-hidden');
@@ -41,9 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
             navbarHeader.classList.remove('left-97');
             navbarHeader.classList.add('left-312');
             localStorage.setItem('sidebarState', 'open');
-            console.log('Sidebar opened');
         } else {
             // Tutup sidebar
+            sidebar.classList.remove('w-[312px]');
+            sidebar.classList.add('w-[97px]');
             sidebarContent.classList.remove('translate-x-0');
             sidebarContent.classList.add('-translate-x-full');
             if (iconContent) iconContent.classList.add('overflow-hidden');
@@ -60,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
             navbarHeader.classList.remove('left-312');
             navbarHeader.classList.add('left-97');
             localStorage.setItem('sidebarState', 'closed');
-            console.log('Sidebar closed');
         }
     };
 
@@ -102,26 +105,34 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handle klik ikon statis
     iconLinks.forEach(link => {
         link.addEventListener('click', function (e) {
-            const isActive = link.classList.contains('bg-[#0A0E5C]'); // Deteksi halaman aktif
-            console.log('Icon clicked:', { isActive, isSidebarOpen, href: link.getAttribute('href') });
+            const href = link.getAttribute('href');
+            const isActive = link.classList.contains('bg-[#0A0E5C]'); // halaman aktif
+            const isSamePage = window.location.pathname === new URL(href, window.location.origin).pathname;
 
-            // Jika sidebar terbuka, biarkan navigasi normal
+            console.log('Icon clicked:', { isActive, isSidebarOpen, href, isSamePage });
+
+            // Kasus 1: Sidebar sedang terbuka
             if (isSidebarOpen) {
-                console.log('Sidebar open, navigating normally');
-                return; // Biarkan <a> berfungsi normal
-            }
-
-            // Jika sidebar tertutup
-            if (!isSidebarOpen) {
-                if (isActive) {
-                    // Sudah di halaman tujuan → Toggle sidebar (buka/tutup)
+                // Jika klik ikon halaman yang sedang aktif → tutup sidebar
+                if (isActive || isSamePage) {
                     e.preventDefault();
                     toggleSidebarFunction(e);
-                    console.log('Toggling sidebar for active page');
-                } else {
-                    // Bukan halaman tujuan → Navigasi normal tanpa buka sidebar
-                    console.log('Navigating to new page without opening sidebar');
+                    return;
                 }
+                // Jika klik ikon lain → biarkan navigasi normal
+                return;
+            }
+
+            // Kasus 2: Sidebar tertutup
+            if (!isSidebarOpen) {
+                // Jika klik ikon halaman yang sedang aktif → buka sidebar
+                if (isActive || isSamePage) {
+                    e.preventDefault();
+                    toggleSidebarFunction(e);
+                    return;
+                }
+                // Jika klik ikon lain → navigasi normal (tidak buka sidebar)
+                return;
             }
         });
     });
