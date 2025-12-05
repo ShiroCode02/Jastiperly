@@ -46,7 +46,7 @@
                                             <!-- Data Utama -->
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                                                <input type="text" name="name" value="{{ old('name', $user->detail->name) }}" required
+                                                <input type="text" name="detail[name]" value="{{ old('detail.name', $user->detail->name) }}" required
                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#344CB7]">
                                             </div>
                                             <div>
@@ -79,7 +79,7 @@
 
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                                <input type="text" name="detail[name]" value="{{ old('detail.name', $user->name ?? '') }}"
+                                                <input type="text" name="name" value="{{ old('name', $user->name ?? '') }}"
                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md">
                                             </div>
                                             <div>

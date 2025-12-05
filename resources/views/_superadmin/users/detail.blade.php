@@ -278,8 +278,9 @@
 
             const ctx = document.getElementById('activityChart').getContext('2d');
 
-            const dataPoints = @json($user->chart_data);
+            const rawData = @json($user->chart_data);
             const labels = @json($user->chart_labels);
+            const dataPoints = rawData.map(val => Math.min(val, 24));
 
             const hasData = dataPoints.some(val => val > 0);
             const maxValue = hasData ? Math.max(...dataPoints) : 6;
@@ -287,6 +288,10 @@
             let suggestedTop = Math.ceil(maxValue);
             if (Number.isInteger(maxValue)) {
                 suggestedTop += 1;
+            }
+
+            if (maxValue >= 24) {
+                suggestedTop = 25;
             }
 
             new Chart(ctx, {
@@ -308,6 +313,12 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
+                                    const displayedHours = context.parsed.y;
+                                    const originalHours = rawData[context.dataIndex]; // ambil data asli
+                                    
+                                    if (originalHours >= 24) {
+                                        return 'Durasi: 24 jam+ (dibatasi grafik)';
+                                    }
                                     const totalMinutes = Math.round(context.parsed.y * 60);
                                     const hours = Math.floor(totalMinutes / 60);
                                     const minutes = totalMinutes % 60;

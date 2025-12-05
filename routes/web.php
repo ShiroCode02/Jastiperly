@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AuthenticationController;
 
 use App\Http\Controllers\_admin\AdminDashboardController;
 use App\Http\Controllers\_admin\AdminUserController;
@@ -17,14 +16,6 @@ use App\Http\Controllers\_superadmin\SuperadminTransactionController;
 use App\Http\Controllers\_superadmin\SuperadminRefundController;
 use App\Http\Controllers\_superadmin\SuperadminSettingController;
 
-// ------------------- AUTHENTICATION -------------------
-Route::get('/login', [AuthenticationController::class, 'signIn'])->name('login');
-Route::post('/login', [AuthenticationController::class, 'login']);
-Route::post('/logout', [AuthenticationController::class, 'logout'])->name('logout');
-Route::get('/register', [AuthenticationController::class, 'signUp']);
-Route::get('/forgot-password', [AuthenticationController::class, 'forgotPassword'])->name('password.request');
-
-// ===========================space for landing page============================
 Route::get('/', function () {
     return redirect('/login');
 });

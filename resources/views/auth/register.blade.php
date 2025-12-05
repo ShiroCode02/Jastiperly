@@ -80,6 +80,12 @@
             </x-primary-button>
         </div>
 
+        <div class="flex items-center justify-center mt-4">
+            <x-primary-button class="ms-4">
+                {{ __('Daftar Dengan Google') }}
+            </x-primary-button>
+        </div>
+
         <div class="flex items-center justify-center mt-4 text-sm">
             <span class="text-gray-600">Sudah Punya Akun?</span>
             <a class="underline text-sm text-[#2C9DDE] hover:text-[#1b7fb8] rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ms-2" href="{{ route('login') }}">
