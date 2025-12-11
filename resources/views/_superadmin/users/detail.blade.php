@@ -344,7 +344,13 @@
                             suggestedMax: suggestedTop,
 
                             ticks: {
-                                stepSize: 1,
+                                stepSize: function(context) {
+                                    const max = context.chart.options.scales.y.suggestedMax;
+                                    if (max <= 6) return 1;
+                                    if (max <= 12) return 2;
+                                    if (max <= 24) return 4;
+                                    return 5;
+                                },
                                 color: '#5E5E5E',
                                 font: { size: 18 },
                                 padding: 10,

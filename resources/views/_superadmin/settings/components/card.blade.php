@@ -43,7 +43,7 @@
             
             <div class="absolute right-4 bottom-3 text-right text-[#000957] text-sm font-bold">
                 @if(isset($user->updated_at) || isset($user->detail->updated_at))
-                    Terakhir diperbarui: {{ max($user->updated_at, $user->detail->updated_at ?? $user->updated_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
+                    {{ __('messages.last_updated') }}: {{ max($user->updated_at, $user->detail->updated_at ?? $user->updated_at)->timezone('Asia/Jakarta')->format('d M Y H:i') }}
                 @endif
             </div>
         </div>
@@ -53,15 +53,15 @@
             <nav class="flex gap-8 justify-center">
                 <a href="{{ url()->current() }}?tab=profil"
                    class="text-xl {{ $tab === 'profil' ? 'text-[#000957] underline underline-offset-8' : 'text-gray-400' }}">
-                    Profil
+                    {{ __('messages.profile') }}
                 </a>
                 <a href="{{ url()->current() }}?tab=preferensi"
                    class="text-xl font-medium {{ $tab === 'preferensi' ? 'text-[#000957] underline underline-offset-8' : 'text-gray-400' }}">
-                    Preferensi
+                    {{ __('messages.preference') }}
                 </a>
                 <a href="{{ url()->current() }}?tab=keamanan"
                    class="text-xl font-medium {{ $tab === 'keamanan' ? 'text-[#000957] underline underline-offset-8' : 'text-gray-400' }}">
-                    Keamanan
+                    {{ __('messages.security') }}
                 </a>
             </nav>
         </div>

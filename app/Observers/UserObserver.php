@@ -83,6 +83,9 @@ class UserObserver
     {
         if (is_null($value)) return '-';
         if ($value === '') return '(kosong)';
+        if (is_array($value)) {
+            return json_encode($value, JSON_PRETTY_PRINT); // Handle array dengan JSON rapi
+        }
         return (string) $value;
     }
 

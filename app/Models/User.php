@@ -19,6 +19,7 @@ class User extends Authenticatable
         'role',
         'account_status',
         'profile_image',
+        'preference',
     ];
 
     protected $hidden = [
@@ -33,6 +34,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'role' => 'string',
             'account_status' => 'string',
+            'preference' => 'array',
         ];
     }
 

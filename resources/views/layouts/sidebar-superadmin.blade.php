@@ -74,5 +74,26 @@
                 </ul>
             </div>
         </nav>
+
+        <div class="pb-5 px-4 z-30">
+            <form method="POST" action="{{ route('logout') }}" class="w-full">
+                @csrf
+                <button type="submit"
+                        class="w-full group flex justify-center py-3 rounded-lg">
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="w-[25px] h-[25px]
+                                stroke-white 
+                                group-hover:stroke-[#FFEB00]   <!-- ini yang penting! -->
+                                transition-all duration-300 ease-in-out"
+                        viewBox="0 0 24 24" fill="none" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </form>
+        </div>
     </div>
 </aside>

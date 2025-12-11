@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\App;
 use App\Models\User;
 
 class SuperadminSettingController extends Controller
@@ -107,18 +108,17 @@ class SuperadminSettingController extends Controller
     private function updatePreference(Request $request, $user)
     {
         $request->validate([
-            'language' => 'nullable|in:id,en',
+            'language' => 'required|in:id,en', // Required biar wajib pilih
         ]);
 
-        // Jika kamu punya tabel preferences khusus, arahkan ke situ.
-        // Untuk sementara simpan ke session atau tambahkan kolom di user table.
+        $preference = $user->preference ?? []; // Ambil existing atau kosong
+        $preference['language'] = $request->language;
+        $user->preference = $preference;
+        $user->save();
 
-        // Contoh sederhana: simpan ke session
-        if ($request->language) {
-            session(['language' => $request->language]);
-        }
+        App::setLocale($request->language); // Langsung apply
 
-        return back()->with('success', 'Preferensi berhasil diperbarui.');
+        return back()->with('success', 'Preferensi bahasa berhasil diperbarui.');
     }
 
 

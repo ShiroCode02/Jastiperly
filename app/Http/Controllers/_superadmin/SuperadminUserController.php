@@ -161,42 +161,50 @@ class SuperadminUserController extends Controller
 
         // Grafik transaksi (traveler & customer)
         if (in_array($user->role, ['traveler', 'customer'])) {
-        $start = Carbon::now('UTC')->startOfWeek()->startOfDay();
-        $end = Carbon::now('UTC')->endOfWeek()->endOfDay();
+            // MINGGU MULAI DARI SENIN — SESUAI INDONESIA!
+            $now = Carbon::now('Asia/Jakarta');
+            $startOfWeek = $now->copy()->startOfWeek(Carbon::MONDAY); // Senin
+            $endOfWeek = $now->copy()->endOfWeek(Carbon::MONDAY);     // Minggu depan
 
-        $buyCount = BuyTransaction::where(
-                $user->role === 'traveler' ? 'traveler_id' : 'buyer_id', $user->id
-            )
-            ->whereBetween('created_at', [$start, $end])
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
-            ->groupBy('date')
-            ->pluck('total', 'date');
+            $start = $startOfWeek->startOfDay();
+            $end = $endOfWeek->addWeek()->startOfDay(); // sampai Minggu malam
 
-        $sendCount = SendTransaction::where(
-                $user->role === 'traveler' ? 'sender_id' : 'reciever_id', $user->id
-            )
-            ->whereBetween('created_at', [$start, $end])
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
-            ->groupBy('date')
-            ->pluck('total', 'date');
+            // Query dengan CONVERT_TZ + tanggal WIB
+            $buyCount = BuyTransaction::where(
+                    $user->role === 'traveler' ? 'traveler_id' : 'buyer_id', $user->id
+                )
+                ->whereBetween('created_at', [$start->copy()->utc(), $end->copy()->utc()])
+                ->selectRaw('DATE(CONVERT_TZ(created_at, "+00:00", "+07:00")) as date, COUNT(*) as total')
+                ->groupBy('date')
+                ->pluck('total', 'date');
 
-        $dailyTransactions = $buyCount->merge($sendCount)
-            ->groupBy('date')
-            ->map->sum()
-            ->toArray();
+            $sendCount = SendTransaction::where(
+                    $user->role === 'traveler' ? 'sender_id' : 'reciever_id', $user->id
+                )
+                ->whereBetween('created_at', [$start->copy()->utc(), $end->copy()->utc()])
+                ->selectRaw('DATE(CONVERT_TZ(created_at, "+00:00", "+07:00")) as date, COUNT(*) as total')
+                ->groupBy('date')
+                ->pluck('total', 'date');
 
-        $transactionData = [];
-        $transactionLabels = [];
+            $dailyTransactions = $buyCount->merge($sendCount)
+                ->groupBy('date')
+                ->map->sum();
 
-        for ($i = 6; $i >= 0; $i--) {
-            $date = Carbon::now()->subDays($i);
-            $dateKey = $date->format('Y-m-d');
-            $transactionLabels[] = $date->locale('id')->translatedFormat('l, j F');
-            $transactionData[] = $dailyTransactions[$dateKey] ?? 0;
-        }
+            $transactionData = [];
+            $transactionLabels = [];
 
-        $user->transaction_labels = $transactionLabels;
-        $user->transaction_data = $transactionData;
+            // Loop 7 hari: Senin → Minggu
+            for ($i = 0; $i < 7; $i++) {
+                $date = $startOfWeek->copy()->addDays($i);
+                $dateKey = $date->format('Y-m-d');
+                $dayName = $date->locale('id')->translatedFormat('l, j F');
+
+                $transactionLabels[] = $dayName;
+                $transactionData[] = $dailyTransactions[$dateKey] ?? 0;
+            }
+
+            $user->transaction_labels = $transactionLabels;
+            $user->transaction_data = $transactionData;
         } else {
             $user->transaction_labels = [];
             $user->transaction_data = [];
