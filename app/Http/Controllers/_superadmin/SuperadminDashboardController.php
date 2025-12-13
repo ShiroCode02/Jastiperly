@@ -12,18 +12,16 @@ use Illuminate\Support\Facades\DB;
 class SuperadminDashboardController extends Controller
 {
     public function index(Request $request)
-    {
-        $title = 'Dashboard';
-        
+    {   
         // ==== 1️⃣ TOTAL PENGGUNA & TRANSAKSI ====
         $totalUsers = User::count();
         $totalTransactions = BuyTransaction::count() + SendTransaction::count();
 
         // ==== 2️⃣ TOTAL AKTIVITAS ====
-        $transaksiSelesai = BuyTransaction::where('payment_status', 'approved')->count();
-        $transaksiBerjalan = BuyTransaction::where('payment_status', 'pending')->count();
-        $transaksiDibatalkan = BuyTransaction::where('payment_status', 'declined')->count();
-        $titipKirim = SendTransaction::count();
+        $transactionCompleted = BuyTransaction::where('payment_status', 'approved')->count();
+        $transactionInProgress = BuyTransaction::where('payment_status', 'pending')->count();
+        $transactionCancelled = BuyTransaction::where('payment_status', 'declined')->count();
+        $sendIt = SendTransaction::count();
 
         // ==== 3️⃣ GRAFIK TOTAL PENGGUNA ====
         // Ambil jumlah user baru per bulan berdasarkan role
@@ -82,13 +80,12 @@ class SuperadminDashboardController extends Controller
 
         // ==== 5️⃣ RETURN VIEW ====
         return view('_superadmin.dashboard.index', compact(
-            'title',
             'totalUsers',
             'totalTransactions',
-            'transaksiSelesai',
-            'transaksiBerjalan',
-            'transaksiDibatalkan',
-            'titipKirim',
+            'transactionCompleted',
+            'transactionInProgress',
+            'transactionCancelled',
+            'sendIt',
             'chartData',
             'latestTransactions'
         ));

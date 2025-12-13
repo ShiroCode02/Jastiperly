@@ -8,15 +8,15 @@
         <table class="w-full text-sm border-collapse border-black">
             <thead>
                 <tr class="bg-[#577BC1] text-white">
-                    <th class="p-2 border border-black">No</th>
-                    <th class="p-2 border border-black">ID Transaksi</th>
-                    <th class="p-2 border border-black">Nama Traveler</th>
-                    <th class="p-2 border border-black">Nama Penitip</th>
-                    <th class="p-2 border border-black">Total Transaksi</th>
-                    <th class="p-2 border border-black">Layanan</th>
-                    <th class="p-2 border border-black">Metode Pembayaran</th>
-                    <th class="p-2 border border-black">Status</th>
-                    <th class="p-2 border border-black">Aksi</th>
+                    <th class="p-2 border border-black">{{ __('tables.columns.no') }}</th>
+                    <th class="p-2 border border-black">{{ __('tables.columns.transaction_id') }}</th>
+                    <th class="p-2 border border-black">{{ __('tables.columns.traveler') }}</th>
+                    <th class="p-2 border border-black">{{ __('tables.columns.customer') }}</th>
+                    <th class="p-2 border border-black">{{ __('tables.columns.total_transactions') }}</th>
+                    <th class="p-2 border border-black">{{ __('tables.columns.service') }}</th>
+                    <th class="p-2 border border-black">{{ __('tables.columns.payment_methods') }}</th>
+                    <th class="p-2 border border-black">{{ __('tables.columns.status') }}</th>
+                    <th class="p-2 border border-black">{{ __('tables.columns.action') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,17 +34,17 @@
                             $type = $trx->type ?? ($trx instanceof \App\Models\BuyTransaction ? 'buy' : 'send');
                         @endphp
                         <span class="px-2 py-1 rounded-full text-xs font-medium {{ $type === 'buy' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700' }}">
-                            {{ $type === 'buy' ? 'Titip Beli' : 'Titip Kirim' }}
+                            {{ $type === 'buy' ? __('messages.transaction_types.buy') : __('messages.transaction_types.send') }}
                         </span>
                     </td>
                     <td class="p-2 border border-black">{{ $trx->paymentMethod?->name ?? '-' }}</td>
                     <td class="p-2 border border-black">
                         @if($trx->payment_status == 'pending')
-                            <span class="text-yellow-500 font-semibold">Belum Bayar</span>
+                            <span class="text-yellow-500 font-semibold">{{ __('messages.transactions_status.pending') }}</span>
                         @elseif($trx->payment_status == 'approved')
-                            <span class="text-green-600 font-semibold">Selesai</span>
+                            <span class="text-green-600 font-semibold">{{ __('messages.transactions_status.approved') }}</span>
                         @elseif($trx->payment_status == 'declined')
-                            <span class="text-red-500">Dibatalkan</span>
+                            <span class="text-red-500">{{ __('messages.transactions_status.declined') }}</span>
                         @else
                             <span class="text-gray-500">-</span>
                         @endif
@@ -59,12 +59,12 @@
                         @endphp
                         <a href="{{ $detailRoute }}"
                         class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1 rounded-lg transition">
-                            Detail
+                            {{ __('messages.actions.details') }}
                         </a>
                     </td>
                 </tr>
                 @empty
-                <tr><td colspan="9" class="text-center text-gray-500 py-4">Tidak ada transaksi</td></tr>
+                <tr><td colspan="9" class="text-center text-gray-500 py-4">{{ __('messages.no_transactions') }}</td></tr>
                 @endforelse
             </tbody>
         </table>

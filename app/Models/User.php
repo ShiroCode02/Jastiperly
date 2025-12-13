@@ -52,7 +52,7 @@ class User extends Authenticatable
     public function getDisplayStatusAttribute(): string
     {
         if ($this->account_status === 'inactive') {
-            return 'Nonaktif';
+            return __('messages.users_status.inactive');
         }
 
         $isOnline = DB::table('sessions')
@@ -61,12 +61,12 @@ class User extends Authenticatable
             ->exists();
 
         if ($isOnline) {
-            return 'Online';
+            return __('messages.users_status.Online');
         }
 
         $hasLoggedIn = \App\Models\LoginHistory::where('user_id', $this->id)->exists();
 
-        return $hasLoggedIn ? 'Offline' : 'Aktif';
+        return $hasLoggedIn ? __('messages.users_status.Offline') : __('messages.users_status.active');
     }
 
     // Profile image

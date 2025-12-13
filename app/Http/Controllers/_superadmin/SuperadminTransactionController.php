@@ -14,7 +14,6 @@ class SuperadminTransactionController extends Controller
 {
     public function index(Request $request)
     {
-        $title = 'Transaksi';
         $type = $request->get('type', 'buy');
         $status = $request->get('status');
         $location = $request->get('location');
@@ -49,7 +48,7 @@ class SuperadminTransactionController extends Controller
         }
 
         $transactions = $query->latest()->paginate(10)->appends($request->query());
-        return view('_superadmin.transactions.index', compact('title', 'transactions', 'type'));
+        return view('_superadmin.transactions.index', compact('transactions', 'type'));
     }
 
     public function show($transaction, Request $request)

@@ -24,13 +24,13 @@
                                     <div class="mt-3 flex justify-center">
                                         <button type="submit"
                                             class="w-[225px] h-[35px] rounded-md text-black font-semibold bg-[#FFEB00] hover:bg-[#FF5E1F] hover:text-white transition">
-                                            Simpan
+                                            {{ __('messages.save') }}
                                         </button>
                                     </div>
                                     <div class="mt-2 flex justify-center">
                                         <a href="{{ route('superadmin.users.show', $user) }}"
                                             class="w-[225px] h-[35px] rounded-md text-center leading-[35px] text-black bg-gray-200 font-semibold hover:bg-gray-300 transition">
-                                            Batal
+                                            {{ __('messages.cancel') }}
                                         </a>
                                     </div>
                                 </div>
@@ -39,82 +39,82 @@
                                 <div class="flex-1">
                                     <div class="bg-gray-50 border border-[#C0C0C0] rounded-lg p-5">
                                         <h3 class="text-lg font-medium text-[#000957] border-b-[2px] border-[#344CB7] mb-6">
-                                            Edit Data Pengguna
+                                            {{ __('messages.edit_user_data') }}
                                         </h3>
 
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <!-- Data Utama -->
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.full_name') }}</label>
                                                 <input type="text" name="detail[name]" value="{{ old('detail.name', $user->detail->name) }}" required
                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#344CB7]">
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.email') }}</label>
                                                 <input type="email" name="email" value="{{ old('email', $user->email) }}" required
                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#344CB7]">
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Status Akun</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.account_status') }}</label>
                                                 <select name="role" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#344CB7]">
                                                     @foreach(['traveler','customer','admin','finance','superadmin'] as $role)
                                                         <option value="{{ $role }}" {{ $user->role === $role ? 'selected' : '' }}>
-                                                            {{ $role === 'traveler' ? 'Traveler' : ($role === 'customer' ? 'Penitip' : ucfirst($role)) }}
+                                                           {{ __('messages.roles.' . $role) }}
                                                         </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Status Aktivitas</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.activity_status') }}</label>
                                                 <select name="account_status" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#344CB7]">
-                                                    <option value="active" {{ $user->account_status === 'active' ? 'selected' : '' }}>Aktif</option>
-                                                    <option value="inactive" {{ $user->account_status === 'inactive' ? 'selected' : '' }}>Nonaktif</option>
+                                                    <option value="active" {{ $user->account_status === 'active' ? 'selected' : '' }}>{{ __('messages.users_status.active') }}</option>
+                                                    <option value="inactive" {{ $user->account_status === 'inactive' ? 'selected' : '' }}>{{ __('messages.users_status.inactive') }}</option>
                                                 </select>
                                             </div>
 
                                             <!-- Detail User -->
                                             <div class="md:col-span-2 mt-6 pt-6 border-t border-gray-300">
-                                                <h4 class="text-base font-semibold text-[#000957] mb-4">Detail Pengguna</h4>
+                                                <h4 class="text-base font-semibold text-[#000957] mb-4">{{ __('messages.user_details') }}</h4>
                                             </div>
 
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.username') }}</label>
                                                 <input type="text" name="name" value="{{ old('name', $user->name ?? '') }}"
                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md">
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Telepon</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.phone') }}</label>
                                                 <input type="text" name="detail[phone]" value="{{ old('detail.phone', $user->detail->phone ?? '') }}"
                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md">
                                             </div>
                                             <div class="md:col-span-2">
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.full_address') }}</label>
                                                 <textarea name="detail[address]" rows="3"
                                                           class="w-full px-3 py-2 border border-gray-300 rounded-md">{{ old('detail.address', $user->detail->address ?? '') }}</textarea>
-                                                <p class="text-xs text-gray-500 mt-1">Contoh: Jl. Sudirman No. 123, Jakarta Selatan</p>
+                                                <p class="text-xs text-gray-500 mt-1">{{ __('messages.example') }}: Jl. Sudirman No. 123, Jakarta Selatan</p>
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.date_birth') }}</label>
                                                 <input type="date" name="detail[date_birth]" value="{{ old('detail.date_birth', $user->detail->date_birth) }}"
                                                        class="w-full px-3 py-2 border border-gray-300 rounded-md">
                                             </div>
                                             <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.gender') }}</label>
                                                 <select name="detail[gender]" class="w-full px-3 py-2 border border-gray-300 rounded-md">
                                                     <option value="">-</option>
-                                                    <option value="Laki-laki" {{ ($user->detail->gender ?? '') === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                                                    <option value="Perempuan" {{ ($user->detail->gender ?? '') === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                                                    <option value="male" {{ ($user->detail->gender ?? '') === 'male' ? 'selected' : '' }}>{{ __('messages.male') }}</option>
+                                                    <option value="female" {{ ($user->detail->gender ?? '') === 'female' ? 'selected' : '' }}>{{ __('messages.female') }}</option>
                                                 </select>
                                             </div>
 
                                             @if(in_array($user->role, ['traveler', 'customer']))
                                                 <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-1">Bank</label>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.bank_account') }}</label>
                                                     <input type="text" name="detail[bank_name]" value="{{ old('detail.bank_name', $user->detail->bank_name ?? '') }}"
                                                            class="w-full px-3 py-2 border border-gray-300 rounded-md">
                                                 </div>
                                                 <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-1">No. Rekening</label>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.bank_account_number') }}</label>
                                                     <input type="text" name="detail[bank_number]" value="{{ old('detail.bank_number', $user->detail->bank_number ?? '') }}"
                                                            class="w-full px-3 py-2 border border-gray-300 rounded-md">
                                                 </div>

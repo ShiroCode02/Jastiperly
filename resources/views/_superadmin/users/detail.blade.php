@@ -33,7 +33,7 @@
                                                     {{ $user->account_status === 'active' 
                                                         ? 'bg-[#344CB7] hover:bg-[#FF5E1F]' 
                                                         : 'bg-green-600 hover:bg-[#FF5E1F]' }}">
-                                            {{ $user->account_status === 'active' ? 'Nonaktifkan' : 'Aktifkan' }}
+                                            {{ $user->account_status === 'active' ? __('messages.disable') : __('messages.activate') }}
                                         </button>
                                     </form>
                                 </div>
@@ -43,79 +43,79 @@
                             <div class="flex-1">
                                 <div class="bg-gray-50 border border-[#C0C0C0] rounded-lg p-5">
                                     <h3 class="text-lg font-medium text-[#000957] border-b-[2px] border-[#344CB7]">
-                                        Informasi Umum
+                                        {{ __('messages.general_info') }}
                                     </h3>
 
                                     <table class="w-full text-[15px] font-medium">
                                         <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600">Nama Lengkap</td>
+                                            <td class="w-40 py-2 text-gray-600">{{ __('messages.full_name') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail->name ?? '-' }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Username</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.username') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->name ?? '-' }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Email</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.email') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->email }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Telepon</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.phone') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail->phone ?? '-' }}</td>
                                         </tr>
 
                                         @if($user->role === 'traveler')
                                             <tr class="border-b border-gray-500">
-                                                <td class="py-2 text-gray-600">Negara/Kota Asal</td>
+                                                <td class="py-2 text-gray-600">{{ __('messages.city_country') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->city_country }}</td>
                                             </tr>
                                         @endif
 
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Alamat</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.address') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail_address }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Tanggal Lahir</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.date_birth') }}</td>
                                             <td class="py-2 text-gray-600 text-right">
                                                 {{ $user->detail->date_birth ? \Carbon\Carbon::parse($user->detail->date_birth)->format('d/m/Y') : '-' }}
                                             </td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Jenis Kelamin</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.gender') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail->gender ?? '-' }}</td>
                                         </tr>
 
                                         @if(in_array($user->role, ['traveler', 'customer']))
                                             <tr class="border-b border-gray-500">
-                                                <td class="py-2 text-gray-600">Rekening Bank</td>
+                                                <td class="py-2 text-gray-600">{{ __('messages.bank_account') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->detail->bank_number . ' - ' . $user->detail->bank_name ?? '-' }}</td>
                                             </tr>
                                         @endif
 
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Tanggal Bergabung</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.joined_date') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->created_at->format('d F Y') }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Status Akun</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.account_status') }}</td>
                                             <td class="py-2 text-green-600 text-right">{{ ucfirst($user->role) }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">Password (hash)</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.password') }}</td>
                                             <td class="py-2 text-gray-600 text-right font-mono">{{ $user->password ? '•••••••••••••••••••' : '-' }}</td>
                                         </tr>
 
                                         @if (in_array($user->role, ['admin', 'finance']))
                                             <tr class="border-b border-gray-500">
-                                                <td class="py-2 text-gray-600">Status Aktivitas</td>
+                                                <td class="py-2 text-gray-600">{{ __('messages.activity_status') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">
                                                     @php
                                                         $statusColors = [
-                                                            'Online'    => 'text-green-600',
-                                                            'Aktif'     => 'text-blue-600',
-                                                            'Offline'   => 'text-gray-500',
-                                                            'Nonaktif'  => 'text-red-600',
+                                                            __('messages.users_status.Online') => 'text-green-600',
+                                                            __('messages.users_status.active') => 'text-blue-600',
+                                                            __('messages.users_status.Offline') => 'text-gray-500',
+                                                            __('messages.users_status.inactive') => 'text-red-600',
                                                         ];
                                                     @endphp
                                                     <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">
@@ -127,38 +127,38 @@
 
                                         @if($user->role === 'traveler')
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600 align-top">Foto KTP</td>
+                                                <td class="w-40 py-2 text-gray-600 align-top">{{ __('messages.photo_id_card') }}</td>
                                                 <td class="py-2 text-right">
                                                     @if($user->detail?->id_card_image)
                                                         <img src="{{ asset('storage/' . $user->detail->id_card_image) }}" 
                                                             alt="KTP" 
                                                             class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
                                                     @else
-                                                        <span class="text-gray-400 italic text-sm">Belum upload</span>
+                                                        <span class="text-gray-400 italic text-sm">{{ __('messages.not_uploaded') }}</span>
                                                     @endif
                                                 </td>
                                             </tr>
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600 align-top">Foto Rekening</td>
+                                                <td class="w-40 py-2 text-gray-600 align-top">{{ __('messages.photo_bank_account') }}</td>
                                                 <td class="py-2 text-right">
                                                     @if($user->detail?->account_image)
                                                         <img src="{{ asset('storage/' . $user->detail->account_image) }}" 
                                                             alt="Rekening" 
                                                             class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
                                                     @else
-                                                        <span class="text-gray-400 italic text-sm">Belum upload</span>
+                                                        <span class="text-gray-400 italic text-sm">{{ __('messages.not_uploaded') }}</span>
                                                     @endif
                                                 </td>
                                             </tr>
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600 align-top">Foto Paspor</td>
+                                                <td class="w-40 py-2 text-gray-600 align-top">{{ __('messages.photo_passport') }}</td>
                                                 <td class="py-2 text-right">
                                                     @if($user->detail?->pasport_image)
                                                         <img src="{{ asset('storage/' . $user->detail->pasport_image) }}" 
                                                             alt="Paspor" 
                                                             class="max-h-32 inline-block rounded-lg shadow border border-gray-300 hover:shadow-lg transition">
                                                     @else
-                                                        <span class="text-gray-400 italic text-sm">Belum upload</span>
+                                                        <span class="text-gray-400 italic text-sm">{{ __('messages.not_uploaded') }}</span>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -169,18 +169,18 @@
                                 <!-- CARD AKTIVITAS-->
                                 @if(in_array($user->role, ['traveler', 'customer']))
                                     <div class="mt-8 bg-gray-50 border border-[#C0C0C0] rounded-lg p-5">
-                                        <h3 class="text-lg font-medium text-[#000957] border-b-[2px] border-[#344CB7]">Aktivitas</h3>
+                                        <h3 class="text-lg font-medium text-[#000957] border-b-[2px] border-[#344CB7]">{{ __('messages.activity') }}</h3>
 
                                         <table class="w-full text-[15px] font-medium">
                                             <tr class="border-b border-gray-500">
-                                                <td class="py-2 text-gray-600">Status</td>
+                                                <td class="py-2 text-gray-600">{{ __('messages.status') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">
                                                     @php
                                                         $statusColors = [
-                                                            'Online'    => 'text-green-600',
-                                                            'Aktif'     => 'text-blue-600',
-                                                            'Offline'   => 'text-gray-500',
-                                                            'Nonaktif'  => 'text-red-600',
+                                                            __('messages.users_status.Online') => 'text-green-600',
+                                                            __('messages.users_status.active') => 'text-blue-600',
+                                                            __('messages.users_status.Offline') => 'text-gray-500',
+                                                            __('messages.users_status.inactive') => 'text-red-600',
                                                         ];
                                                     @endphp
                                                     <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">
@@ -191,11 +191,11 @@
 
                                             @if($user->role === 'traveler')
                                                 <tr class="border-b border-gray-500">
-                                                    <td class="w-40 py-2 text-gray-600">Rating</td>
+                                                    <td class="w-40 py-2 text-gray-600">{{ __('messages.ratings') }}</td>
                                                     <td class="py-2 text-gray-600 text-right">-</td>
                                                 </tr>
                                                 <tr class="border-b border-gray-500">
-                                                    <td class="w-40 py-2 text-gray-600">Login Terakhir</td>
+                                                    <td class="w-40 py-2 text-gray-600">{{ __('messages.last_login') }}</td>
                                                     <td class="py-2 text-gray-600 text-right">
                                                         {{ $user->last_login_at 
                                                             ? $user->last_login_at->translatedFormat('d F Y, H:i') . ' WIB'
@@ -204,7 +204,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr class="border-b border-gray-500">
-                                                    <td class="w-40 py-2 text-gray-600">Lokasi Login</td>
+                                                    <td class="w-40 py-2 text-gray-600">{{ __('messages.login_location') }}</td>
                                                     <td class="py-2 text-gray-600 text-right">
                                                         {{ $user->last_login_device }}
                                                     </td>
@@ -212,15 +212,15 @@
                                             @endif
 
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600">Total Transaksi</td>
+                                                <td class="w-40 py-2 text-gray-600">{{ __('messages.total_transactions') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->total_transaction ?? 0 }}</td>
                                             </tr>
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600">Transaksi Berhasil</td>
+                                                <td class="w-40 py-2 text-gray-600">{{ __('messages.transaction_completed') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->successful_transaction ?? 0 }}</td>
                                             </tr>
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600">Transaksi Dibatalkan</td>
+                                                <td class="w-40 py-2 text-gray-600">{{ __('messages.transaction_cancelled') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->failed_transaction ?? 0 }}</td>
                                             </tr>
                                         </table>
@@ -232,24 +232,24 @@
                         <!-- STATISTIK -->
                         <div class="mt-10">
                             <h3 class="text-xl font-medium text-[#000957] border-b-[2px] border-[#344CB7] mb-4">
-                                Statistik Durasi Aktivitas
+                                {{ __('messages.statistics.activity_duration') }}
                             </h3>
 
                             <canvas id="activityChart" height="100"></canvas>
 
                             <p class="text-lg text-gray-600 mt-3">
-                                Grafik ini menunjukkan frekuensi login selama seminggu terakhir.
+                                {{ __('messages.statistics.login_frequency_graph') }}
                             </p>
                         </div>
 
                         @if(in_array($user->role, ['traveler', 'customer']))
                             <div class="mt-10">
                                 <h3 class="text-xl font-medium text-[#000957] border-b-[2px] border-[#FF5E1F] mb-4">
-                                    Statistik Jumlah Transaksi
+                                    {{ __('messages.statistics.transaction_count') }}
                                 </h3>
                                 <canvas id="transactionChart" height="100"></canvas>
                                 <p class="text-lg text-gray-600 mt-3">
-                                    Grafik ini menunjukkan jumlah transaksi per hari selama seminggu terakhir.
+                                    {{ __('messages.statistics.transaction_frequency_graph') }}
                                 </p>
                             </div>
                         @endif
@@ -257,7 +257,7 @@
                         <!-- RIWAYAT PERUBAHAN DATA -->
                         <div class="mt-10">
                             <h3 class="text-xl font-medium text-[#000957] border-b-[2px] border-[#344CB7]">
-                                Riwayat Perubahan Data
+                                {{ __('tables.data_changes') }}
                             </h3>
 
                             <div id="history-table">

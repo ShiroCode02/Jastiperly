@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\ProductRejected; // Buat notifikasi ini nanti
+use App\Notifications\ProductRejected;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ProductsExport;
 use App\Exports\ProductDetailExport;
@@ -15,7 +15,6 @@ class SuperadminProductController extends Controller
 {
     public function index(Request $request)
     {
-        $title = 'Manajemen Produk';
         $tab = $request->input('tab', 'Traveler');
         $filter = $request->input('filter');
         $search = $request->input('search');
@@ -47,7 +46,7 @@ class SuperadminProductController extends Controller
         $products = $query->latest()->paginate(10);
         $products->appends($request->query());
 
-        return view('_superadmin.products.index', compact('title', 'products', 'tab'));
+        return view('_superadmin.products.index', compact('products', 'tab'));
     }
 
     public function detail(Request $request)

@@ -3,9 +3,9 @@
         <table class="w-full text-sm border-collapse">
             <thead>
                 <tr class="border-b border-black">
-                    <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">Hari, Tanggal</th>
-                    <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">Field</th>
-                    <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[60%]">Perubahan</th>
+                    <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">{{ __('tables.columns.day_date') }}</th>
+                    <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[20%]">{{ __('tables.columns.field') }}</th>
+                    <th class="py-3 pl-4 text-left font-semibold text-[#344CB7] w-[60%]">{{ __('tables.columns.change') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,7 +20,7 @@
                 @empty
                     <tr>
                         <td colspan="3" class="text-center py-8 text-gray-500 italic">
-                            Belum ada perubahan data.
+                            {{ __('messages.no_data_changes') }}
                         </td>
                     </tr>
                 @endforelse

@@ -1,14 +1,14 @@
 @if ($paginator->hasPages())
     <div class="flex justify-center items-center mt-4 space-x-2 text-sm font-medium">
         @if ($paginator->onFirstPage())
-            <span class="px-4 py-2 text-gray-400 cursor-not-allowed">Previous</span>
+            <span class="px-4 py-2 text-gray-400 cursor-not-allowed">{{ __('messages.previous') }}</span>
         @else
             <button hx-get="{{ $paginator->previousPageUrl() }}"
                     hx-target="#latest-transactions-card"
                     hx-swap="outerHTML"
                     hx-indicator="#loading-spinner"
                     class="px-4 py-2 text-blue-900 hover:text-blue-600 transition">
-                Previous
+                {{ __('messages.previous') }}
             </button>
         @endif
 
@@ -57,10 +57,10 @@
                     hx-swap="outerHTML"
                     hx-indicator="#loading-spinner"
                     class="px-4 py-2 text-blue-900 hover:text-blue-600 transition">
-                Next
+                {{ __('messages.next') }}
             </button>
         @else
-            <span class="px-4 py-2 text-gray-400 cursor-not-allowed">Next</span>
+            <span class="px-4 py-2 text-gray-400 cursor-not-allowed">{{ __('messages.next') }}</span>
         @endif
     </div>
 @endif

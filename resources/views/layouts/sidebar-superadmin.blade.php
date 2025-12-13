@@ -1,12 +1,12 @@
 @php
     // Menu Superadmin
     $menus = [
-        ['name' => 'Dashboard', 'icon' => 'superadmin/dashboard.svg', 'route' => 'superadmin.dashboard'],
-        ['name' => 'Manajemen Pengguna', 'icon' => 'superadmin/users.svg', 'route' => 'superadmin.users'],
-        ['name' => 'Manajemen Produk', 'icon' => 'superadmin/product.svg', 'route' => 'superadmin.products'],
-        ['name' => 'Transaksi', 'icon' => 'superadmin/transaction.svg', 'route' => 'superadmin.transactions'],
-        ['name' => 'Refund', 'icon' => 'superadmin/refund.svg' , 'route' => 'superadmin.refunds'],
-        ['name' => 'Pengaturan', 'icon' => 'superadmin/settings.svg', 'route' => 'superadmin.settings'],
+        ['name' => __('messages.dashboard'), 'icon' => 'superadmin/dashboard.svg', 'route' => 'superadmin.dashboard'],
+        ['name' => __('messages.user_management'), 'icon' => 'superadmin/users.svg', 'route' => 'superadmin.users'],
+        ['name' => __('messages.product_management'), 'icon' => 'superadmin/product.svg', 'route' => 'superadmin.products'],
+        ['name' => __('messages.transactions'), 'icon' => 'superadmin/transaction.svg', 'route' => 'superadmin.transactions'],
+        ['name' => __('messages.refunds'), 'icon' => 'superadmin/refund.svg' , 'route' => 'superadmin.refunds'],
+        ['name' => __('messages.settings'), 'icon' => 'superadmin/settings.svg', 'route' => 'superadmin.settings'],
     ];
 @endphp
 

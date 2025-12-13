@@ -2,11 +2,11 @@
     <div class="flex justify-center items-center mt-6 space-x-2 text-sm font-medium">
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
-            <span class="px-4 py-2 text-gray-400 cursor-not-allowed">Previous</span>
+            <span class="px-4 py-2 text-gray-400 cursor-not-allowed">{{ __('messages.previous') }}</span>
         @else
             <a href="{{ $paginator->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}"
                class="px-4 py-2 text-blue-900 hover:text-blue-600 transition">
-                Previous
+                {{ __('messages.previous') }}
             </a>
         @endif
 
@@ -51,10 +51,10 @@
         @if ($paginator->hasMorePages())
             <a href="{{ $paginator->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}"
                class="px-4 py-2 text-blue-900 hover:text-blue-600 transition">
-                Next
+                {{ __('messages.next') }}
             </a>
         @else
-            <span class="px-4 py-2 text-gray-400 cursor-not-allowed">Next</span>
+            <span class="px-4 py-2 text-gray-400 cursor-not-allowed">{{ __('messages.next') }}</span>
         @endif
     </div>
 @endif

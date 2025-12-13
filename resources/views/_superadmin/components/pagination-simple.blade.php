@@ -1,6 +1,6 @@
 <!-- Footer Tabel -->
 <div class="flex justify-between items-center bg-white/50 p-3 shadow-md">
-    <span class="text-gray-700 font-semibold">Total {{ $paginator->total() }}</span>
+    <span class="text-gray-700 font-semibold">{{ __('messages.total') }} {{ $paginator->total() }}</span>
     <div class="flex gap-2 items-center">
         <button
             onclick="window.location.href='{{ $paginator->appends(request()->query())->previousPageUrl() }}'"

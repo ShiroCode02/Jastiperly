@@ -38,17 +38,12 @@ class SuperadminUserController extends Controller
             });
         }
 
-        // Filter tab (Traveler, Penitip, Admin, Finance)
+        // Filter tab (traveler, customer, admin, finance)
         if ($request->filled('tab')) {
             $tab = $request->input('tab');
-            $roleMap = [
-                'Traveler' => 'traveler',
-                'Penitip' => 'customer',
-                'Admin' => 'admin',
-                'Finance' => 'finance',
-            ];
-            if (isset($roleMap[$tab])) {
-                $query->where('role', $roleMap[$tab]);
+            $validRoles = ['traveler', 'customer', 'admin', 'finance'];
+            if (in_array($tab, $validRoles)) {
+                $query->where('role', $tab);
             }
         }
 
@@ -256,7 +251,7 @@ class SuperadminUserController extends Controller
             'detail.phone' => 'nullable|string|max:20',
             'detail.address' => 'nullable|string',
             'detail.date_birth' => 'nullable|date',
-            'detail.gender' => 'nullable|in:Laki-laki,Perempuan',
+            'detail.gender' => 'nullable|in:male,female',
             'detail.bank_name' => 'nullable|string',
             'detail.bank_number' => 'nullable|string',
         ]);

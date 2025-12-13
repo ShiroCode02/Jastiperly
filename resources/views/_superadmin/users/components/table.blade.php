@@ -2,12 +2,12 @@
     <table class="w-full text-sm border-collapse align-middle">
         <thead class="bg-[#577BC1]/40 text-blue-900">
             <tr>
-                <th class="p-3 text-center font-semibold">ID</th>
-                <th class="p-3 text-center font-semibold">Foto</th>
-                <th class="p-3 text-center font-semibold">Nama</th>
-                <th class="p-3 text-center font-semibold">Email</th>
-                <th class="p-3 text-center font-semibold">Status</th>
-                <th class="p-3 text-center font-semibold">Aksi</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.id') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.photo') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.name') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.email') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.status') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.action') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -23,10 +23,10 @@
                     <td class="p-3 text-center">
                         @php
                             $statusColors = [
-                                'Online'    => 'text-green-600',
-                                'Aktif'     => 'text-blue-600',
-                                'Offline'   => 'text-gray-500',
-                                'Nonaktif'  => 'text-red-600',
+                                __('messages.users_status.Online') => 'text-green-600',
+                                __('messages.users_status.active') => 'text-blue-600',
+                                __('messages.users_status.Offline') => 'text-gray-500',
+                                __('messages.users_status.inactive') => 'text-red-600',
                             ];
                         @endphp
                         <span class="{{ $statusColors[$user->display_status] ?? 'text-gray-500' }}">
@@ -55,7 +55,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="text-center text-gray-500 py-4">Tidak ada pengguna</td></tr>
+                <tr><td colspan="6" class="text-center text-gray-500 py-4">{{ __('messages.no_users') }}</td></tr>
             @endforelse
         </tbody>
     </table>
