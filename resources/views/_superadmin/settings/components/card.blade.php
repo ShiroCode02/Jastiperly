@@ -53,15 +53,15 @@
             <nav class="flex gap-8 justify-center">
                 <a href="{{ url()->current() }}?tab=profil"
                    class="text-xl {{ $tab === 'profil' ? 'text-[#000957] underline underline-offset-8' : 'text-gray-400' }}">
-                    {{ __('messages.profile') }}
+                    {{ __('messages.tabs.profile') }}
                 </a>
                 <a href="{{ url()->current() }}?tab=preferensi"
                    class="text-xl font-medium {{ $tab === 'preferensi' ? 'text-[#000957] underline underline-offset-8' : 'text-gray-400' }}">
-                    {{ __('messages.preference') }}
+                    {{ __('messages.tabs.preference') }}
                 </a>
                 <a href="{{ url()->current() }}?tab=keamanan"
                    class="text-xl font-medium {{ $tab === 'keamanan' ? 'text-[#000957] underline underline-offset-8' : 'text-gray-400' }}">
-                    {{ __('messages.security') }}
+                    {{ __('messages.tabs.security') }}
                 </a>
             </nav>
         </div>

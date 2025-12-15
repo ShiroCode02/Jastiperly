@@ -22,38 +22,38 @@
                     <!-- Info -->
                     <div class="space-y-2 text-[15px] text-gray-800 leading-relaxed">
                         <div class="flex items-start">
-                            <p class="font-semibold w-44 text-gray-700">Nama Barang</p>
+                            <p class="font-semibold w-44 text-gray-700">{{ __('messages.labels.name_of_goods') }}</p>
                             <p class="flex-1 text-gray-900 font-medium">: {{ $product->name }}</p>
                         </div>
                         <div class="flex items-start">
-                            <p class="font-semibold w-44 text-gray-700">Deskripsi Barang</p>
+                            <p class="font-semibold w-44 text-gray-700">{{ __('messages.labels.item_description') }}</p>
                             <p class="flex-1 text-gray-800 leading-relaxed">: {!! nl2br(e($product->description ?? '-')) !!}</p>
                         </div>
                         <div class="flex items-start">
-                            <p class="font-semibold w-44 text-gray-700">Harga Barang</p>
+                            <p class="font-semibold w-44 text-gray-700">{{ __('messages.labels.price_of_goods') }}</p>
                             <p class="flex-1 text-blue-900 font-semibold">: Rp{{ number_format($product->price, 0, ',', '.') }}</p>
                         </div>
                         <div class="flex items-start">
                             <p class="font-semibold w-44 text-gray-700">
-                                {{ request('tab') === 'Traveler' ? 'Nama Traveler' : 'Nama Penitip' }}
+                                {{ request('tab') === 'traveler' ? __('messages.names.traveler') : __('messages.names.customer') }}
                             </p>
                             <p class="flex-1 text-gray-800">: {{ $product->submiter->detail->name }}</p>
                         </div>
                         <div class="flex items-start">
-                            <p class="font-semibold w-44 text-gray-700">Status</p>
+                            <p class="font-semibold w-44 text-gray-700">{{ __('messages.labels.status') }}</p>
                             <p class="flex-1">
                                 @if($product->approval === 'approved')
-                                    : <span class="text-green-600 font-semibold">Disetujui</span>
+                                    : <span class="text-green-600 font-semibold">{{ __('messages.filters.approved') }}</span>
                                 @elseif($product->approval === 'pending')
-                                    : <span class="text-orange-600 font-semibold">Belum Validasi</span>
+                                    : <span class="text-orange-600 font-semibold">{{ __('messages.filters.validation') }}</span>
                                 @else
-                                    : <span class="text-red-600 font-semibold">Ditolak</span>
+                                    : <span class="text-red-600 font-semibold">{{ __('messages.filters.rejected') }}</span>
                                 @endif
                             </p>
                         </div>
                         @if($product->approval === 'declined' && $product->reject_reason)
                             <div class="flex items-start">
-                                <p class="font-semibold w-44 text-gray-700">Alasan Penolakan</p>
+                                <p class="font-semibold w-44 text-gray-700">{{ __('messages.labels.reasons') }}</p>
                                 <p class="flex-1 text-black leading-relaxed">: {!! nl2br(e($product->reject_reason)) !!}</p>
                             </div>
                         @endif
@@ -64,13 +64,13 @@
                             <button type="button"
                                     onclick="openRejectModal({{ $product->id }})"
                                     class="w-40 h-10 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition">
-                                Tolak
+                                {{ __('messages.actions.decline') }}
                             </button>
                             <form method="POST" action="{{ route('superadmin.products.approve', $product->id) }}" class="inline">
                                 @csrf
                                 <button type="submit"
                                         class="w-40 h-10 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition">
-                                    Setujui
+                                    {{ __('messages.actions.approve') }}
                                 </button>
                             </form>
                         </div>

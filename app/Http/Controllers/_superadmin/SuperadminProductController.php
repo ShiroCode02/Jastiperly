@@ -15,23 +15,23 @@ class SuperadminProductController extends Controller
 {
     public function index(Request $request)
     {
-        $tab = $request->input('tab', 'Traveler');
+        $tab = $request->input('tab', 'traveler');
         $filter = $request->input('filter');
         $search = $request->input('search');
 
         $query = Product::with(['submiter', 'category']);
 
-        if ($tab === 'Traveler') {
+        if ($tab === 'traveler') {
             $query->whereHas('submiter', fn($q) => $q->where('role', 'traveler'));
-        } elseif ($tab === 'Customer') {
+        } elseif ($tab === 'customer') {
             $query->whereHas('submiter', fn($q) => $q->where('role', 'customer'));
         }
 
-        if ($filter === 'Validasi') {
+        if ($filter === 'validation') {
             $query->where('approval', 'pending');
-        } elseif ($filter === 'Disetujui') {
+        } elseif ($filter === 'approved') {
             $query->where('approval', 'approved');
-        } elseif ($filter === 'Ditolak') {
+        } elseif ($filter === 'rejected') {
             $query->where('approval', 'declined');
         }
 

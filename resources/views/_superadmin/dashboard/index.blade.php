@@ -29,7 +29,7 @@
                         <img src="{{ asset('icons/superadmin/card-bag.svg') }}" alt="Total Pengguna" class="w-8 h-8">
                         <div class="flex flex-col leading-tight">
                             <p class="text-[22px] font-extrabold text-gray-900">{{ number_format($totalUsers) }}</p>
-                            <span class="text-gray-500 text-sm font-medium">{{ __('messages.total_users') }}</span>
+                            <span class="text-gray-500 text-sm font-medium">{{ __('messages.labels.total_users') }}</span>
                         </div>
                     </div>
 
@@ -37,7 +37,7 @@
                         <img src="{{ asset('icons/superadmin/card-bag.svg') }}" alt="Total Transaksi" class="w-8 h-8">
                         <div class="flex flex-col leading-tight">
                             <p class="text-[22px] font-extrabold text-gray-900">{{ number_format($totalTransactions) }}</p>
-                            <span class="text-gray-500 text-sm font-medium">{{ __('messages.total_transactions') }}</span>
+                            <span class="text-gray-500 text-sm font-medium">{{ __('messages.labels.total_transactions') }}</span>
                         </div>
                     </div>
                 </div>
@@ -53,10 +53,10 @@
                         <h3 class="font-semibold mb-6 text-lg text-black">{{ __('messages.total_activities') }}</h3>
                         @php
                             $activities = [
-                                ['label' => __('messages.transaction_completed'), 'value' => $transactionCompleted, 'color' => 'bg-green-500'],
-                                ['label' => __('messages.transaction_in_progress'), 'value' => $transactionInProgress, 'color' => 'bg-yellow-400'],
-                                ['label' => __('messages.transaction_cancelled'), 'value' => $transactionCancelled, 'color' => 'bg-red-500'],
-                                ['label' => __('messages.send_it'), 'value' => $sendIt, 'color' => 'bg-blue-500'],
+                                ['label' => __('messages.labels.transaction_completed'), 'value' => $transactionCompleted, 'color' => 'bg-green-500'],
+                                ['label' => __('messages.labels.transaction_in_progress'), 'value' => $transactionInProgress, 'color' => 'bg-yellow-400'],
+                                ['label' => __('messages.labels.transaction_cancelled'), 'value' => $transactionCancelled, 'color' => 'bg-red-500'],
+                                ['label' => __('messages.transaction_types.send'), 'value' => $sendIt, 'color' => 'bg-blue-500'],
                             ];
 
                             $max = collect($activities)->max('value');

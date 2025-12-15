@@ -1,6 +1,6 @@
 <div class="bg-white/50 rounded-t-lg shadow-md divide-y divide-blue-100">
     <div class="px-5 py-3 bg-[#577BC1]/40 text-black font-semibold rounded-t-xl text-xl">
-        Daftar Produk
+        {{ __('tables.columns.product_list') }}
     </div>
     <div class="divide-y divide-blue-100">
         @forelse ($products as $product)
@@ -13,11 +13,11 @@
                 </div>
                 <!-- Label -->
                 <div class="col-span-2 space-y-2 text-base text-gray-600">
-                    <p>Nama Barang</p>
-                    <p>Deskripsi Barang</p>
-                    <p>Harga Barang</p>
-                    <p>{{ request('tab') === 'Traveler' ? 'Nama Traveler' : 'Nama Penitip' }}</p>
-                    <p>Status</p>
+                    <p>{{ __('messages.labels.name_of_goods') }}</p>
+                    <p>{{ __('messages.labels.item_description') }}</p>
+                    <p>{{ __('messages.labels.price_of_goods') }}</p>
+                    <p>{{ request('tab') === 'traveler' ? __('messages.names.traveler') : __('messages.names.customer') }}</p>
+                    <p>{{ __('messages.labels.status') }}</p>
                 </div>
                 <!-- Isi -->
                 <div class="col-span-3 space-y-2 text-base">
@@ -27,11 +27,11 @@
                     <p class="text-gray-800 truncate">: {{ $product->submiter->detail->name }}</p>
                     <p class="truncate">
                         @if ($product->approval === 'approved')
-                            <span class="text-green-600 font-medium">: Disetujui</span>
+                            <span class="text-green-600 font-medium">: {{ __('messages.filters.approved') }}</span>
                         @elseif ($product->approval === 'pending')
-                            <span class="text-orange-600 font-medium">: Validasi</span>
+                            <span class="text-orange-600 font-medium">: {{ __('messages.filters.validation') }}</span>
                         @else
-                            <span class="text-red-600 font-medium">: Ditolak</span>
+                            <span class="text-red-600 font-medium">: {{ __('messages.filters.rejected') }}</span>
                         @endif
                     </p>
                 </div>
@@ -40,18 +40,18 @@
                     @if ($product->approval === 'pending')
                         <a href="{{ route('superadmin.products.detail', array_merge(request()->query(), ['product_id' => $product->id])) }}"
                            class="w-36 h-12 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white rounded-md transition text-base">
-                            Validasi
+                            {{ __('messages.actions.validation') }}
                         </a>
                     @else
                         <a href="{{ route('superadmin.products.detail', array_merge(request()->query(), ['product_id' => $product->id])) }}"
                            class="w-36 h-12 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition text-base">
-                            Detail
+                            {{ __('messages.actions.details') }}
                         </a>
                     @endif
                 </div>
             </div>
         @empty
-            <div class="p-6 text-center text-gray-500 col-span-12">Tidak ada produk untuk ditampilkan</div>
+            <div class="p-6 text-center text-gray-500 col-span-12">{{ __('messages.no_products') }}</div>
         @endforelse
     </div>
 </div>

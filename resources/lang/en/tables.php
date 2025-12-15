@@ -24,6 +24,7 @@ return [
         'day_date' => 'Day, Date',
         'field' => 'Field',
         'change' => 'Change',
+        'product_list' => 'Product List',
         '' => '',
     ],
     // Tambah teks lain dari tabel-tabel di views super admin, misal 'users' => 'Pengguna'

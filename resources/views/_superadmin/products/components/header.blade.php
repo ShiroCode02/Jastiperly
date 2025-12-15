@@ -5,16 +5,16 @@
         @if(!request('product_id'))
             <!-- TAB + FILTER + UNDUH -->
             <div class="flex gap-3 bg-[#FFF6E3] mt-3 px-6 py-1 rounded-md items-center">
-                @foreach (['Traveler', 'Customer'] as $i => $tabName)
+                @foreach (['traveler', 'customer'] as $i => $role)
                     @php
                         $pendingCount = \App\Models\Product::where('approval', 'pending')
-                            ->whereHas('submiter', fn($q) => $q->where('role', strtolower($tabName)))
+                            ->whereHas('submiter', fn($q) => $q->where('role', $role))
                             ->count();
                     @endphp
-                    <a href="{{ route('superadmin.products', ['tab' => $tabName]) }}"
-                       class="flex items-center gap-2 px-4 py-1.5 rounded-md text-black font-medium
-                              hover:bg-white transition {{ (request('tab') ?? 'Traveler') === $tabName ? 'bg-white text-black' : 'bg-transparent' }}">
-                        <span>{{ $tabName }}</span>
+                    <a href="{{ route('superadmin.products', ['tab' => $role]) }}"
+                    class="flex items-center gap-2 px-4 py-1.5 rounded-md text-black font-medium
+                            hover:bg-white transition {{ (request('tab') ?? 'traveler') === $role ? 'bg-white text-black' : 'bg-transparent' }}">
+                        <span>{{ __('messages.roles.' . $role) }}</span>
                         @if($pendingCount > 0)
                             <span class="text-gray-400 text-sm font-bold flex items-center justify-center ml-2">
                                 {{ $pendingCount }}
@@ -29,11 +29,11 @@
             <div class="flex items-center gap-3 mt-6">
                 <form method="GET" class="flex items-center gap-2">
                     <select name="filter" onchange="this.form.submit()"
-                            class="border border-gray-300 rounded-md px-8 py-1.5 text-sm focus:outline-none">
-                        <option value="">Semua</option>
-                        <option value="Validasi" {{ request('filter') == 'Validasi' ? 'selected' : '' }}>Validasi</option>
-                        <option value="Disetujui" {{ request('filter') == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
-                        <option value="Ditolak" {{ request('filter') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                            class="border border-gray-300 rounded-md px-6 py-1.5 text-sm focus:outline-none">
+                        <option value="">{{ __('messages.filters.all') }}</option>
+                        <option value="validation" {{ request('filter') == 'validation' ? 'selected' : '' }}>{{ __('messages.filters.validation') }}</option>
+                        <option value="approved" {{ request('filter') == 'approved' ? 'selected' : '' }}>{{ __('messages.filters.approved') }}</option>
+                        <option value="rejected" {{ request('filter') == 'rejected' ? 'selected' : '' }}>{{ __('messages.filters.rejected') }}</option>
                     </select>
                     <input type="hidden" name="tab" value="{{ request('tab', 'Traveler') }}">
                     @if(request('search'))
@@ -42,7 +42,7 @@
                 </form>
                 <a href="{{ route('superadmin.products.export', request()->query()) }}"
                    class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-4 py-1 rounded-md shadow transition">
-                    <span>Unduh Data</span>
+                    <span>{{ __('messages.actions.download') }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
                     </svg>
@@ -62,7 +62,7 @@
                 </div>
                 <a href="{{ route('superadmin.products.export', array_merge(request()->query(), ['product_id' => request('product_id')])) }}"
                    class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-4 py-1 rounded-md shadow transition">
-                    <span>Unduh Data</span>
+                    <span>{{ __('messages.actions.download') }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
                     </svg>

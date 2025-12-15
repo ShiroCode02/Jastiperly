@@ -31,7 +31,7 @@
 
     <div class="pt-2 pb-8">
         <button type="submit" class="bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-bold px-16 py-1 rounded shadow">
-            {{ __('messages.save') }}
+            {{ __('messages.actions.save') }}
         </button>
     </div>
 </form>

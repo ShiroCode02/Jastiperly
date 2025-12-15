@@ -21,7 +21,7 @@ return [
         'day_date' => 'Hari, Tanggal',
         'field' => 'Bidang',
         'changes' => 'Perubahan',
-        '' => '',
+        'product_list' => 'Daftar Produk',
         '' => '',
         
     ],

@@ -33,7 +33,7 @@
                                                     {{ $user->account_status === 'active' 
                                                         ? 'bg-[#344CB7] hover:bg-[#FF5E1F]' 
                                                         : 'bg-green-600 hover:bg-[#FF5E1F]' }}">
-                                            {{ $user->account_status === 'active' ? __('messages.disable') : __('messages.activate') }}
+                                            {{ $user->account_status === 'active' ? __('messages.actions.disable') : __('messages.actions.activate') }}
                                         </button>
                                     </form>
                                 </div>
@@ -48,67 +48,67 @@
 
                                     <table class="w-full text-[15px] font-medium">
                                         <tr class="border-b border-gray-500">
-                                            <td class="w-40 py-2 text-gray-600">{{ __('messages.full_name') }}</td>
+                                            <td class="w-40 py-2 text-gray-600">{{ __('messages.labels.full_name') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail->name ?? '-' }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">{{ __('messages.username') }}</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.labels.username') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->name ?? '-' }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">{{ __('messages.email') }}</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.labels.email') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->email }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">{{ __('messages.phone') }}</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.labels.phone') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail->phone ?? '-' }}</td>
                                         </tr>
 
                                         @if($user->role === 'traveler')
                                             <tr class="border-b border-gray-500">
-                                                <td class="py-2 text-gray-600">{{ __('messages.city_country') }}</td>
+                                                <td class="py-2 text-gray-600">{{ __('messages.labels.city_country') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->city_country }}</td>
                                             </tr>
                                         @endif
 
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">{{ __('messages.address') }}</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.labels.address') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail_address }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">{{ __('messages.date_birth') }}</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.labels.date_birth') }}</td>
                                             <td class="py-2 text-gray-600 text-right">
                                                 {{ $user->detail->date_birth ? \Carbon\Carbon::parse($user->detail->date_birth)->format('d/m/Y') : '-' }}
                                             </td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">{{ __('messages.gender') }}</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.labels.gender') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->detail->gender ?? '-' }}</td>
                                         </tr>
 
                                         @if(in_array($user->role, ['traveler', 'customer']))
                                             <tr class="border-b border-gray-500">
-                                                <td class="py-2 text-gray-600">{{ __('messages.bank_account') }}</td>
+                                                <td class="py-2 text-gray-600">{{ __('messages.labels.bank_account') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->detail->bank_number . ' - ' . $user->detail->bank_name ?? '-' }}</td>
                                             </tr>
                                         @endif
 
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">{{ __('messages.joined_date') }}</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.labels.joined_date') }}</td>
                                             <td class="py-2 text-gray-600 text-right">{{ $user->created_at->format('d F Y') }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">{{ __('messages.account_status') }}</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.labels.account_status') }}</td>
                                             <td class="py-2 text-green-600 text-right">{{ ucfirst($user->role) }}</td>
                                         </tr>
                                         <tr class="border-b border-gray-500">
-                                            <td class="py-2 text-gray-600">{{ __('messages.password') }}</td>
+                                            <td class="py-2 text-gray-600">{{ __('messages.labels.password') }}</td>
                                             <td class="py-2 text-gray-600 text-right font-mono">{{ $user->password ? '•••••••••••••••••••' : '-' }}</td>
                                         </tr>
 
                                         @if (in_array($user->role, ['admin', 'finance']))
                                             <tr class="border-b border-gray-500">
-                                                <td class="py-2 text-gray-600">{{ __('messages.activity_status') }}</td>
+                                                <td class="py-2 text-gray-600">{{ __('messages.labels.activity_status') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">
                                                     @php
                                                         $statusColors = [
@@ -127,7 +127,7 @@
 
                                         @if($user->role === 'traveler')
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600 align-top">{{ __('messages.photo_id_card') }}</td>
+                                                <td class="w-40 py-2 text-gray-600 align-top">{{ __('messages.labels.photo_id_card') }}</td>
                                                 <td class="py-2 text-right">
                                                     @if($user->detail?->id_card_image)
                                                         <img src="{{ asset('storage/' . $user->detail->id_card_image) }}" 
@@ -139,7 +139,7 @@
                                                 </td>
                                             </tr>
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600 align-top">{{ __('messages.photo_bank_account') }}</td>
+                                                <td class="w-40 py-2 text-gray-600 align-top">{{ __('messages.labels.photo_bank_account') }}</td>
                                                 <td class="py-2 text-right">
                                                     @if($user->detail?->account_image)
                                                         <img src="{{ asset('storage/' . $user->detail->account_image) }}" 
@@ -151,7 +151,7 @@
                                                 </td>
                                             </tr>
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600 align-top">{{ __('messages.photo_passport') }}</td>
+                                                <td class="w-40 py-2 text-gray-600 align-top">{{ __('messages.labels.photo_passport') }}</td>
                                                 <td class="py-2 text-right">
                                                     @if($user->detail?->pasport_image)
                                                         <img src="{{ asset('storage/' . $user->detail->pasport_image) }}" 
@@ -173,7 +173,7 @@
 
                                         <table class="w-full text-[15px] font-medium">
                                             <tr class="border-b border-gray-500">
-                                                <td class="py-2 text-gray-600">{{ __('messages.status') }}</td>
+                                                <td class="py-2 text-gray-600">{{ __('messages.labels.status') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">
                                                     @php
                                                         $statusColors = [
@@ -191,11 +191,11 @@
 
                                             @if($user->role === 'traveler')
                                                 <tr class="border-b border-gray-500">
-                                                    <td class="w-40 py-2 text-gray-600">{{ __('messages.ratings') }}</td>
+                                                    <td class="w-40 py-2 text-gray-600">{{ __('messages.labels.ratings') }}</td>
                                                     <td class="py-2 text-gray-600 text-right">-</td>
                                                 </tr>
                                                 <tr class="border-b border-gray-500">
-                                                    <td class="w-40 py-2 text-gray-600">{{ __('messages.last_login') }}</td>
+                                                    <td class="w-40 py-2 text-gray-600">{{ __('messages.labels.last_login') }}</td>
                                                     <td class="py-2 text-gray-600 text-right">
                                                         {{ $user->last_login_at 
                                                             ? $user->last_login_at->translatedFormat('d F Y, H:i') . ' WIB'
@@ -204,7 +204,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr class="border-b border-gray-500">
-                                                    <td class="w-40 py-2 text-gray-600">{{ __('messages.login_location') }}</td>
+                                                    <td class="w-40 py-2 text-gray-600">{{ __('messages.labels.login_location') }}</td>
                                                     <td class="py-2 text-gray-600 text-right">
                                                         {{ $user->last_login_device }}
                                                     </td>
@@ -212,15 +212,15 @@
                                             @endif
 
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600">{{ __('messages.total_transactions') }}</td>
+                                                <td class="w-40 py-2 text-gray-600">{{ __('messages.labels.total_transactions') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->total_transaction ?? 0 }}</td>
                                             </tr>
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600">{{ __('messages.transaction_completed') }}</td>
+                                                <td class="w-40 py-2 text-gray-600">{{ __('messages.labels.transaction_completed') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->successful_transaction ?? 0 }}</td>
                                             </tr>
                                             <tr class="border-b border-gray-500">
-                                                <td class="w-40 py-2 text-gray-600">{{ __('messages.transaction_cancelled') }}</td>
+                                                <td class="w-40 py-2 text-gray-600">{{ __('messages.labels.transaction_cancelled') }}</td>
                                                 <td class="py-2 text-gray-600 text-right">{{ $user->failed_transaction ?? 0 }}</td>
                                             </tr>
                                         </table>
