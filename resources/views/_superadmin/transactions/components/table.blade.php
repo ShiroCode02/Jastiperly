@@ -2,14 +2,14 @@
     <table class="w-full text-sm border-collapse">
         <thead class="bg-[#577BC1]/40 text-blue-900">
             <tr>
-                <th class="p-3 text-center font-semibold">No</th>
-                <th class="p-3 text-center font-semibold">Nama Penitip</th>
-                <th class="p-3 text-center font-semibold">ID Transaksi</th>
-                <th class="p-3 text-center font-semibold">Tanggal</th>
-                <th class="p-3 text-center font-semibold">Status</th>
-                <th class="p-3 text-center font-semibold">Total Transaksi</th>
-                <th class="p-3 text-center font-semibold">Pembayaran</th>
-                <th class="p-3 text-center font-semibold">Aksi</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.no') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.customer') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.transaction_id') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.date') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.status') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.total_transactions') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.payment_methods') }}</th>
+                <th class="p-3 text-center font-semibold">{{ __('tables.columns.action') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -23,9 +23,9 @@
                     <td class="p-3 text-center">JSTP{{ $trx->id }}</td>
                     <td class="p-3 text-center">{{ $trx->created_at->format('d-m-Y') }}</td>
                     <td class="p-3 text-center font-semibold">
-                        @if($trx->payment_status == 'pending') <span class="text-yellow-500">Belum Bayar</span>
-                        @elseif($trx->payment_status == 'approved') <span class="text-green-600">Selesai</span>
-                        @elseif($trx->payment_status == 'declined') <span class="text-red-500">Dibatalkan</span>
+                        @if($trx->payment_status == 'pending') <span class="text-yellow-500">{{ __('messages.transactions_status.pending') }}</span>
+                        @elseif($trx->payment_status == 'approved') <span class="text-green-600">{{ __('messages.transactions_status.approved') }}</span>
+                        @elseif($trx->payment_status == 'declined') <span class="text-red-500">{{ __('messages.transactions_status.declined') }}</span>
                         @else <span class="text-gray-500">-</span> @endif
                     </td>
                     <td class="p-3 text-center font-medium">

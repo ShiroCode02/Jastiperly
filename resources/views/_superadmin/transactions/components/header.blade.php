@@ -7,7 +7,7 @@
             <!-- TAB + FILTER + UNDUH (Hanya di daftar) -->
             <div class="flex gap-3 items-center">
                 <div class="flex gap-3 bg-[#FFF6E3] mt-3 px-6 py-1 rounded-md items-center">
-                    @foreach (['buy' => 'Titip Beli', 'send' => 'Titip Kirim'] as $type => $label)
+                    @foreach (['buy', 'send'] as $i => $type)
                         @php
                             $count = $type === 'buy'
                                 ? \App\Models\BuyTransaction::whereDoesntHave('refund')->count()
@@ -18,7 +18,7 @@
                             <button type="submit"
                                     class="flex items-center gap-2 px-4 py-1.5 rounded-md text-black font-medium
                                         hover:bg-white transition {{ request('type', 'buy') === $type ? 'bg-white text-black' : 'bg-transparent' }}">
-                                <span>{{ $label }}</span>
+                                <span>{{ __('messages.transaction_types.' . $type) }}</span>
                                 <span class="text-gray-400 text-sm font-bold flex items-center justify-center ml-1">
                                     {{ $count }}
                                 </span>
@@ -32,13 +32,13 @@
                     <div class="relative">
                         <select name="location" onchange="this.form.submit()"
                                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                            <option value="">Semua Lokasi</option>
-                            <option value="dalam" {{ request('location') == 'dalam' ? 'selected' : '' }}>Dalam Negeri</option>
-                            <option value="luar" {{ request('location') == 'luar' ? 'selected' : '' }}>Luar Negeri</option>
+                            <option value="">{{ __('messages.filters.all_locations') }}</option>
+                            <option value="dalam" {{ request('location') == 'dalam' ? 'selected' : '' }}>{{ __('messages.filters.domestic') }}</option>
+                            <option value="luar" {{ request('location') == 'luar' ? 'selected' : '' }}>{{ __('messages.filters.overseas') }}</option>
                         </select>
                         <div class="border border-gray-300 rounded-md mt-3 px-4 py-3 text-sm bg-white flex items-center justify-between pointer-events-none min-w-[110px]">
                             <span class="text-left">
-                                {{ request('location') == 'dalam' ? 'Dalam Negeri' : (request('location') == 'luar' ? 'Luar Negeri' : 'Semua Lokasi') }}
+                                {{ request('location') == 'dalam' ? __('messages.filters.domestic') : (request('location') == 'luar' ? __('messages.filters.overseas') : __('messages.filters.all_locations')) }}
                             </span>
                             <svg class="w-4 h-4 text-gray-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -61,14 +61,14 @@
                     <div class="relative">
                         <select name="status" onchange="this.form.submit()"
                                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                            <option value="">Semua Status</option>
-                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
-                            <option value="berjalan" {{ request('status') == 'berjalan' ? 'selected' : '' }}>Berjalan</option>
-                            <option value="dibatalkan" {{ request('status') == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+                            <option value="">{{ __('messages.filters.all_status') }}</option>
+                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>{{ __('messages.transactions_status.approved') }}</option>
+                            <option value="berjalan" {{ request('status') == 'berjalan' ? 'selected' : '' }}>{{ __('messages.transactions_status.pending') }}</option>
+                            <option value="dibatalkan" {{ request('status') == 'dibatalkan' ? 'selected' : '' }}>{{ __('messages.transactions_status.declined') }}</option>
                         </select>
                         <div class="border border-gray-300 rounded-md px-4 py-1.5 text-sm bg-white flex items-center justify-between pointer-events-none">
                             <span class="text-left">
-                                {{ request('status') == 'selesai' ? 'Selesai' : (request('status') == 'berjalan' ? 'Berjalan' : (request('status') == 'dibatalkan' ? 'Dibatalkan' : 'Semua Status')) }}
+                                {{ request('status') == 'selesai' ? __('messages.transactions_status.approved') : (request('status') == 'berjalan' ? __('messages.transactions_status.pending') : (request('status') == 'dibatalkan' ? __('messages.transactions_status.declined') : __('messages.filters.all_status'))) }}
                             </span>
                             <svg class="w-4 h-4 text-gray-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -84,7 +84,7 @@
 
                 <a href="{{ route('superadmin.transactions.export', request()->query()) }}"
                    class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-4 py-1 rounded-md shadow transition">
-                    <span>Unduh Data</span>
+                    <span>{{ __('messages.actions.download') }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
                     </svg>
@@ -101,19 +101,19 @@
                         </svg>
                     </a>
                     <h2 class="text-[32px] font-semibold text-blue-900">
-                        {{ request()->is('*edit*') ? 'Edit Detail' : 'Detail' }} {{ request('type') === 'buy' ? 'Titip Beli' : 'Titip Kirim' }}
+                        {{ request()->is('*edit*') ? __('messages.edit_details') : __('messages.details') }} {{ request('type') === 'buy' ? __('messages.transaction_types.buy') : __('messages.transaction_types.send') }}
                     </h2>
                 </div>
 
                 @if(request()->is('*edit*'))
                     <button form="editForm" type="submit" 
                             class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-10 py-1 rounded-md shadow transition">
-                        <span>Simpan</span>
+                        <span>{{ __('messages.actions.save') }}</span>
                     </button>
                 @else
                     <a href="{{ route('superadmin.transactions.export', array_merge(request()->query(), ['transaction' => request()->route('transaction')])) }}"
                        class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-4 py-1 rounded-md shadow transition">
-                        <span>Unduh Data</span>
+                        <span>{{ __('messages.actions.download') }}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
                         </svg>

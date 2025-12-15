@@ -27,7 +27,7 @@ return [
         'send' => 'Send It',
     ],
     'transactions_status' => [
-        'pending' => 'Not yet paid',
+        'pending' => 'In Progress',
         'approved' => 'Completed',
         'declined' => 'Cancelled',
     ],
@@ -49,6 +49,7 @@ return [
         'decline' => 'Reject',
         'closed' => 'Closed',
         'validation' => 'Validation',
+        'view_proof_of_transaction' => 'View Proof of Transaction',
     ],
     'tabs' => [
         // Settings
@@ -62,6 +63,10 @@ return [
         'validation' => 'Validation',
         'approved' => 'Approved',
         'rejected' => 'Rejected',
+        'all_locations' => 'All Locations',
+        'domestic' => 'Domestic',
+        'overseas' => 'Overseas',
+        'all_status' => 'All Status',
 
     ],
     'statistics' => [
@@ -105,12 +110,33 @@ return [
         'transaction_completed' => 'Transaction Completed',
         'transaction_in_progress' => 'Transaction In Progress',
         'transaction_cancelled' => 'Transaction Cancelled',
+        'transaction_id' => 'Transaction Id',
+        'sender_contact' => 'Sender Contact',
+        'recipient_info' => 'Recipient Information',
+        'recipient_contact' => 'Recipient Contact',
+        'shipping_info' => 'Shipping Information',
+        'shipping_method' => 'Shipping Method',
+        'pickup_address' => 'Pickup Address',
+        'delivery_receipt' => 'Delivery Receipt',
+        'destination_address' => 'Destination Address',
+        'delivery_type' => 'Delivery Type',
+        'order_details' => 'Order Details',
+        'transaction_date' => 'Transaction Date',
+        'payment_methods' => 'Payment Methods',
+        'sender_name' => 'Sender Name',
+        'recipient_name' => 'Recipient Name',
 
         // Product
         'name_of_goods' => 'Name of goods',
         'item_description' => 'Item Description',
         'price_of_goods' => 'Price of goods',
         'reasons' => 'Reasons for Rejection',
+        'item_category' => 'Item Category',
+        'item_size' => 'Item Size',
+        'item_weight' => 'Item Weight',
+        'item_photos' => 'Item Photos',
+        'origin_of_goods' => 'Origin of Goods',
+        'the_amount_of_goods' => 'Jumlah Barang',
     ],
 
 
@@ -121,6 +147,11 @@ return [
     'no_users' => 'No Users',
     'no_products' => 'No Products',
     'no_data_changes' => 'No data changes yet',
+    'unknown' => 'Unknown',
+    'not_yet_available' => 'Not yet available',
+    'no_photos' => 'No photos',
+    'no_description.' => 'No description',
+    'not_available' => 'Not available',
     'previous' => 'Previous',
     'next' => 'Next',
     'total' => 'Total',
@@ -128,6 +159,14 @@ return [
     'edit_user_data' => 'Edit User Data',
     'user_details' => 'User Detail',
     'example' => 'Example',
+    'edit_details' => 'Edit Details',
+    'details' => 'Detail',
+    'transaction_info' => 'Transaction Information',
+    'sender_info' => 'Sender Information',
+    'item_details' => 'Item Details',
+    'units' => 'Unit',
+    'edit_transaction_info' => 'Edit Transaction Information',
+    'upload_payment' => 'Upload New Proof of Payment',
     '' => '',
 
     // Main page titles and menus

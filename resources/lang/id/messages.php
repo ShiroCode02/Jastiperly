@@ -28,7 +28,7 @@ return [
         'send' => 'Titip Kirim',
     ],
     'transactions_status' => [
-        'pending' => 'Belum Bayar',
+        'pending' => 'Berjalan',
         'approved' => 'Selesai',
         'declined' => 'Dibatalkan',
     ],
@@ -50,6 +50,7 @@ return [
         'decline' => 'Tolak',
         'closed' => 'Tutup',
         'validation' => 'Validasi',
+        'view_proof_of_transaction' => 'Lihat Bukti Transaksi',
     ],
     'tabs' => [
         // Pengaturan
@@ -63,6 +64,11 @@ return [
         'validation' => 'Validasi',
         'approved' => 'Disetujui',
         'rejected' => 'Ditolak',
+        'all_locations' => 'Semua Lokasi',
+        'domestic' => 'Dalam Negeri',
+        'overseas' => 'Luar Negeri',
+        'all_status' => 'Semua Status',
+        '' => '',
         '' => '',
     ],
     'statistics' => [
@@ -109,12 +115,35 @@ return [
         'transaction_completed' => 'Transaksi Selesai',
         'transaction_in_progress' => 'Transaksi Berjalan',
         'transaction_cancelled' => 'Transaksi Dibatalkan',
+        'transaction_id' => 'Id Transaksi',
+        'sender_contact' => 'Kontak Pengirim',
+        'recipient_info' => 'Informasi Penerima',
+        'recipient_contact' => 'Kontak Penerima',
+        'shipping_info' => 'Informasi Pengiriman',
+        'shipping_method' => 'Metode Pengiriman',
+        'pickup_address' => 'Alamat Pengambilan',
+        'delivery_receipt' => 'Resi Pengiriman',
+        'destination_address' => 'Alamat Tujuan',
+        'delivery_type' => 'Jenis Pengiriman',
+        'order_details' => 'Detail Titipan',
+        'transaction_date' => 'Tanggal Transaksi',
+        'payment_methods' => 'Metode Pembayaran',
+        'sender_name' => 'Nama Pengirim',
+        'recipient_name' => 'Nama Penerima',
+        '' => '',
+        
 
         // Produk
         'name_of_goods' => 'Nama Barang',
         'item_description' => 'Deskripsi Barang',
         'price_of_goods' => 'Harga Barang',
         'reasons' => 'Alasan Penolakan',
+        'item_category' => 'Kategori Barang',
+        'item_size' => 'Ukuran Barang',
+        'item_weight' => 'Berat Barang',
+        'item_photos' => 'Foto Barang',
+        'origin_of_goods' => 'Asal Barang',
+        'the_amount_of_goods' => 'Jumlah Barang',
     ],
 
     // Umum
@@ -124,6 +153,11 @@ return [
     'no_users' => 'Tidak ada pengguna',
     'no_products' => 'Tidak ada produk',
     'no_data_changes' => 'Belum ada perubahan data',
+    'unknown' => 'Tidak diketahui',
+    'not_yet_available' => 'Belum tersedia',
+    'no_photos' => 'Tidak ada foto',
+    'no_description.' => 'Tidak ada deskripsi',
+    'not_available' => 'Tidak tersedia',
     'previous' => 'Sebelumnya',
     'next' => 'Selanjutnya',
     'total' => 'Total',
@@ -131,11 +165,18 @@ return [
     'edit_user_data' => 'Edit Data Pengguna',
     'user_details' => 'Detail Pengguna',
     'example' => 'Contoh',
+    'edit_details' => 'Edit Detail',
+    'details' => 'Detail',
+    'transaction_info' => 'Informasi Transaksi',
+    'sender_info' => 'Informasi Pengirim',
+    'item_details' => 'Detail Barang',
+    'units' => 'Unit',
+    'edit_transaction_info' => 'Edit Informasi Transaksi',
+    'upload_payment' => 'Upload Bukti Pembayaran Baru',
     '' => '',
     '' => '',
     '' => '',
-    '' => '',
-    '' => '',
+    
 
 
     // Judul halaman utama dan menu

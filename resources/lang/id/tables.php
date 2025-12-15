@@ -19,6 +19,7 @@ return [
         'name' => 'Nama',
         'email' => 'Email',
         'day_date' => 'Hari, Tanggal',
+        'date' => 'Tanggal',
         'field' => 'Bidang',
         'changes' => 'Perubahan',
         'product_list' => 'Daftar Produk',
