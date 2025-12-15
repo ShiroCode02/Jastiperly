@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class SendTransaction extends Model
+{
+    protected $fillable = [
+        'sender_id', 'reciever_id', 'product_id', 'dimension', 'weight', 'pickup_address', 'delivery_address', 'delivery_code',
+        'delivery_method', 'delivery_type', 'delivery_image', 'total_price', 'payment_method_id', 'payment_proof',
+        'payment_status'
+    ];
+
+     protected $casts = [
+        'total_price' => 'decimal:2',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+    ];
+
+
+    public function sender(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function reciever(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reciever_id');
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function paymentMethod(): BelongsTo
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+}

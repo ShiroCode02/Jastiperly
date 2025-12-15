@@ -2,44 +2,79 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
+        'account_status',
+        'profile_image',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'role' => 'string',
+            'account_status' => 'string',
+        ];
+    }
+
+    public function detail()
+    {
+        return $this->hasOne(UserDetail::class);
+    }
+
+    public function detailHistories()
+    {
+        return $this->hasMany(UserDetailHistory::class)->latest('changed_at');
+    }
+
+    // FIX: Status online/offline yang benar & aman
+    public function getDisplayStatusAttribute(): string
+    {
+        if ($this->account_status === 'inactive') {
+            return 'Nonaktif';
+        }
+
+        $isOnline = DB::table('sessions')
+            ->where('user_id', $this->id)
+            ->whereNotNull('user_id')
+            ->exists();
+
+        if ($isOnline) {
+            return 'Online';
+        }
+
+        $hasLoggedIn = \App\Models\LoginHistory::where('user_id', $this->id)->exists();
+
+        return $hasLoggedIn ? 'Offline' : 'Aktif';
+    }
+
+    // Profile image
+    protected $appends = ['profile_image_url'];
+
+    public function getProfileImageUrlAttribute()
+    {
+        return $this->profile_image
+            ? Storage::url($this->profile_image)
+            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) 
+              . '&color=344CB7&background=EBF4FF&bold=true&size=256';
+    }
 }
