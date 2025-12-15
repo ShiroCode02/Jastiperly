@@ -31,7 +31,7 @@ return [
         'approved' => 'Completed',
         'declined' => 'Cancelled',
     ],
-    'transactions_refund' => [
+    'refunds_status' => [
         'pending' => 'Processing',
         'approved' => 'Completed',
         'declined' => 'Cancelled',
@@ -77,9 +77,13 @@ return [
     ],
     'confirmations' => [
         'delete_user' => 'Are you sure you want to delete this user?',
+        'delete_transaction' => 'Are you sure you want to delete this transaction?',
+        'delete_refund' => 'Are you sure you want to delete this refund?',
     ],
     'success' => [
         'user_deleted' => 'User successfully deleted',
+        'transaction_deleted' => 'Transaction successfully deleted',
+
     ],
     'labels' => [
         'username' => 'Username',
@@ -125,6 +129,10 @@ return [
         'payment_methods' => 'Payment Methods',
         'sender_name' => 'Sender Name',
         'recipient_name' => 'Recipient Name',
+        'price' => 'Harga',
+        'total_price_paid' => 'Total Price Paid',
+        'total_refund' => 'Total Refund',
+        'reason_refund ' => 'Reason for Refund Transaction',
 
         // Product
         'name_of_goods' => 'Name of goods',
@@ -167,6 +175,8 @@ return [
     'units' => 'Unit',
     'edit_transaction_info' => 'Edit Transaction Information',
     'upload_payment' => 'Upload New Proof of Payment',
+    'no_refunds' => 'No refunds',
+    'order_info' => 'Order Information',
     '' => '',
 
     // Main page titles and menus

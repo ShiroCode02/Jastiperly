@@ -3,7 +3,7 @@
     <div class="bg-white rounded-xl p-8 w-full max-w-md shadow-xl text-center">
 
         <h3 class="text-lg mb-4 text-black">
-            Apakah Anda yakin ingin menghapus transaksi ini?
+            {{ __('messages.confirmations.delete_transaction') }}
         </h3>
 
         <div class="flex justify-center mb-6">
@@ -16,7 +16,7 @@
             <button type="button"
                     onclick="closeDeleteModal()"
                     class="px-8 py-1.5 rounded-2xl border border-gray-300 text-black hover:bg-gray-100 transition">
-                Batal
+                {{ __('messages.actions.cancel') }}
             </button>
 
             <!-- Form tetap seperti versi lama -->
@@ -25,7 +25,7 @@
                 @method('DELETE')
                 <button type="submit" onclick="deleteTransaction()"
                         class="px-8 py-1.5 rounded-2xl bg-red-500 text-black hover:bg-red-600 transition">
-                    Hapus
+                    {{ __('messages.actions.delete') }}
                 </button>
             </form>
         </div>
@@ -37,7 +37,7 @@
     <div class="bg-white rounded-xl p-8 w-full max-w-md shadow-xl text-center">
 
         <h3 class="text-lg mb-4 text-black">
-            Transaksi berhasil dihapus
+            {{ __('messages.success.transaction_deleted') }}
         </h3>
 
         <div class="flex justify-center mb-6">
@@ -52,7 +52,7 @@
 
         <button onclick="closeSuccessModal()"
                 class="px-8 py-1.5 rounded-2xl border border-gray-300 text-black hover:bg-gray-100 transition">
-            Tutup
+            {{ __('messages.actions.closed') }}
         </button>
     </div>
 </div>

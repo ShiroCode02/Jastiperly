@@ -10,13 +10,13 @@
                     <div class="relative">
                         <select name="location" onchange="this.form.submit()"
                                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                            <option value="">Semua Lokasi</option>
-                            <option value="dalam" {{ request('location') == 'dalam' ? 'selected' : '' }}>Dalam Negeri</option>
-                            <option value="luar" {{ request('location') == 'luar' ? 'selected' : '' }}>Luar Negeri</option>
+                            <option value="">{{ __('messages.filters.all_locations') }}</option>
+                            <option value="dalam" {{ request('location') == 'dalam' ? 'selected' : '' }}>{{ __('messages.filters.domestic') }}</option>
+                            <option value="luar" {{ request('location') == 'luar' ? 'selected' : '' }}>{{ __('messages.filters.overseas') }}</option>
                         </select>
                         <div class="border border-gray-300 rounded-md mt-3 px-4 py-3 text-sm bg-white flex items-center justify-between pointer-events-none min-w-[110px]">
                             <span class="text-left">
-                                {{ request('location') == 'dalam' ? 'Dalam Negeri' : (request('location') == 'luar' ? 'Luar Negeri' : 'Semua Lokasi') }}
+                                {{ request('location') == 'dalam' ? __('messages.filters.domestic') : (request('location') == 'luar' ? __('messages.filters.overseas') : __('messages.filters.all_locations')) }}
                             </span>
                             <svg class="w-4 h-4 text-gray-500 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -30,7 +30,7 @@
             <div class="flex items-center gap-3 mt-6">
                 <a href="{{ route('superadmin.refunds.export', request()->query()) }}"
                    class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-4 py-1 rounded-md shadow transition">
-                    <span>Unduh Data</span>
+                    <span>{{ __('messages.actions.download') }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
                     </svg>
@@ -55,13 +55,13 @@
                     <!-- TOMBOL SIMPAN -->
                     <button form="editForm" type="submit"
                             class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-10 py-1 rounded-md shadow transition">
-                        <span>Simpan</span>
+                        <span>{{ __('messages.actions.save') }}</span>
                     </button>
                 @else
                     <!-- TOMBOL UNDUH (DETAIL) -->
                     <a href="{{ route('superadmin.refunds.export', array_merge(request()->query(), ['refund' => request('refund')])) }}"
                        class="flex items-center gap-2 bg-[#FFEB00] hover:bg-[#FF5E1F] text-black font-semibold px-4 py-1 rounded-md shadow transition">
-                        <span>Unduh Data</span>
+                        <span>{{ __('messages.actions.download') }}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
                         </svg>

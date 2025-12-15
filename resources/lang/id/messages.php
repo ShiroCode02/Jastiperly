@@ -80,11 +80,13 @@ return [
     ],
     'confirmations' => [
         'delete_user' => 'Apakah Anda yakin ingin menghapus pengguna ini?',
-        '' => '',
+        'delete_transaction' => 'Apakah Anda yakin ingin menghapus transaksi ini?',
+        'delete_refund' => 'Apakah Anda yakin ingin menghapus refund ini?',
     ],
     'success' => [
         'user_deleted' => 'Pengguna berhasil dihapus',
-        '' => '',
+        'transaction_deleted' => 'Transaksi berhasil dihapus',
+        'refund_deleted' => 'Refund berhasil dihapus',
     ],
     'labels' => [
         'username' => 'Nama Pengguna',
@@ -130,7 +132,10 @@ return [
         'payment_methods' => 'Metode Pembayaran',
         'sender_name' => 'Nama Pengirim',
         'recipient_name' => 'Nama Penerima',
-        '' => '',
+        'price' => 'Harga',
+        'total_price_paid' => 'Total Harga yang sudah dibayar',
+        'total_refund' => 'Jumlah Pengembalian Dana',
+        'reason_refund ' => 'Alasan Refund Transaksi',
         
 
         // Produk
@@ -173,8 +178,8 @@ return [
     'units' => 'Unit',
     'edit_transaction_info' => 'Edit Informasi Transaksi',
     'upload_payment' => 'Upload Bukti Pembayaran Baru',
-    '' => '',
-    '' => '',
+    'no_refunds' => 'Tidak ada pengembalian dana',
+    'order_info' => 'Informasi Titipan',
     '' => '',
     
 

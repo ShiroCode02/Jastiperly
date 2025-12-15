@@ -16,48 +16,48 @@
                     <div class="bg-white/70 rounded-xl shadow-md p-6 mx-auto border border-gray-200 max-w-5xl">
                         <!-- ID TRANSAKSI -->
                         <div class="text-right mb-4">
-                            <h3 class="text-lg font-bold text-gray-800">ID Transaksi</h3>
+                            <h3 class="text-lg font-bold text-gray-800">{{ __('messages.labels.transaction_id') }}</h3>
                             <p class="text-xl font-mono text-blue-600">#JSTP{{ $transaction->id }}</p>
                         </div>
 
                         <!-- INFORMASI TITIPAN -->
-                        <h2 class="text-2xl font-bold text-gray-800 mb-6">Informasi Titipan</h2>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ __('messages.order_info') }}</h2>
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                             <!-- KIRI -->
                             <div class="space-y-5">
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Barang</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.name_of_goods') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
                                         {{ $transaction->product->name }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Harga</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.price') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
                                         Rp{{ number_format($transaction->total_price / $transaction->quantity, 0, ',', '.') }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Metode Pembayaran</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.payment_methods') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white flex justify-between items-center">
                                         <span>{{ $transaction->paymentMethod->name ?? '-' }}</span>
                                         @if($transaction->payment_proof)
                                             <button type="button"
                                                     onclick="showProofModal('{{ asset('storage/' . $transaction->payment_proof) }}')"
                                                     class="text-blue-600 text-xs underline hover:text-blue-800">
-                                                Lihat Bukti Transfer
+                                                {{ __('messages.actions.view_proof_of_transaction') }}
                                             </button>
                                         @endif
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nomor Rekening</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.bank_account_number') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white font-mono">
                                         {{ $transaction->buyer->detail->bank_number ?? 'Tidak Terdeteksi' }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Deskripsi Barang</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.item_description') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white min-h-24 text-sm">
                                         {{ $transaction->product->description ?? 'Boneka standard size 40cm, bisa dipakaikan costume yg dijual terpisah. Khusus STELLA LOU dikenakan ongkir 2 kg karena telinganya rentan terlipat, jadi akan dikirim menggunakan dus yg lebih besar. Khusus Variasi LINABELL 55cm HK' }}
                                     </div>
@@ -66,32 +66,32 @@
                             <!-- KANAN -->
                             <div class="space-y-5">
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Kategori Barang</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.item_category') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
                                         {{ $transaction->product->category->name ?? 'Aksesoris dan Koleksi' }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Asal Barang</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.origin_of_goods') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
                                         {{ $transaction->product->origin ?? 'Jepang' }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Jumlah Barang</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.the_amount_of_goods') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white">
                                         {{ $transaction->quantity }} pcs
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Foto Barang</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.item_photos') }}</label>
                                     <div class="border border-gray-300 rounded-md p-2 bg-white">
                                         @if($transaction->product->image)
                                             <img src="{{ asset('storage/' . $transaction->product->image) }}"
                                                  class="w-full h-48 object-cover rounded-md" alt="Foto Barang">
                                         @else
                                             <div class="w-full h-48 bg-gray-200 border-2 border-dashed rounded-md flex items-center justify-center text-gray-500">
-                                                Tidak ada foto
+                                                {{ __('messages.no_photos') }}
                                             </div>
                                         @endif
                                     </div>
@@ -104,13 +104,13 @@
                             <!-- TOTAL HARGA & REFUND -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 text-lg">
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Total Harga yang sudah dibayar</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.total_price_paid') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white font-bold text-green-600">
                                         Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Total Refund</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.total_refund') }}</label>
                                     <div class="border border-gray-300 rounded-md px-4 py-2 bg-white font-bold text-red-600">
                                         Rp{{ number_format($transaction->total_price, 0, ',', '.') }}
                                     </div>
@@ -125,14 +125,14 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    Lihat Bukti Transaksi
+                                    {{ __('messages.actions.view_proof_of_transaction') }}
                                 </button>
                             </div>
 
                             <!-- ALASAN & STATUS — HANYA INI YANG JADI FORM -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="reason" class="block text-sm font-semibold text-gray-700 mb-1">Alasan Refund Transaksi</label>
+                                    <label for="reason" class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.reason_refund') }}</label>
                                     <textarea
                                         name="reason"
                                         id="reason"
@@ -143,16 +143,16 @@
                                     @error('reason') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>
                                 <div>
-                                    <label for="status" class="block text-sm font-semibold text-gray-700 mb-1">Status</label>
+                                    <label for="status" class="block text-sm font-semibold text-gray-700 mb-1">{{ __('messages.labels.status') }}</label>
                                     <select
                                         name="status"
                                         id="status"
                                         class="w-full border border-gray-300 rounded-md px-4 py-2 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                                         required
                                     >
-                                        <option value="pending" {{ old('status', $refund->status) === 'pending' ? 'selected' : '' }}>Proses</option>
-                                        <option value="approved" {{ old('status', $refund->status) === 'approved' ? 'selected' : '' }}>Selesai</option>
-                                        <option value="declined" {{ old('status', $refund->status) === 'declined' ? 'selected' : '' }}>Ditolak</option>
+                                        <option value="pending" {{ old('status', $refund->status) === 'pending' ? 'selected' : '' }}>{{ __('messages.refunds_status.pending') }}</option>
+                                        <option value="approved" {{ old('status', $refund->status) === 'approved' ? 'selected' : '' }}>{{ __('messages.refunds_status.approved') }}</option>
+                                        <option value="declined" {{ old('status', $refund->status) === 'declined' ? 'selected' : '' }}>{{ __('messages.refunds_status.declined') }}</option>
                                     </select>
                                     @error('status') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                                 </div>

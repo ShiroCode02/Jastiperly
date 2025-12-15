@@ -2,7 +2,7 @@
 <div id="deleteRefundModal" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-xl p-8 w-full max-w-md shadow-xl text-center">
         <h3 class="text-lg mb-4 text-black">
-            Apakah Anda yakin ingin menghapus refund ini?
+            {{ __('messages.confirmations.delete_refund') }}
         </h3>
         <div class="flex justify-center mb-6">
             <div class="w-20 h-20 rounded-full border-4 border-rose-500 flex items-center justify-center">
@@ -13,14 +13,14 @@
             <button type="button"
                     onclick="closeDeleteRefundModal()"
                     class="px-8 py-1.5 rounded-2xl border border-gray-300 text-black hover:bg-gray-100 transition">
-                Batal
+                {{ __('messages.actions.cancel') }}
             </button>
             <!-- Form tetap seperti versi lama -->
             <form id="deleteRefundForm" method="POST" class="inline">
                 @csrf @method('DELETE')
                 <button type="submit" onclick="deleteRefund()"
                         class="px-8 py-1.5 rounded-2xl bg-red-500 text-black hover:bg-red-600 transition">
-                    Hapus
+                    {{ __('messages.actions.delete') }}
                 </button>
             </form>
         </div>
@@ -30,7 +30,7 @@
 <div id="successRefundModal" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-xl p-8 w-full max-w-md shadow-xl text-center">
         <h3 class="text-lg mb-4 text-black">
-            Refund berhasil dihapus
+            {{ __('messages.success.refund_deleted') }}
         </h3>
         <div class="flex justify-center mb-6">
             <div class="w-20 h-20 rounded-full border-4 border-sky-500 flex items-center justify-center">
@@ -43,7 +43,7 @@
         </div>
         <button onclick="closeSuccessRefundModal()"
                 class="px-8 py-1.5 rounded-2xl border border-gray-300 text-black hover:bg-gray-100 transition">
-            Tutup
+            {{ __('messages.actions.closed') }}
         </button>
     </div>
 </div>
